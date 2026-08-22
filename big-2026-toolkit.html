@@ -19,12 +19,12 @@ html,body{margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 button,input{font-family:inherit;font-size:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--green-dk);outline-offset:2px;border-radius:4px}
-.wrap{max-width:840px;margin:0 auto;padding-bottom:70px}
+.wrap{max-width:760px;margin:0 auto;padding-bottom:70px}
 
-.top{background:var(--green-dk);color:#fff;padding:18px 20px 16px}
-.top .kicker{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--yellow);margin:0 0 5px}
-.top h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,6.5vw,36px);line-height:1;letter-spacing:-.02em;margin:0 0 7px}
-.top .when{font-size:15px;color:#DCEFDE;margin:0}
+.top{background:var(--green-dk);color:#fff;padding:14px 20px 13px}
+.top .kicker{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--yellow);margin:0 0 4px}
+.top h1{font-family:var(--display);font-weight:800;font-size:clamp(25px,6.6vw,34px);line-height:1;letter-spacing:-.02em;margin:0 0 5px}
+.top .when{font-size:14px;line-height:1.35;color:#DCEFDE;margin:0}
 .status{background:var(--yellow);color:#5C4A0C;font-size:14px;font-weight:600;padding:9px 20px;margin:0}
 .status strong{font-family:var(--display)}
 
@@ -182,6 +182,10 @@ details.q .qb p{font-size:15px}
 .note-item .sm{font-size:14px;color:var(--ink-soft);margin:0}
 .empty{color:var(--stone);font-size:15px;padding:14px 2px}
 
+/* text fills its card instead of stopping short on wide screens */
+.card p,.panel p,.beat-b p,.note,.note p,.qb p,.ev p,.seg-b p,.day-panel p,
+.tpane > p,.view > p,.lede,.sub{max-width:none}
+
 .tbl{width:100%;border-collapse:collapse;font-size:15px;margin-bottom:12px}
 .tbl th{text-align:left;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--stone);padding:0 10px 7px 0;border-bottom:1.5px solid var(--line)}
 .tbl td{padding:11px 10px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft)}
@@ -202,7 +206,7 @@ details.q .qb p{font-size:15px}
 
 <div class="top">
   <p class="kicker">Event toolkit · Run of show &amp; table guides</p>
-  <h1>BIG 2026<br>Toolkit</h1>
+  <h1>BIG 2026 Toolkit</h1>
   <p class="when">BIG Conference · Friday, September 18, 2026 · 2:10–3:35 pm · Portland, OR</p>
 </div>
 <p class="status" id="status"></p>
@@ -681,6 +685,29 @@ details.q .qb p{font-size:15px}
 
 </div>
 
+<button id="fbBtn" type="button" aria-label="Give feedback">&#9998; Feedback</button>
+
+<div id="fbWrap" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div id="fbPanel">
+    <h3 id="fbTitle">Feedback</h3>
+    <p id="fbWhere"></p>
+    <div id="fbSel" hidden></div>
+    <div class="fb-kinds" id="fbKinds">
+      <button data-kind="Bug" type="button">Bug</button>
+      <button data-kind="Wording" type="button">Wording</button>
+      <button data-kind="Idea" type="button">Idea</button>
+      <button data-kind="Don't like" type="button">Don't like</button>
+    </div>
+    <textarea id="fbText" placeholder="What did you notice?"></textarea>
+    <input type="text" id="fbFrom" placeholder="Your name">
+    <div class="fb-row">
+      <button id="fbCancel" type="button">Cancel</button>
+      <button id="fbSend" type="button">Send</button>
+    </div>
+    <p id="fbMsg"></p>
+  </div>
+</div>
+
 <script>
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const KEY='bisc-session-';
@@ -874,6 +901,7 @@ const APP_NAME = 'BIG 2026 toolkit';
 (function(){
   const btn=$('#fbBtn'), wrap=$('#fbWrap');
   if(!FEEDBACK_ON){ if(btn) btn.remove(); if(wrap) wrap.remove(); return; }
+  if(!btn || !wrap) return;
   const NAMES={brief:'Brief',timing:'Timing',tables:'Table guides',kit:'Kit & capture',notes:'Notes',wrong:'If it goes wrong'};
   const SUB={how:'How a table works',t1:'Table 1 Members',t2:'Table 2 Administrators',t3:'Table 3 Funders'};
   let kind='', selected='';
@@ -928,29 +956,5 @@ const APP_NAME = 'BIG 2026 toolkit';
 tick();
 setInterval(tick,30000);
 </script>
-
-<button id="fbBtn" type="button" aria-label="Give feedback">&#9998; Feedback</button>
-
-<div id="fbWrap" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
-  <div id="fbPanel">
-    <h3 id="fbTitle">Feedback</h3>
-    <p id="fbWhere"></p>
-    <div id="fbSel" hidden></div>
-    <div class="fb-kinds" id="fbKinds">
-      <button data-kind="Bug" type="button">Bug</button>
-      <button data-kind="Wording" type="button">Wording</button>
-      <button data-kind="Idea" type="button">Idea</button>
-      <button data-kind="Don't like" type="button">Don't like</button>
-    </div>
-    <textarea id="fbText" placeholder="What did you notice?"></textarea>
-    <input type="text" id="fbFrom" placeholder="Your name">
-    <div class="fb-row">
-      <button id="fbCancel" type="button">Cancel</button>
-      <button id="fbSend" type="button">Send</button>
-    </div>
-    <p id="fbMsg"></p>
-  </div>
-</div>
-
 </body>
 </html>

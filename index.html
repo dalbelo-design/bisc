@@ -680,8 +680,14 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 
   <div class="panel-green">
   <h2 id="agendaTitle">Agenda</h2>
-  <p id="agendaNote" style="font-size:14px;color:#DCEFDE;margin:-4px 0 14px"></p>
+  <p id="agendaNote" style="font-size:14px;color:#DCEFDE;margin:-4px 0 4px"></p>
+  <p id="agendaSrc" style="font-size:13px;color:#B6DCB8;margin:0 0 14px"></p>
   <ol class="steps" id="agendaBody"></ol>
+  </div>
+
+  <div class="card sky">
+    <h3>Writing the next agenda</h3>
+    <p style="font-size:15px;margin:0">Posted agendas are members only — signed-out visitors see the standard running order. Whoever holds the agenda role adds rows to the <strong>Agendas</strong> sheet — a date, the meeting, an order number, how many minutes, the item, and a sentence of detail. Set Published to <strong>yes</strong> and it replaces the standard running order here. Times work themselves out from the minutes, so reordering rows or changing a length reflows everything.</p>
   </div>
 
   <h2 data-i18n="ag.later.h">Later this season</h2>
@@ -2784,6 +2790,36 @@ function upcomingMeetings(limit){
   return out.sort((a,b)=>a.dt-b.dt);
 }
 
+
+/* ---- agendas posted to the sheet override the built-in running order ---- */
+let agendaCache = null;
+
+async function loadAgendas(){
+  if(!signedIn()){ agendaCache = []; return agendaCache; }   // members only
+  if(agendaCache) return agendaCache;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'agenda_fetch', token: AUTH.token})});
+    const out = await r.json().catch(()=>null);
+    agendaCache = (out && out.ok) ? out.items : [];
+  }catch(e){ agendaCache = []; }
+  return agendaCache;
+}
+
+function postedAgendaFor(ev){
+  if(!signedIn()) return null;
+  if(!agendaCache || !agendaCache.length) return null;
+  const key = ev.y + '-' + String(ev.mo+1).padStart(2,'0') + '-' + String(ev.day).padStart(2,'0');
+  const label = AGENDAS[ev.kind] ? AGENDAS[ev.kind].label.toLowerCase() : '';
+  const rows = agendaCache.filter(a =>
+    a.date === key && (!a.meeting || a.meeting.toLowerCase() === label));
+  if(!rows.length) return null;
+
+  let at = 0;
+  const items = rows.map(r => { const from = at; at += r.minutes; return [from, at, r.item, r.detail]; });
+  return {items, by: (rows.find(r=>r.by)||{}).by || ''};
+}
+
 function renderAgenda(){
   const hits = nextMeeting();
   if(!hits.length){ $('#nextUp').innerHTML=''; return; }
@@ -2814,13 +2850,23 @@ function renderAgenda(){
   };
   const ampm = (first.hh % 24) < 12 ? 'AM' : 'PM';
 
+  const posted = postedAgendaFor(first);
+  const items = posted ? posted.items : AGENDAS[first.kind].items;
   $('#agendaTitle').textContent = AGENDAS[first.kind].label + ' — the hour';
   $('#agendaNote').textContent =
     'Both sessions run on the same clock: ' + clock(0) + ' ' + ampm +
     ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.';
-  $('#agendaBody').innerHTML = AGENDAS[first.kind].items.map(([a,b,t,d])=>
-    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d}</p></div></li>`
+  $('#agendaBody').innerHTML = items.map(([a,b,t,d])=>
+    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d||''}</p></div></li>`
   ).join('');
+  const src = $('#agendaSrc');
+  if(src){
+    src.innerHTML = posted
+      ? 'Posted agenda' + (posted.by ? ' — prepared by ' + posted.by : '')
+      : signedIn()
+        ? 'Standard running order. Nobody has posted an agenda for this meeting yet.'
+        : 'Standard running order. Members see the posted agenda when there is one.';
+  }
 
   const firstKey = first.y+'-'+first.mo+'-'+first.day+'-'+first.kind;
   const seen = new Set([firstKey]);
@@ -2947,6 +2993,7 @@ async function loadAll(){
   try{ const l=await window.storage.get('bisc:lang',false); if(l && l.value==='es') LANG='es'; }catch(e){}
   applyLang();
   renderMeetings(); renderAgenda();
+  loadAgendas().then(()=>renderAgenda());
 }
 async function saveMe(){ try{ await window.storage.set('bisc:me',JSON.stringify(me),false); }catch(e){ console.error(e); } }
 
@@ -3147,8 +3194,10 @@ $('#verifyCode').addEventListener('click', async ()=>{
     msg.textContent = '';
     $('#codeInput').value = '';
     notesCache = null;
+    agendaCache = null;
     go('meetings');
     loadNotes(true);
+    loadAgendas().then(()=>renderAgenda());
   } else {
     msg.style.color='#A8341C';
     msg.textContent = out && out.error === 'expired'
@@ -3159,7 +3208,9 @@ $('#verifyCode').addEventListener('click', async ()=>{
   }
 });
 
-$('#signOut').addEventListener('click', ()=>{ notesCache = null; saveAuth(null); go('home'); });
+$('#signOut').addEventListener('click', ()=>{
+  notesCache = null; agendaCache = null; saveAuth(null); renderAgenda(); go('home');
+});
 
 AUTH = loadAuth();
 

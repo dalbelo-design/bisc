@@ -225,6 +225,21 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .ev .t1{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green-dk);margin:0 0 2px}
 .ev .t2{font-size:13px;color:var(--stone);margin:0 0 5px}
 .ev .d{font-size:14px;color:var(--ink-soft);margin:0}
+.mnote{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.mnote summary{cursor:pointer;list-style:none;padding:15px 16px;display:flex;gap:11px;align-items:baseline}
+.mnote summary::-webkit-details-marker{display:none}
+.mnote summary::after{content:'+';margin-left:auto;color:var(--orange);font-size:23px;line-height:.8;font-weight:700}
+.mnote[open] summary::after{content:'\2013'}
+.mnote .mdate{font-family:var(--display);font-weight:700;font-size:16.5px}
+.mnote .mkind{font-size:13px;color:var(--stone)}
+.mnote-b{padding:0 16px 14px}
+.mnote-b h4{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--green-md);margin:14px 0 6px}
+.mnote-b ul{margin:0;padding-left:20px;font-size:15px;color:var(--ink-soft)}
+.mnote-b li{margin-bottom:5px}
+.mnote-b .att{font-size:15px;color:var(--ink);margin:0}
+.mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
+
 .lockcard{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);
   border-radius:var(--r);padding:18px;margin-bottom:12px}
 .lockcard h3{color:var(--green-dk);margin-bottom:4px}
@@ -627,6 +642,23 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 
   <div class="day-panel" id="dayPanel"></div>
 
+  <h2>Past meeting notes</h2>
+
+  <div id="notesLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Notes from past meetings are for members of the union. Sign in with the email you joined with — it takes about a minute.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="notesGate" hidden>
+    <p id="notesStatus" class="sub" style="font-size:15px;color:var(--ink-soft)">Loading…</p>
+    <div id="notesList"></div>
+    <div class="card sky" id="notesHow" hidden>
+      <h3>Posting notes</h3>
+      <p style="font-size:15px;margin:0">Whoever is taking notes this month adds a row to the <strong>Meeting Notes</strong> sheet and sets Published to <strong>yes</strong>. Nothing else is needed — it shows up here. Decisions, actions, open questions, and next agenda each go in their own column, one item per line.</p>
+    </div>
+  </div>
+
   <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
   <div class="card">
     <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
@@ -650,34 +682,6 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <h2 id="agendaTitle">Agenda</h2>
   <p id="agendaNote" style="font-size:14px;color:#DCEFDE;margin:-4px 0 14px"></p>
   <ol class="steps" id="agendaBody"></ol>
-  </div>
-
-  <div id="notesLock" class="lockcard" hidden>
-    <h3>Members only</h3>
-    <p style="font-size:15px;margin:0 0 12px">Notes from past meetings are for members of the union. Sign in with the email you joined with — it takes about a minute.</p>
-    <button class="btn sm gold" data-go="auth">Sign in</button>
-  </div>
-
-  <div id="notesGate" hidden>
-  <h2 data-i18n="ag.notes.h">Notes from the last meeting</h2>
-  <p style="font-size:15px;color:var(--ink-soft)">Sample notes — replace with real ones after each meeting.</p>
-
-  <div class="card green">
-    <p class="eyebrow" style="margin-bottom:4px">New member meeting · Wednesday, August 12</p>
-    <p style="font-size:15px;margin:0 0 12px"><strong>19 members across both sessions.</strong> 11 in the Eastern session, 8 in the Pacific.</p>
-
-    <p style="font-size:15px;margin:0 0 6px"><strong>Who joined us</strong></p>
-    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">New members from Stockton, Jackson, Cambridge, Compton, Chelsea, and two people from pilots in Georgia we hadn't connected with before. Four members said this was the first time they had spoken to anyone else who had been through a pilot.</p>
-
-    <p style="font-size:15px;margin:0 0 6px"><strong>What came up</strong></p>
-    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">Several members asked whether joining could affect their benefits. We said we are getting that answered properly rather than guessing, and will bring it back next month. Two members asked whether family members who were not in a pilot can take part. That question went to the Organizing Committee.</p>
-
-    <p style="font-size:15px;margin:0 0 6px"><strong>Where people wanted to plug in</strong></p>
-    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">Storytelling drew the most interest, then advocacy training. Three members offered to help run future new member meetings. One member asked about Spanish-language materials, and that is now with the communications team.</p>
-
-    <p style="font-size:15px;margin:0 0 6px"><strong>What we committed to</strong></p>
-    <p style="font-size:15px;margin:0;color:var(--ink-soft)">Buddy pairings for everyone who asked, within a week. A written answer on the benefits question by the September meeting. Meeting notes sent to everyone who attended, including those who could not stay to the end.</p>
-  </div>
   </div>
 
   <h2 data-i18n="ag.later.h">Later this season</h2>
@@ -2913,7 +2917,7 @@ function go(id){
   const navId = id==='welcome' ? 'me' : id;
   $$('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.go===navId));
   window.scrollTo({top:0,behavior:'instant'});
-  if(id==='meetings') renderMeetings();
+  if(id==='meetings'){ renderMeetings(); loadNotes(); }
   if(id==='agenda') renderAgenda();
 }
 document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
@@ -3142,7 +3146,9 @@ $('#verifyCode').addEventListener('click', async ()=>{
     saveAuth({token: out.token, name: out.name, expires: out.expires});
     msg.textContent = '';
     $('#codeInput').value = '';
+    notesCache = null;
     go('meetings');
+    loadNotes(true);
   } else {
     msg.style.color='#A8341C';
     msg.textContent = out && out.error === 'expired'
@@ -3153,7 +3159,7 @@ $('#verifyCode').addEventListener('click', async ()=>{
   }
 });
 
-$('#signOut').addEventListener('click', ()=>{ saveAuth(null); go('home'); });
+$('#signOut').addEventListener('click', ()=>{ notesCache = null; saveAuth(null); go('home'); });
 
 AUTH = loadAuth();
 
@@ -3165,6 +3171,61 @@ async function fetchGated(){
       body: JSON.stringify({type:'gated_fetch', token: AUTH.token})});
     return await r.json().catch(()=>({ok:false}));
   }catch(e){ return {ok:false}; }
+}
+
+
+/* ---- meeting notes archive, fetched from the sheet ---- */
+let notesCache = null;
+
+function esc(t){ return String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+
+function noteBlock(label, arr){
+  if(!arr || !arr.length) return '';
+  return '<h4>' + label + '</h4><ul>' + arr.map(x=>'<li>'+esc(x)+'</li>').join('') + '</ul>';
+}
+
+async function loadNotes(force){
+  if(!signedIn()) return;
+  const status = $('#notesStatus'), list = $('#notesList'), how = $('#notesHow');
+  if(!status) return;
+  if(notesCache && !force){ paintNotesList(notesCache); return; }
+
+  status.hidden = false;
+  status.textContent = 'Loading…';
+  const res = await fetchGated();
+  if(!res || !res.ok){
+    status.textContent = 'Could not load notes just now. Check your connection and try again.';
+    return;
+  }
+  notesCache = res.items || [];
+  paintNotesList(notesCache);
+  if(how) how.hidden = false;
+}
+
+function paintNotesList(items){
+  const status = $('#notesStatus'), list = $('#notesList');
+  if(!items.length){
+    status.hidden = false;
+    status.textContent = 'No notes have been posted yet.';
+    list.innerHTML = '';
+    return;
+  }
+  status.hidden = true;
+  list.innerHTML = items.map((n,i)=>`
+    <details class="mnote"${i===0?' open':''}>
+      <summary>
+        <span class="mdate">${esc(n.date)}</span>
+        <span class="mkind">${esc(n.meeting)}</span>
+      </summary>
+      <div class="mnote-b">
+        ${n.attendance ? '<p class="att"><strong>Attendance:</strong> '+esc(n.attendance)+'</p>' : ''}
+        ${noteBlock('Decisions', n.decisions)}
+        ${noteBlock('Actions', n.actions)}
+        ${noteBlock('Open questions', n.questions)}
+        ${noteBlock('For next time', n.next)}
+        ${n.by ? '<p class="by">Written up by '+esc(n.by)+'</p>' : ''}
+      </div>
+    </details>`).join('');
 }
 
 /* =========================================================

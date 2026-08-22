@@ -1278,42 +1278,11 @@ const RULES = [
    desc:'The whole union in one room. Bring your kids, your dog, your lunch.'}
 ];
 
-/* ---- one-off events: conferences, local actions, anything not on the union's own cycle ---- */
-const EVENTS = [
-  {kind:'ac', title:'Basic Income Guarantee (BIG) Conference',
-   y:2026, mo:8, days:[17,18],
-   when:'September 17–18, 2026', where:'Portland, Oregon',
-   link:{url:'big-2026-toolkit.html', label:'Open the BIG 2026 toolkit'}}
-];
-
-
-const fmtDay = (y,m,d) => new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(new Date(y,m-1,d));
-const fmtRange = (y1,m1,d1,y2,m2,d2) => (m1===m2 && y1===y2)
-  ? new Intl.DateTimeFormat('en-US',{month:'long'}).format(new Date(y1,m1-1,1)) + ' ' + d1 + '\u2013' + d2 + ', ' + y1
-  : fmtDay(y1,m1,d1) + ' \u2013 ' + fmtDay(y2,m2,d2);
-
-/* ---- calendar: sheet events and meeting changes ---- */
-let CAL = {events:[], changes:[], loaded:false};
-
-async function loadCalendar(){
-  try{
-    const body = {type:'calendar_fetch'};
-    if(signedIn()) body.token = AUTH.token;
-    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(body)});
-    const out = await r.json().catch(()=>null);
-    if(out && out.ok) CAL = {events:out.events||[], changes:out.changes||[], loaded:true};
-  }catch(e){ /* keep whatever is built into the app */ }
-  return CAL;
-}
-
-const ymd = (y,mo,d) => y + '-' + String(mo+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-
-function changeFor(y, mo, d, title){
-  return CAL.changes.find(c =>
-    c.date === ymd(y,mo,d) &&
-    (!c.meeting || c.meeting.toLowerCase() === String(title).toLowerCase()));
-}
+/* One-off events now live in the Events tab of the sheet, not here.
+   Anyone with edit access can add a conference, a local action, or a
+   toolkit link without touching this file. Kept as an empty list so
+   the merge below has something to iterate. */
+const EVENTS = [];
 
 function monthEvents(y, mo){
   const map = {};

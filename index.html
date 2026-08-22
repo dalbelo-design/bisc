@@ -296,6 +296,13 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .card p,.mission p,.panel-green p,.step-b p,.ev p,.trk-b p,.qb p,.mod-b p,
 .m-body p,.m-try p,.note-item p,details p,.lede,.contact .blurb{max-width:none}
 
+.ev.is-off{opacity:.65}
+.ev.is-off h4,.ev.is-off .t1{text-decoration:line-through}
+.ev-flag{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  border-radius:99px;padding:4px 10px;display:inline-block;margin:0 0 7px}
+.ev-flag.off{background:#F6E0DA;color:#8A3216}
+.ev-flag.moved{background:var(--yellow);color:#5C4A0C}
+
 .ev-link{display:inline-block;margin-top:9px;background:var(--green-dk);color:#fff;text-decoration:none;
   border-radius:9px;padding:10px 15px;font-family:var(--display);font-weight:700;font-size:14.5px;min-height:42px}
 .ev-link:hover{filter:brightness(1.1)}
@@ -664,6 +671,13 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
     <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
     <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
     <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — Saturday mixer, one session · 1:00 PM PT / 4:00 PM ET</p>
+  </div>
+
+  <div class="card sky">
+    <h3>Adding to the calendar</h3>
+    <p style="font-size:15px;margin:0 0 9px">Two sheets, each doing one job. Set Published to <strong>yes</strong> and it appears here.</p>
+    <p style="font-size:15px;margin:0 0 9px"><strong>Events</strong> — conferences, local actions, anything outside the union's own cycle. Start date, end date, title, where, and a toolkit link if there is one.</p>
+    <p style="font-size:15px;margin:0"><strong>Meeting changes</strong> — cancelling or moving one of our own meetings. The regular pattern stays in the app; you only record the exception, and members see why.</p>
   </div>
 
   <h2 data-i18n="mtg.access.h">Access</h2>
@@ -1272,6 +1286,35 @@ const EVENTS = [
    link:{url:'big-2026-toolkit.html', label:'Open the BIG 2026 toolkit'}}
 ];
 
+
+const fmtDay = (y,m,d) => new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(new Date(y,m-1,d));
+const fmtRange = (y1,m1,d1,y2,m2,d2) => (m1===m2 && y1===y2)
+  ? new Intl.DateTimeFormat('en-US',{month:'long'}).format(new Date(y1,m1-1,1)) + ' ' + d1 + '\u2013' + d2 + ', ' + y1
+  : fmtDay(y1,m1,d1) + ' \u2013 ' + fmtDay(y2,m2,d2);
+
+/* ---- calendar: sheet events and meeting changes ---- */
+let CAL = {events:[], changes:[], loaded:false};
+
+async function loadCalendar(){
+  try{
+    const body = {type:'calendar_fetch'};
+    if(signedIn()) body.token = AUTH.token;
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(body)});
+    const out = await r.json().catch(()=>null);
+    if(out && out.ok) CAL = {events:out.events||[], changes:out.changes||[], loaded:true};
+  }catch(e){ /* keep whatever is built into the app */ }
+  return CAL;
+}
+
+const ymd = (y,mo,d) => y + '-' + String(mo+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+
+function changeFor(y, mo, d, title){
+  return CAL.changes.find(c =>
+    c.date === ymd(y,mo,d) &&
+    (!c.meeting || c.meeting.toLowerCase() === String(title).toLowerCase()));
+}
+
 function monthEvents(y, mo){
   const map = {};
   RULES.forEach(r=>{
@@ -1289,11 +1332,45 @@ function monthEvents(y, mo){
       (map[d] = map[d] || []).push({...r, dt: zoned(y,mo,d,r.hh,r.mm,r.tz), y, mo, day:d});
     }
   });
+  // cancellations and moves from the sheet
+  Object.keys(map).map(Number).forEach(d=>{
+    map[d] = map[d].flatMap(e=>{
+      const c = changeFor(y, mo, d, e.title);
+      if(!c) return [e];
+      if(c.change === 'cancelled') return [{...e, cancelled:true, reason:c.reason}];
+      if(c.change === 'moved' && c.newDate){
+        const [ny,nm,nd] = c.newDate.split('-').map(Number);
+        if(ny===y && nm-1===mo){
+          const moved = {...e, day:nd, dt: zoned(y, mo, nd, e.hh, e.mm, e.tz), movedFrom:d, reason:c.reason};
+          (map[nd] = map[nd] || []).push(moved);
+        }
+        return [{...e, cancelled:true, movedTo:c.newDate, reason:c.reason}];
+      }
+      return [e];
+    });
+  });
+
+  // one-off events: the built-in list plus anything posted to the sheet
   EVENTS.forEach(e=>{
     if(e.y!==y || e.mo!==mo) return;
     e.days.forEach(d=>{
       (map[d] = map[d] || []).push({...e, day:d, allDay:true, dt:new Date(y,mo,d,9,0)});
     });
+  });
+  CAL.events.forEach(e=>{
+    const [sy,sm,sd] = e.start.split('-').map(Number);
+    const [ey,em,ed] = (e.end || e.start).split('-').map(Number);
+    const from = new Date(sy, sm-1, sd), to = new Date(ey, em-1, ed);
+    for(let dt=new Date(from); dt<=to; dt.setDate(dt.getDate()+1)){
+      if(dt.getFullYear()!==y || dt.getMonth()!==mo) continue;
+      const d = dt.getDate();
+      (map[d] = map[d] || []).push({
+        kind:'ac', title:e.title, where:e.where, allDay:true, day:d, y, mo,
+        when: e.start===e.end ? fmtDay(sy,sm,sd) : fmtRange(sy,sm,sd,ey,em,ed),
+        link: e.hasToolkit ? {url:e.url, label:e.label, gated:e.gated} : null,
+        dt:new Date(y,mo,d,9,0)
+      });
+    }
   });
   Object.values(map).forEach(a => a.sort((x,z)=>x.dt-z.dt));
   return map;
@@ -2922,19 +2999,31 @@ function renderDayPanel(){
   const dateStr = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
     .format(new Date(selDay.y, selDay.mo, selDay.d));
   if(!ev.length){ p.innerHTML = `<h3>${dateStr}</h3><p class="empty-day">Nothing scheduled.</p>`; return; }
+  const linkFor = e => {
+    if(!e.link) return '';
+    const gated = e.link.gated !== false;
+    if(gated && !signedIn())
+      return `<button class="ev-locked" data-go="auth">\u{1F512} ${e.link.label} \u2014 members only</button>`;
+    if(!e.link.url) return '';
+    return `<a class="ev-link" href="${e.link.url}" target="_blank" rel="noopener">${e.link.label} \u2192</a>`;
+  };
+  const flag = e => {
+    if(e.cancelled) return `<p class="ev-flag off">${e.movedTo ? 'Moved to ' + e.movedTo : 'Cancelled'}${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
+    if(e.movedFrom) return `<p class="ev-flag moved">Moved to this date${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
+    return '';
+  };
   p.innerHTML = `<h3>${dateStr}</h3>` + ev.map(e=> e.allDay ? `
     <div class="ev ${e.kind}">
       <h4>${e.title}</h4>
       <p class="t1">${e.when}</p>
       <p class="t2">${e.where}</p>
-      ${e.link ? (signedIn()
-          ? `<a class="ev-link" href="${e.link.url}" target="_blank" rel="noopener">${e.link.label} \u2192</a>`
-          : `<button class="ev-locked" data-go="auth">\ud83d\udd12 ${e.link.label} \u2014 members only</button>`) : ''}
+      ${linkFor(e)}
     </div>` : `
-    <div class="ev ${e.kind}">
+    <div class="ev ${e.kind}${e.cancelled ? ' is-off' : ''}">
       <h4>${e.title}</h4>
+      ${flag(e)}
       <p class="t1">${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</p>
-      <p class="t2">${fmtT(e.dt, ET)} ET · ${fmtT(e.dt, PT)} PT — ${e.session}</p>
+      <p class="t2">${fmtT(e.dt, ET)} ET \u00b7 ${fmtT(e.dt, PT)} PT \u2014 ${e.session}</p>
       <p class="d">${e.desc}</p>
     </div>`).join('');
 }
@@ -2993,6 +3082,7 @@ async function loadAll(){
   try{ const l=await window.storage.get('bisc:lang',false); if(l && l.value==='es') LANG='es'; }catch(e){}
   applyLang();
   renderMeetings(); renderAgenda();
+  loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
   loadAgendas().then(()=>renderAgenda());
 }
 async function saveMe(){ try{ await window.storage.set('bisc:me',JSON.stringify(me),false); }catch(e){ console.error(e); } }
@@ -3198,6 +3288,7 @@ $('#verifyCode').addEventListener('click', async ()=>{
     go('meetings');
     loadNotes(true);
     loadAgendas().then(()=>renderAgenda());
+    loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
   } else {
     msg.style.color='#A8341C';
     msg.textContent = out && out.error === 'expired'

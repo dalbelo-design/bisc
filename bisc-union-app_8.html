@@ -1,0 +1,3246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BISC Union — Member Companion</title>
+<meta name="description" content="A national union of people who have been through a guaranteed income pilot.">
+<meta name="theme-color" content="#247227">
+<meta name="color-scheme" content="light only">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --paper:#FFFFF8;--ink:#49420C;--ink-soft:#6B6222;--stone:#736C42;
+  --sky:#64D5FF;--green-dk:#247227;--green-md:#519A66;--orange:#FAAA04;--yellow:#FED786;
+  --line:#E4E1CC;--raised:#FFFFFF;--r:14px;--nav-h:74px;
+  --display:'League Spartan','Helvetica Neue',sans-serif;
+  --body:'Inter','Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--green-dk);outline-offset:2px;border-radius:4px}
+.app{max-width:1040px;margin:0 auto;padding-bottom:calc(var(--nav-h) + 24px);background:var(--paper)}
+
+.top{background:var(--green-dk);padding:13px 20px;display:flex;align-items:center;gap:13px}
+.top svg{flex:0 0 auto;width:42px;height:auto}
+.wordmark{line-height:.92}
+.wordmark .b{font-family:var(--display);font-weight:800;font-size:27px;color:#fff;letter-spacing:-.01em;display:block}
+.wordmark .u{font-family:var(--display);font-weight:600;font-size:21px;color:#fff;letter-spacing:.02em;display:block}
+.wordmark .t{font-family:var(--display);font-weight:700;font-size:9.5px;color:var(--yellow);letter-spacing:.055em;display:block;margin-top:3px}
+
+.screen{display:none;padding:26px 20px 8px;animation:rise .26s ease both}
+.screen.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.screen{animation:none}*{transition:none!important}}
+
+h1{font-family:var(--display);font-weight:800;font-size:clamp(31px,7.6vw,46px);line-height:.98;letter-spacing:-.02em;margin:0 0 13px;color:var(--green-dk)}
+h2{font-family:var(--display);font-weight:800;font-size:21px;line-height:1.1;letter-spacing:.02em;text-transform:uppercase;margin:34px 0 12px;color:var(--ink)}
+h3{font-family:var(--display);font-weight:700;font-size:18px;margin:0 0 4px}
+p{margin:0 0 14px;max-width:60ch}
+.lede{font-size:19px;color:var(--ink-soft);max-width:52ch}
+.eyebrow{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--green-md);margin:0 0 9px}
+
+
+.card{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.card p:last-child{margin-bottom:0}
+.card.orange{border-left:5px solid var(--orange)}
+.card.green{border-left:5px solid var(--green-md)}
+.card.sky{border-left:5px solid var(--sky)}
+.panel-green{background:var(--green-dk);border-radius:var(--r);padding:18px 16px 8px;margin:22px 0 14px}
+.panel-green > h2:first-child{margin-top:0;color:#fff}
+.panel-green .card{background:var(--paper);border-color:transparent}
+.panel-green .card h3{color:var(--green-dk)}
+
+.panel-green .steps li{border-bottom-color:#479B4A}
+.panel-green .when{color:#FEE6B0}
+#agendaBody .when{flex:0 0 96px}
+.panel-green .step-b h3{color:#fff}
+.panel-green .step-b p{color:#DCEFDE}
+
+.mod.live{cursor:pointer}
+.mod.live:hover .mod-b h4{color:var(--green-dk)}
+.mod.live .mod-n{background:var(--green-dk);color:#fff}
+.ready{display:inline-block;font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;background:var(--green-dk);color:#fff;border-radius:99px;padding:3px 8px;margin-left:6px}
+.back{background:none;border:none;cursor:pointer;font-family:var(--display);font-weight:600;font-size:15px;
+  color:var(--green-dk);padding:6px 0;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.m-meta{font-size:13px;color:var(--stone);font-family:var(--display);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:0 0 6px}
+.m-body h2{font-size:19px;text-transform:none;letter-spacing:-.01em;margin:26px 0 8px;color:var(--green-dk)}
+.m-body p{font-size:16.5px;line-height:1.6;margin:0 0 13px;max-width:62ch}
+.m-key{background:var(--green-dk);color:#fff;border-radius:var(--r);padding:18px;margin:24px 0}
+.m-key p{color:#fff;font-size:17px;font-weight:600;margin:0;font-family:var(--display);line-height:1.35}
+.m-try{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);border-radius:var(--r);padding:18px;margin:14px 0 8px}
+.m-try h3{color:var(--green-dk);margin-bottom:5px}
+.m-try p{font-size:15.5px;margin:0;color:var(--ink-soft)}
+.m-nav{display:flex;gap:10px;margin:18px 0 8px}
+.m-nav button{flex:1}
+
+.trk{border:1px solid var(--line);border-radius:var(--r);background:var(--raised);margin-bottom:10px;overflow:hidden}
+.trk summary{font-family:var(--display);font-weight:700;font-size:17px;cursor:pointer;list-style:none;padding:15px 16px;display:flex;gap:12px;align-items:baseline}
+.trk summary::-webkit-details-marker{display:none}
+.trk summary::after{content:'+';margin-left:auto;color:var(--orange);font-size:24px;line-height:.8;font-weight:700}
+.trk[open] summary::after{content:'–'}
+.trk summary .cnt{font-family:var(--body);font-size:13px;font-weight:500;color:var(--stone)}
+.trk-b{padding:0 16px 6px}
+.trk-b > p{font-size:14.5px;color:var(--ink-soft);margin:0 0 10px}
+.mod{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.mod-n{flex:0 0 26px;height:26px;border-radius:50%;background:#EFF3EC;color:var(--green-dk);
+  font-family:var(--display);font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.mod-b{flex:1;min-width:0}
+.mod-b h4{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0 0 1px}
+.mod-b p{font-size:14px;color:var(--ink-soft);margin:0}
+.mod-t{font-size:12.5px;color:var(--stone);font-weight:500;white-space:nowrap;margin-top:2px}
+.soon{display:inline-block;font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;background:var(--yellow);color:#5C4A0C;border-radius:99px;padding:4px 10px;margin-bottom:12px}
+
+.langbtn{margin-left:auto;align-self:flex-start;background:transparent;border:1.5px solid rgba(255,255,255,.55);
+  color:#fff;border-radius:99px;padding:6px 13px;font-family:var(--display);font-weight:600;font-size:13px;
+  cursor:pointer;min-height:34px;transition:background .15s}
+.langbtn:hover{background:rgba(255,255,255,.14)}
+
+.qr-block{display:flex;gap:16px;align-items:center;background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:20px 0 0}
+.qr-block img{flex:0 0 auto;width:104px;height:104px;display:block;border-radius:8px}
+.qr-block h3{margin:0 0 3px;color:var(--green-dk)}
+.qr-block p{font-size:14.5px;color:var(--ink-soft);margin:0;max-width:34ch}
+@media (max-width:400px){.qr-block{flex-direction:column;text-align:center;gap:12px}.qr-block p{max-width:none}}
+
+.mission{margin-top:20px;background:var(--green-dk);color:#fff;border:none;border-radius:var(--r);padding:22px;margin-bottom:12px}
+.mission p{color:#fff}
+.mission strong{color:#FEE6B0}
+
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:none}
+.when{flex:0 0 76px;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--green-md);padding-top:4px}
+.step-b p{font-size:15px;color:var(--ink-soft);margin:2px 0 0}
+
+.vals{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.val{font-family:var(--display);font-weight:600;font-size:14px;background:var(--yellow);color:var(--ink);border-radius:99px;padding:7px 14px}
+
+.btn{display:block;width:100%;min-height:54px;border:none;border-radius:11px;background:var(--green-dk);color:#fff;font-family:var(--display);font-weight:700;font-size:18px;cursor:pointer;transition:transform .12s ease,filter .15s ease;padding:14px 18px}
+.btn:active{transform:scale(.985)}
+.btn:hover{filter:brightness(1.08)}
+.btn.gold{background:var(--orange);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:600}
+.btn.sm{min-height:44px;font-size:15px;width:auto;padding:9px 18px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+
+.f{margin-bottom:22px}
+label.q{display:block;font-family:var(--display);font-weight:700;font-size:17px;margin-bottom:3px}
+.help{font-size:14px;color:var(--stone);margin:0 0 9px;max-width:56ch}
+.opt{font-weight:500;color:var(--stone);font-size:14px;font-family:var(--body)}
+input[type=text],input[type=email],input[type=tel],textarea{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;background:var(--raised);min-height:52px}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--green-md);outline:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:10px;background:var(--raised);cursor:pointer;min-height:52px;transition:border-color .15s,background .15s}
+.choice:hover{border-color:var(--green-md)}
+.choice input{flex:0 0 auto;width:21px;height:21px;margin:1px 0 0;accent-color:var(--green-dk);cursor:pointer}
+.choice.sel{border-color:var(--green-dk);background:#EFF7EF}
+.choice span{font-size:16px;line-height:1.4}
+.err{color:#A8341C;font-weight:600;font-size:14px;margin-top:6px}
+.note{font-size:14px;color:var(--stone);border-top:1px solid var(--line);padding-top:14px;margin-top:6px}
+
+
+details{border-bottom:1px solid var(--line);padding:15px 0}
+details summary{font-family:var(--display);font-weight:700;font-size:18px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'+';color:var(--orange);font-size:25px;line-height:.9;font-weight:700}
+details[open] summary::after{content:'–'}
+details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
+
+.flow{width:100%;height:auto;display:block;margin-bottom:6px}
+.flow .nt{font-family:'League Spartan',sans-serif;font-weight:700;font-size:15px;fill:#49420C}
+.flow .ns{font-family:'Inter',sans-serif;font-size:12.5px;fill:#6B6222}
+.flow .nt-w{fill:#fff}.flow .ns-w{fill:#B6DCB8}
+.flow .arr{stroke:#519A66;stroke-width:2.2;fill:none}
+
+/* ---------- contact ---------- */
+.contact{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.contact .who{font-family:var(--display);font-weight:800;font-size:20px;margin:0 0 1px;color:var(--green-dk)}
+.contact .role{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--stone);margin:0 0 8px}
+.contact .blurb{font-size:15px;color:var(--ink-soft);margin:0 0 14px}
+.reach{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.reach.one{grid-template-columns:1fr}
+.reach.one a{flex-direction:row;min-height:60px;gap:11px;font-size:16px}
+.reach.one a .sub{text-align:left}
+.reach a{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;border-radius:11px;padding:14px 6px;min-height:82px;
+  font-family:var(--display);font-weight:700;font-size:15px;
+  border:1.5px solid var(--line);background:#F6F5E6;color:var(--ink);
+  transition:background .15s,border-color .15s;
+}
+.reach a:hover{background:#EDECD8;border-color:var(--green-md)}
+.reach a svg{width:25px;height:25px;stroke:var(--green-dk);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.reach a .sub{font-family:var(--body);font-weight:500;font-size:11.5px;color:var(--stone);text-align:center;line-height:1.25}
+.contact .fine{font-size:13.5px;color:var(--stone);margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line)}
+@media (max-width:359px){.reach{grid-template-columns:1fr}.reach a{flex-direction:row;min-height:56px;gap:11px}}
+
+/* ---------- calendar ---------- */
+.tz-bar{background:var(--yellow);border-radius:11px;padding:12px 15px;font-size:14.5px;margin-bottom:16px;display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.tz-bar strong{font-family:var(--display);font-weight:700}
+
+.cal{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px 16px;margin-bottom:14px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px}
+.cal-nav h3{font-family:var(--display);font-weight:800;font-size:20px;margin:0;letter-spacing:.01em}
+.cal-nav button{background:none;border:1.5px solid var(--line);border-radius:9px;width:40px;height:40px;cursor:pointer;font-size:19px;line-height:1;color:var(--green-dk);display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{border-color:var(--green-md)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-wd{text-align:center;font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--stone);padding-bottom:5px}
+.cal-day{
+  aspect-ratio:1/1;border:none;background:none;border-radius:9px;cursor:default;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-family:var(--display);font-weight:600;font-size:15px;color:var(--ink);padding:0;min-height:42px;
+}
+.cal-day.pad{visibility:hidden}
+.cal-day.past{color:#BDB89A}
+.cal-day.has{cursor:pointer;background:#F6F5E6}
+.cal-day.has:hover{background:#EDECD8}
+.cal-day.today{box-shadow:inset 0 0 0 2px var(--green-md)}
+.cal-day.sel{background:var(--green-dk);color:#fff}
+.cal-day.sel .dot{box-shadow:0 0 0 1.5px var(--green-dk)}
+.dots{display:flex;gap:2.5px;height:6px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%}
+.dot.nm{background:var(--sky)}.dot.fu{background:var(--green-md)}.dot.sx{background:var(--orange)}
+.dot.ac{background:var(--yellow);box-shadow:inset 0 0 0 1.5px #B07C14}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.legend span{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft)}
+.legend i{width:9px;height:9px;border-radius:50%;display:block}
+
+.day-panel{margin-bottom:14px}
+.day-panel h3{font-family:var(--display);font-size:17px;margin:0 0 9px;color:var(--green-dk)}
+.ev{background:var(--raised);border:1px solid var(--line);border-left-width:5px;border-radius:11px;padding:13px 15px;margin-bottom:8px}
+.ev.nm{border-left-color:var(--sky)}.ev.fu{border-left-color:var(--green-md)}.ev.sx{border-left-color:var(--orange)}
+.ev.ac{border-left-color:var(--yellow)}
+.ev h4{font-family:var(--display);font-weight:700;font-size:16.5px;margin:0 0 2px}
+.ev .t1{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green-dk);margin:0 0 2px}
+.ev .t2{font-size:13px;color:var(--stone);margin:0 0 5px}
+.ev .d{font-size:14px;color:var(--ink-soft);margin:0}
+.lockcard{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);
+  border-radius:var(--r);padding:18px;margin-bottom:12px}
+.lockcard h3{color:var(--green-dk);margin-bottom:4px}
+.ev-locked{display:inline-block;margin-top:9px;background:transparent;border:1.5px solid var(--line);
+  color:var(--stone);border-radius:9px;padding:10px 15px;font-family:var(--display);font-weight:700;
+  font-size:14.5px;min-height:42px;cursor:pointer}
+
+/* sign-in */
+.authbtn{background:transparent;border:1.5px solid rgba(255,255,255,.55);color:#fff;border-radius:99px;
+  padding:6px 13px;font-family:var(--display);font-weight:600;font-size:13px;cursor:pointer;min-height:34px;
+  align-self:flex-start;margin-left:8px}
+.authbtn:hover{background:rgba(255,255,255,.14)}
+.nav button.locked{opacity:.5}
+.nav button.locked svg{stroke:var(--stone)}
+.lockmsg{background:var(--yellow);color:#5C4A0C;border-radius:11px;padding:14px 16px;font-size:15px;margin-bottom:14px}
+.authbox{max-width:420px}
+.authbox input{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;background:var(--raised);
+  min-height:54px;font-size:17px;margin-bottom:11px}
+.authbox input:focus{border-color:var(--green-md);outline:none}
+#codeInput{letter-spacing:.32em;font-family:var(--display);font-weight:700;font-size:24px;text-align:center}
+#authMsg{font-size:15px;min-height:22px;margin:8px 0 0}
+.whoami{background:#EFF3EC;border-radius:11px;padding:14px 16px;font-size:15px;margin-bottom:13px}
+.whoami strong{color:var(--green-dk)}
+
+/* co-design feedback — set FEEDBACK_ON = false to remove at launch */
+#fbBtn{position:fixed;right:14px;bottom:calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));z-index:60;
+  background:#8C3A5C;color:#fff;border:none;border-radius:99px;padding:12px 17px;
+  font-family:var(--display);font-weight:700;font-size:14.5px;cursor:pointer;
+  box-shadow:0 3px 14px rgba(0,0,0,.24);min-height:46px}
+#fbBtn:hover{filter:brightness(1.12)}
+#fbWrap{position:fixed;inset:0;z-index:70;background:rgba(20,38,31,.45);display:none;align-items:flex-end;justify-content:center}
+#fbWrap.on{display:flex}
+#fbPanel{background:var(--paper);width:100%;max-width:560px;border-radius:18px 18px 0 0;
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto}
+#fbPanel h3{font-family:var(--display);font-weight:800;font-size:20px;margin:0 0 3px;color:var(--green-dk)}
+#fbWhere{font-size:13.5px;color:var(--stone);margin:0 0 13px}
+#fbSel{background:#F6F5E6;border-left:4px solid var(--orange);border-radius:8px;padding:10px 12px;
+  font-size:14.5px;color:var(--ink-soft);margin:0 0 13px;max-height:110px;overflow-y:auto}
+.fb-kinds{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.fb-kinds button{flex:1 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:99px;
+  padding:9px 13px;font-family:var(--display);font-weight:600;font-size:13.5px;cursor:pointer;min-height:44px}
+.fb-kinds button.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+#fbPanel textarea,#fbPanel input{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);font-size:16px;margin-bottom:11px}
+#fbPanel textarea{min-height:110px;resize:vertical}
+#fbPanel textarea:focus,#fbPanel input:focus{border-color:var(--green-md);outline:none}
+.fb-row{display:flex;gap:9px}
+.fb-row button{flex:1;min-height:50px;border:none;border-radius:11px;font-family:var(--display);font-weight:700;font-size:16px;cursor:pointer}
+#fbSend{background:var(--green-dk);color:#fff}
+#fbCancel{background:transparent;border:1.5px solid var(--line);color:var(--ink);font-weight:600}
+#fbMsg{font-size:14px;margin:10px 0 0;min-height:20px}
+
+.ev-link{display:inline-block;margin-top:9px;background:var(--green-dk);color:#fff;text-decoration:none;
+  border-radius:9px;padding:10px 15px;font-family:var(--display);font-weight:700;font-size:14.5px;min-height:42px}
+.ev-link:hover{filter:brightness(1.1)}
+
+.empty-day{font-size:15px;color:var(--stone);padding:4px 2px;margin:0}
+
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--raised);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.nav button{flex:1;background:none;border:none;cursor:pointer;padding:9px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--display);font-size:11.5px;font-weight:600;color:var(--stone);min-height:var(--nav-h);justify-content:center}
+.nav button svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on{color:var(--green-dk)}
+.nav button.on svg{stroke:var(--orange)}
+
+@media (min-width:760px){
+  .app{padding-bottom:40px}
+  .nav{position:sticky;top:0;bottom:auto;border-top:none;border-bottom:1px solid var(--line);background:var(--paper);max-width:1040px;margin:0 auto}
+  .nav button{flex:0 0 auto;flex-direction:row;gap:8px;font-size:14.5px;padding:14px 20px;min-height:0}
+  .screen{padding:34px 34px 8px}
+  .top{padding:18px 34px}
+  .top svg{width:52px}
+  .wordmark .b{font-size:33px}.wordmark .u{font-size:25px}.wordmark .t{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div class="top">
+  <svg viewBox="0 0 100 172" aria-hidden="true">
+    <circle cx="54" cy="27" r="26" fill="#FAAA04"/>
+    <path d="M50 66 L50 44" stroke="#519A66" stroke-width="6" stroke-linecap="round"/>
+    <path d="M49 50 Q31 51 21 38 Q37 30 50 45 Z" fill="#519A66" stroke="#FFFFF8" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M50 46 Q63 28 82 34 Q75 52 51 57 Z" fill="#519A66" stroke="#FFFFF8" stroke-width="2.5" stroke-linejoin="round"/>
+    <rect x="9" y="61" width="82" height="63" rx="24" fill="#64D5FF"/>
+    <rect x="11" y="129" width="78" height="46" rx="19" fill="#519A66" stroke="#FFFFF8" stroke-width="2.5"/>
+  </svg>
+  <div class="wordmark">
+    <span class="b">BI$C</span><span class="u">UNION</span>
+    <span class="t">BASIC INCOME SOLIDARITY COMMUNITY</span>
+  </div>
+  <button class="langbtn" id="langBtn" type="button">Español</button>
+  <button class="authbtn" id="authBtn" type="button">Sign in</button>
+</div>
+
+<p id="langNote" hidden style="background:var(--yellow);color:#5C4A0C;font-size:13.5px;margin:0;padding:9px 20px" lang="es">Algunas partes de la app todavía están en inglés. Estamos trabajando en ello.</p>
+
+<nav class="nav" id="nav" aria-label="Main">
+  <button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg><span data-i18n="nav.home">Home</span></button>
+  <button data-go="learn"><svg viewBox="0 0 24 24"><path d="M4 5v14a2 2 0 0 1 2-2h13V3H6a2 2 0 0 0-2 2z"/></svg><span data-i18n="nav.about">About</span></button>
+  <button data-go="join"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="nav.join">Join</span></button>
+  <button data-go="meetings"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg><span data-i18n="nav.meetings">Meetings</span></button>
+  <button data-go="agenda"><svg viewBox="0 0 24 24"><path d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M8 11h8M8 15h5"/></svg><span data-i18n="nav.agenda">Agenda</span></button>
+  <button data-go="learning"><svg viewBox="0 0 24 24"><path d="M12 7v13M12 7a5 5 0 0 0-5-4H3v13h4a5 5 0 0 1 5 4 5 5 0 0 1 5-4h4V3h-4a5 5 0 0 0-5 4z"/></svg><span data-i18n="nav.learning">Learning</span></button>
+</nav>
+
+<!-- HOME -->
+<section class="screen on" id="s-home">
+  <h1 data-i18n="home.h1">You got the money.<br>Now let's get the power.</h1>
+  <p class="lede" data-i18n="home.lede">A national union of people who have been through a guaranteed income pilot. We know what direct cash did. We should be the ones saying so.</p>
+
+  <div class="mission">
+    <p><strong>The Basic Income Solidarity Community (BISC) Union is a community-led initiative run by people power.</strong></p>
+    <p>We believe that lasting change comes from organized communities.</p>
+    <p style="margin-bottom:0">Our union, founded by former pilot participants, welcomes people from across the U.S. to co-design a community that supports and advocates for direct cash and its benefits. Our mission is to win a basic income for every person in America by turning curiosity into courage, solidarity into power, and isolation into belonging. We are reclaiming our collective right to economic security and instilling dignity in the process.</p>
+  </div>
+  <div class="qr-block">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAGkAQMAAABEgsN2AAAABlBMVEX///8kcifShZNdAAACCUlEQVR42u2bTY7qQAyEywlSZtfvBnATuFnCzZKbZG5AdiAB9RbuDsnwVqNZ5HmqNvw0n5Asy6q2HUCSJEmSpF+rmi/dAbTkFXt2QGIPNF+OgepbfyNK1M9SO3/5POTPBNJlzur7ZG/HiqGoIFRLkn1JbfsAgIf9+eexYigqKlUv81wxFBXK2yyV/QyAhymGojZM5co8lre8I5U7ZJe/a1bHiqGoENS+5DkA4FzhZgeg5gVHvh0rhqL+e+phL+0wGZ+ltif2wG11rBiKilLnnwvz4h2Y9g5gMO+fm+q8qE1SNQezmlcAtkNiB9zsgLO9+ocAgMEUQ1FBb6PP1WTz6kdJFVtUmJyHj/Ebb5AntyTj4jaqGIoK6G1ITnaanbnZwZ05fJtFzlxUMG+T2+pHZg/Dq99GE3u4tzGSvTrtojboUtbp2T69veKpWnopF2hOJCqOSxnRPuwDgDW84Fyh4WDd+qdJG1yiQt1GS9dl3jPPLmUp5byoONSnWeUz0B3gdZ7Mg1Azs1Lz5W1Ebc+lfH30BzfvpUx2Wm1wabIvKkovZU7qchttOBaXApQLqiq2qEg5nx8YKnV+sam4knJeVFSq4eBriqfZmU9m2oERtXEq+fRnz672Pjk54lxpm0VUWGeefP825/yRfhvVlFNUrJx/68Dk2WjumY+AZqOiIuW8JEmSJEm/Tn8B5laGxRzv+XAAAAAASUVORK5CYII=" alt="QR code that opens the BISC Union app">
+    <div>
+      <h3 data-i18n="home.qr.h">Share the union</h3>
+      <p data-i18n="home.qr.p">Point a camera at this to open the app. Show it to someone who was in a pilot — there's nothing to install.</p>
+    </div>
+  </div>
+
+  <h2 data-i18n="home.who.h">Who this is for</h2>
+  <div class="card orange">
+    <p>Right now we're starting with people who took part in a guaranteed income or basic income pilot — current or past. That's roughly 40,000 people across the country.</p>
+    <p><strong>We're starting there, not stopping there.</strong> The union opens wider as we grow.</p>
+  </div>
+
+  <h2 data-i18n="home.why.h">Why join?</h2>
+
+  <div class="card orange">
+    <h3>Your experience is evidence</h3>
+    <p style="font-size:15px;margin:0">Pilots produced reports, studies, and headlines. The people who lived them got measured, but rarely got to say what any of it meant. Together we decide how that story gets told — and who tells it.</p>
+  </div>
+
+  <div class="card green">
+    <h3>You are not the only one</h3>
+    <p style="font-size:15px;margin:0">Roughly 40,000 people across the country have received guaranteed income. Most never met a single other participant. This is the room where you do.</p>
+  </div>
+
+  <div class="card sky">
+    <h3>Decisions get made without us</h3>
+    <p style="font-size:15px;margin:0">Direct cash policy is written in rooms where nobody at the table has received it. A union changes who is in the room and what gets asked before a program is designed.</p>
+  </div>
+
+  <div class="card orange">
+    <h3>You get an actual vote</h3>
+    <p style="font-size:15px;margin:0">Not an advisory seat, not a feedback survey. Active members hold binding voting rights on what this union does and where it goes.</p>
+  </div>
+
+  <div class="card green">
+    <h3>Skills that stay yours</h3>
+    <p style="font-size:15px;margin:0">Training in advocacy, facilitation, running events, and building resources. Whatever else happens, you keep what you learn.</p>
+  </div>
+
+  <div class="card sky">
+    <h3>It costs nothing, and it never will</h3>
+    <p style="font-size:15px;margin:0">No dues, no fees, no minimum commitment. Show up for what you can, step back when life demands it, and you are still a member.</p>
+  </div>
+
+  <div class="panel-green">
+  <h2 data-i18n="home.ways.h">Ways to take part</h2>
+  <div class="card"><h3>Storytelling</h3><p class="help" style="margin:0">Your experience, in your words, aimed at people who make decisions.</p></div>
+  <div class="card"><h3>Advocacy</h3><p class="help" style="margin:0">Meeting with elected officials and pushing for guaranteed income policy.</p></div>
+  <div class="card"><h3>Tools and policy tracking</h3><p class="help" style="margin:0">Following what's happening with basic income across all fifty states.</p></div>
+  <div class="card"><h3>Training</h3><p class="help" style="margin:0">Learning to host events, build resources, and organize — skills you keep.</p></div>
+  </div>
+
+</section>
+
+<!-- JOIN -->
+<section class="screen" id="s-join">
+  <h1 data-i18n="join.h1">Join</h1>
+  <p class="lede" data-i18n="join.lede">About two minutes. We don't ask you to prove anything.</p>
+
+  <div class="panel-green">
+  <h2 data-i18n="join.after.h">What happens after you join</h2>
+  <ol class="steps">
+    <li><div class="when">Minutes</div><div class="step-b"><h3>A welcome from us</h3><p>An email confirming you're in, and what to expect.</p></div></li>
+    <li><div class="when">3–7 days</div><div class="step-b"><h3>Your BISC Buddy</h3><p>A member reaches out the way you asked — call, text, or email. A real person, not a form.</p></div></li>
+    <li><div class="when">First two weeks</div><div class="step-b"><h3>New member meeting</h3><p>Monthly, in two sessions so you can pick the one that fits your time zone.</p></div></li>
+    <li><div class="when">Ongoing</div><div class="step-b"><h3>Work you pick</h3><p>Storytelling, advocacy, building tools, training. You choose. Nothing is required.</p></div></li>
+  </ol>
+  </div>
+
+  <h2 data-i18n="join.flow.h">How onboarding works</h2>
+  <p style="font-size:15px;color:var(--ink-soft)">From hearing about us to holding a vote. None of it is required — it's what's available to you.</p>
+
+  <svg class="flow" viewBox="0 0 680 800" role="img" xmlns="http://www.w3.org/2000/svg">
+    <title>BISC Union onboarding flow</title>
+    <desc>A member's path from hearing about the union through sign-up, welcome email, BISC Buddy contact, new member meeting, first action, one-month check-in, and Active Member status.</desc>
+    <defs>
+      <marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#519A66" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <rect x="240" y="26" width="200" height="60" rx="11" fill="#FFF1CF" stroke="#FAAA04" stroke-width="2"/>
+    <text class="nt" x="340" y="50" text-anchor="middle">Hears about us</text>
+    <text class="ns" x="340" y="69" text-anchor="middle">Cohort, partner, or social</text>
+    <line x1="340" y1="86" x2="340" y2="112" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="240" y="120" width="200" height="60" rx="11" fill="#FFF1CF" stroke="#FAAA04" stroke-width="2"/>
+    <text class="nt" x="340" y="144" text-anchor="middle">Sign-up form</text>
+    <text class="ns" x="340" y="163" text-anchor="middle">Name, pilot, interests</text>
+    <line x1="340" y1="180" x2="340" y2="206" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="240" y="214" width="200" height="60" rx="11" fill="#DCF4FF" stroke="#64D5FF" stroke-width="2"/>
+    <text class="nt" x="340" y="238" text-anchor="middle">Welcome email</text>
+    <text class="ns" x="340" y="257" text-anchor="middle">Automatic, within minutes</text>
+
+    <path d="M340 274 L340 292 L160 292 L160 316" class="arr" marker-end="url(#fa)"/>
+    <path d="M340 274 L340 292 L520 292 L520 316" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="50" y="324" width="220" height="66" rx="11" fill="#E4F1E8" stroke="#519A66" stroke-width="2"/>
+    <text class="nt" x="160" y="348" text-anchor="middle">BISC Buddy reaches out</text>
+    <text class="ns" x="160" y="367" text-anchor="middle">Within 3 to 7 days</text>
+    <text class="ns" x="160" y="383" text-anchor="middle">Call, text, or email</text>
+
+    <rect x="410" y="324" width="220" height="66" rx="11" fill="#DCF4FF" stroke="#64D5FF" stroke-width="2"/>
+    <text class="nt" x="520" y="348" text-anchor="middle">Ways to participate</text>
+    <text class="ns" x="520" y="367" text-anchor="middle">Roles and meeting links</text>
+    <text class="ns" x="520" y="383" text-anchor="middle">A few days later</text>
+
+    <path d="M160 390 L160 412 L340 412 L340 436" class="arr" marker-end="url(#fa)"/>
+    <path d="M520 390 L520 412 L340 412" class="arr"/>
+
+    <rect x="230" y="444" width="220" height="66" rx="11" fill="#E4F1E8" stroke="#519A66" stroke-width="2"/>
+    <text class="nt" x="340" y="468" text-anchor="middle">New member meeting</text>
+    <text class="ns" x="340" y="487" text-anchor="middle">2nd Wednesday, two sessions</text>
+    <text class="ns" x="340" y="503" text-anchor="middle">6 PM Eastern or 6 PM Pacific</text>
+    <line x1="340" y1="510" x2="340" y2="536" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="230" y="544" width="220" height="66" rx="11" fill="#E4F1E8" stroke="#519A66" stroke-width="2"/>
+    <text class="nt" x="340" y="568" text-anchor="middle">First real action</text>
+    <text class="ns" x="340" y="587" text-anchor="middle">Story, advocacy, tools,</text>
+    <text class="ns" x="340" y="603" text-anchor="middle">or training — you pick</text>
+    <line x1="340" y1="610" x2="340" y2="636" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="230" y="644" width="220" height="60" rx="11" fill="#E4F1E8" stroke="#519A66" stroke-width="2"/>
+    <text class="nt" x="340" y="668" text-anchor="middle">One-month check-in</text>
+    <text class="ns" x="340" y="687" text-anchor="middle">A person, not a form</text>
+    <line x1="340" y1="704" x2="340" y2="730" class="arr" marker-end="url(#fa)"/>
+
+    <rect x="230" y="738" width="220" height="60" rx="11" fill="#247227"/>
+    <text class="nt nt-w" x="340" y="762" text-anchor="middle">Active member</text>
+    <text class="ns ns-w" x="340" y="781" text-anchor="middle">Three in six months, and a vote</text>
+  </svg>
+
+  <div class="legend" style="border-top:none;padding-top:0;margin-bottom:22px">
+    <span><i style="background:#FFF1CF;box-shadow:inset 0 0 0 1.5px #FAAA04"></i>Before joining</span>
+    <span><i style="background:#DCF4FF;box-shadow:inset 0 0 0 1.5px #64D5FF"></i>Automatic</span>
+    <span><i style="background:#E4F1E8;box-shadow:inset 0 0 0 1.5px #519A66"></i>A person, or you</span>
+    <span><i style="background:#247227"></i>Milestone</span>
+  </div>
+
+
+
+
+  <h2 data-i18n="join.form.h">Join us</h2>
+  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px">Everything below stays with the union. We won't share it, sell it, or hand it to anyone.</p>
+
+  <form id="joinForm" novalidate>
+    <div class="f">
+      <label class="q" for="fname" data-i18n="f.name.l">Your name</label>
+      <p class="help" data-i18n="f.name.h">First and last.</p>
+      <div class="row2"><input data-i18n-ph="ph.first" type="text" id="fname" placeholder="First" autocomplete="given-name"><input data-i18n-ph="ph.last" type="text" id="lname" placeholder="Last" autocomplete="family-name"></div>
+      <div class="err" id="e-name" hidden>Please add your first and last name.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="email" data-i18n="f.email.l">Email</label>
+      <input data-i18n-ph="ph.email" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      <div class="err" id="e-email" hidden>Please add an email we can reach you at.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="phone">Phone <span class="opt">— optional</span></label>
+      <p class="help">Only if you want texts or calls. We won't call out of the blue.</p>
+      <input data-i18n-ph="ph.phone" type="tel" id="phone" placeholder="(555) 555-5555" autocomplete="tel">
+    </div>
+    <div class="f">
+      <label class="q" data-i18n="f.reach.l">How should we reach you?</label>
+      <p class="help">Check every way that works for you — we'll use whichever suits what we're getting in touch about.</p>
+      <div class="choices" id="contactPref">
+        <label class="choice"><input type="checkbox" value="Email" checked><span>Email</span></label>
+        <label class="choice"><input type="checkbox" value="Text"><span>Text</span></label>
+        <label class="choice"><input type="checkbox" value="Phone call"><span>Phone call</span></label>
+      </div>
+      <div class="err" id="e-pref" hidden>Please pick at least one way we can reach you.</div>
+    </div>
+
+    <div class="f">
+      <label class="q" for="langOther" data-i18n="f.lang.l">What language should we use?</label>
+      <p class="help" style="margin-bottom:9px"><span lang="es">¿Qué idioma prefieres?</span> — so we pair you with someone who speaks it.</p>
+      <div class="choices" id="langPref">
+        <label class="choice"><input type="radio" name="lang" value="English" checked><span>English</span></label>
+        <label class="choice"><input type="radio" name="lang" value="Spanish"><span lang="es">Español</span></label>
+        <label class="choice"><input type="radio" name="lang" value="Either"><span>Either one works <span class="opt" lang="es">· Cualquiera</span></span></label>
+        <label class="choice"><input type="radio" name="lang" value="Other"><span>Another language <span class="opt" lang="es">· Otro idioma</span></span></label>
+      </div>
+      <div id="langOtherWrap" hidden style="margin-top:9px">
+        <input data-i18n-ph="ph.lang" type="text" id="langOther" placeholder="Which language?">
+      </div>
+    </div>
+    <div class="f">
+      <label class="q" for="state" data-i18n="f.where.l">Where you are</label>
+      <p class="help">So we can connect you with people and efforts near you — and point you to the meeting session that fits your time zone.</p>
+      <div class="row2"><input data-i18n-ph="ph.state" type="text" id="state" placeholder="State" autocomplete="address-level1"><input data-i18n-ph="ph.zip" type="text" id="zip" placeholder="ZIP" inputmode="numeric" autocomplete="postal-code"></div>
+      <div class="err" id="e-loc" hidden>Please add your state and ZIP.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pilot" data-i18n="f.pilot.l">Your pilot</label>
+      <p class="help" data-i18n="f.pilot.h">If you don't remember the name, the organization that ran it is fine — or just the city where you were living. Whatever you've got.</p>
+      <input data-i18n-ph="ph.pilot" type="text" id="pilot" placeholder="Pilot, organization, or city">
+      <div class="err" id="e-pilot" hidden>Anything you remember works here.</div>
+    </div>
+    <div class="f">
+      <label class="q" data-i18n="f.int.l">What are you interested in?</label>
+      <p class="help" data-i18n="f.int.h">Check anything that sounds like you. You're not committing to it.</p>
+      <div class="choices" id="interests">
+        <label class="choice"><input type="checkbox" value="Sharing my story"><span>Sharing my story and experience to create change</span></label>
+        <label class="choice"><input type="checkbox" value="Advocacy"><span>Advocating with elected officials and decision makers</span></label>
+        <label class="choice"><input type="checkbox" value="Community"><span>Attending meetings and being part of the community</span></label>
+        <label class="choice"><input type="checkbox" value="Tools and policy"><span>Building tools and tracking policy</span></label>
+        <label class="choice"><input type="checkbox" value="Training"><span>Workshops and training — events, graphics, facilitation</span></label>
+        <label class="choice"><input type="checkbox" value="Not sure yet"><span>Not sure yet — I want to see what's here</span></label>
+      </div>
+    </div>
+    <div class="f">
+      <label class="q" data-i18n="f.extras.l">Anything you'd like from us?</label>
+      <div class="choices" id="extras">
+        <label class="choice"><input type="checkbox" value="buddy" checked><span>Pair me with a BISC Buddy for my first few months</span></label>
+        <label class="choice"><input type="checkbox" value="call"><span>A call from a member to say hi and answer questions</span></label>
+        <label class="choice"><input type="checkbox" value="reminder"><span>A text reminder before the new member meeting</span></label>
+      </div>
+    </div>
+    <div class="f">
+      <label class="q" for="anything">Anything else you want to share? <span class="opt">— optional</span></label>
+      <textarea id="anything" placeholder="What brought you here, what you're hoping for, what you need from us."></textarea>
+    </div>
+    <div style="position:absolute;left:-9999px" aria-hidden="true">
+      <label for="jWebsite">Leave this blank</label>
+      <input type="text" id="jWebsite" tabindex="-1" autocomplete="off">
+    </div>
+    <button class="btn gold" type="submit" data-i18n="f.submit">Join the union</button>
+    <div class="err" id="e-send" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
+    <p class="note" data-i18n="f.note">Free, and always will be. We won't flood your inbox. You can step back any time and still be a member.</p>
+  </form>
+
+</section>
+
+<!-- WELCOME -->
+<section class="screen" id="s-welcome">
+  <p class="eyebrow">You're in</p>
+  <h1 id="welcomeH">Welcome to the union.</h1>
+  <p class="lede">You're a member as of today. Here's what happens next — nothing needed from you right now.</p>
+  <ol class="steps" id="welcomeSteps"></ol>
+  <div class="card green">
+    <h3>One thing that helps</h3>
+    <p>Come to a new member meeting when you can. There's one each month in two sessions, so pick whichever time suits you.</p>
+    <div class="btn-row"><button class="btn sm gold" data-go="meetings">See upcoming meetings</button></div>
+  </div>
+  <h2>Need something now?</h2>
+  <div data-contact
+       data-blurb="You don't have to wait for your Buddy. If you have a question today, reach me directly."></div>
+</section>
+
+<!-- MEETINGS -->
+<section class="screen" id="s-meetings">
+  <h1 data-i18n="mtg.h1">Meetings and events</h1>
+  <p class="lede" data-i18n="mtg.lede">All on Zoom. Nothing to download — you join from a browser link.</p>
+  <div class="tz-bar"><strong>Times shown in your zone:</strong> <span id="tzName"></span></div>
+
+  <div class="card sky">
+    <h3 data-i18n="mtg.two.h">Two sessions, same meeting</h3>
+    <p style="font-size:15px;margin:0 0 8px">All meetings run <strong>once a month, in two sessions on the same day</strong>. Same content — come to whichever works.</p>
+    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The Second Saturday mixer is one session for everyone.</p>
+  </div>
+
+  <div class="cal">
+    <div class="cal-nav">
+      <button id="calPrev" aria-label="Previous month">‹</button>
+      <h3 id="calTitle"></h3>
+      <button id="calNext" aria-label="Next month">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="legend">
+      <span><i style="background:#64D5FF"></i>New member</span>
+      <span><i style="background:#519A66"></i>Full union</span>
+      <span><i style="background:#FAAA04"></i>Social mixer</span>
+      <span><i style="background:#FED786;box-shadow:inset 0 0 0 1.5px #B07C14"></i>Events</span>
+    </div>
+  </div>
+
+  <div class="day-panel" id="dayPanel"></div>
+
+  <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
+  <div class="card">
+    <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
+    <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — Saturday mixer, one session · 1:00 PM PT / 4:00 PM ET</p>
+  </div>
+
+  <h2 data-i18n="mtg.access.h">Access</h2>
+  <div class="card green">
+    <p>If you need something to take part — a different time, materials in another language, a quieter format — tell your BISC Buddy or write to us. It's not a favor; it's how the union is supposed to work.</p>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section class="screen" id="s-agenda">
+  <h1 data-i18n="ag.h1">Agenda</h1>
+
+  <div id="nextUp"></div>
+
+  <div class="panel-green">
+  <h2 id="agendaTitle">Agenda</h2>
+  <p id="agendaNote" style="font-size:14px;color:#DCEFDE;margin:-4px 0 14px"></p>
+  <ol class="steps" id="agendaBody"></ol>
+  </div>
+
+  <div id="notesLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Notes from past meetings are for members of the union. Sign in with the email you joined with — it takes about a minute.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="notesGate">
+  <h2 data-i18n="ag.notes.h">Notes from the last meeting</h2>
+  <p style="font-size:15px;color:var(--ink-soft)">Sample notes — replace with real ones after each meeting.</p>
+
+  <div class="card green">
+    <p class="eyebrow" style="margin-bottom:4px">New member meeting · Wednesday, August 12</p>
+    <p style="font-size:15px;margin:0 0 12px"><strong>19 members across both sessions.</strong> 11 in the Eastern session, 8 in the Pacific.</p>
+
+    <p style="font-size:15px;margin:0 0 6px"><strong>Who joined us</strong></p>
+    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">New members from Stockton, Jackson, Cambridge, Compton, Chelsea, and two people from pilots in Georgia we hadn't connected with before. Four members said this was the first time they had spoken to anyone else who had been through a pilot.</p>
+
+    <p style="font-size:15px;margin:0 0 6px"><strong>What came up</strong></p>
+    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">Several members asked whether joining could affect their benefits. We said we are getting that answered properly rather than guessing, and will bring it back next month. Two members asked whether family members who were not in a pilot can take part. That question went to the Organizing Committee.</p>
+
+    <p style="font-size:15px;margin:0 0 6px"><strong>Where people wanted to plug in</strong></p>
+    <p style="font-size:15px;margin:0 0 12px;color:var(--ink-soft)">Storytelling drew the most interest, then advocacy training. Three members offered to help run future new member meetings. One member asked about Spanish-language materials, and that is now with the communications team.</p>
+
+    <p style="font-size:15px;margin:0 0 6px"><strong>What we committed to</strong></p>
+    <p style="font-size:15px;margin:0;color:var(--ink-soft)">Buddy pairings for everyone who asked, within a week. A written answer on the benefits question by the September meeting. Meeting notes sent to everyone who attended, including those who could not stay to the end.</p>
+  </div>
+  </div>
+
+  <h2 data-i18n="ag.later.h">Later this season</h2>
+  <p style="font-size:15px;color:var(--ink-soft)">The meetings after the one above.</p>
+  <div id="laterList"></div>
+
+  <div class="card">
+    <h3>Saturday mixer</h3>
+    <p style="font-size:15px;margin:0">No agenda, on purpose. Drop in, say hello, leave when you like.</p>
+  </div>
+</section>
+
+<!-- LEARNING -->
+<section class="screen" id="s-learning">
+  <h1 data-i18n="lr.h1">Learning</h1>
+  <p class="lede" data-i18n="lr.lede">Short trainings for your phone. Ten minutes at a time, whenever you have them.</p>
+
+  <div class="card sky">
+    <h3 data-i18n="lr.how.h">How this works</h3>
+    <p style="font-size:15px;margin:0 0 8px" data-i18n="lr.how.p1">Nothing here is a course you have to finish. Take any module, in any order, as many times as you want. Nothing is graded and nobody is watching.</p>
+    <p style="font-size:15px;margin:0" data-i18n="lr.how.p2">Every module ends with one thing to try, not something to memorize. Most are under ten minutes and work on a phone without much data.</p>
+  </div>
+
+  <div class="panel-green">
+  <h2 data-i18n="lr.start.h">Start here</h2>
+  <p style="font-size:15px;color:#DCEFDE;margin:-4px 0 0" data-i18n="lr.start.p">If you only ever do one track, do the first one. Someone who can speak about their own experience on their own terms is already an advocate — the rest is amplification.</p>
+  </div>
+
+  <details class="trk" open>
+    <summary><span data-i18n="t1.name">Your story as evidence</span> <span class="ready">Ready</span> <span class="cnt">5 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t1.blurb">Everything else builds on this one. Start here even if you have been organizing for years.</p>
+      <div class="mod live" data-mod="m1"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m1.listtitle">What lived expertise means</h4><p data-i18n="m1.listdesc">The difference between telling your story and being an expert on it.</p></div><div class="mod-t">7 min</div></div>
+      <div class="mod live" data-mod="m2"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m2.listtitle">What you share, what you keep</h4><p data-i18n="m2.listdesc">Deciding your own limits before anyone asks you to cross them.</p></div><div class="mod-t">8 min</div></div>
+      <div class="mod live" data-mod="m3"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m3.listtitle">From experience to argument</h4><p data-i18n="m3.listdesc">Turning what happened to you into a case about what should change.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m4"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m4.listtitle">Hard and hostile questions</h4><p data-i18n="m4.listdesc">What to do when someone asks something extractive, and how to end it.</p></div><div class="mod-t">9 min</div></div>
+      <div class="mod live" data-mod="m5"><div class="mod-n">5</div><div class="mod-b"><h4 data-i18n="m5.listtitle">Knowing what your time is worth</h4><p data-i18n="m5.listdesc">Rates, scope, and how to say no to unpaid asks.</p></div><div class="mod-t">8 min</div></div>
+    </div>
+  </details>
+
+  <details class="trk">
+    <summary><span data-i18n="t2.name">The case for basic income</span> <span class="ready">Ready</span> <span class="cnt">5 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t2.blurb">What the movement is asking for, what the pilots showed, and how to answer the pushback.</p>
+      <div class="mod live" data-mod="m6"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m6.listtitle">Guaranteed income and UBI</h4><p data-i18n="m6.listdesc">The same family, different arguments. Where BISC sits.</p></div><div class="mod-t">6 min</div></div>
+      <div class="mod live" data-mod="m7"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m7.listtitle">What the pilots found</h4><p data-i18n="m7.listdesc">Stockton, Magnolia, Compton and others, in plain numbers.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m8"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m8.listtitle">The four objections</h4><p data-i18n="m8.listdesc">Work, cost, jobs instead, and who deserves it. Answers to each.</p></div><div class="mod-t">12 min</div></div>
+      <div class="mod live" data-mod="m9"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m9.listtitle">The federal picture</h4><p data-i18n="m9.listdesc">Where a national basic income would actually come from.</p></div><div class="mod-t">9 min</div></div>
+      <div class="mod live" data-mod="m10"><div class="mod-n">5</div><div class="mod-b"><h4 data-i18n="m10.listtitle">Changing the pitch</h4><p data-i18n="m10.listdesc">The same case for a neighbor, a council member, and a reporter.</p></div><div class="mod-t">8 min</div></div>
+    </div>
+  </details>
+
+  <details class="trk">
+    <summary><span data-i18n="t3.name">How power actually works</span> <span class="ready">Ready</span> <span class="cnt">4 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t3.blurb">Who decides what, and where the money already sits.</p>
+      <div class="mod live" data-mod="m11"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m11.listtitle">Who decides what</h4><p data-i18n="m11.listdesc">City, county, state, federal — which one to aim at.</p></div><div class="mod-t">8 min</div></div>
+      <div class="mod live" data-mod="m12"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m12.listtitle">How a bill really moves</h4><p data-i18n="m12.listdesc">Committees, markups, and where things quietly die.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m13"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m13.listtitle">Reading a budget</h4><p data-i18n="m13.listdesc">Enough to find the money and name it out loud.</p></div><div class="mod-t">12 min</div></div>
+      <div class="mod live" data-mod="m14"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m14.listtitle">Mapping your own area</h4><p data-i18n="m14.listdesc">Finding the people who can actually say yes where you live.</p></div><div class="mod-t">10 min</div></div>
+    </div>
+  </details>
+
+  <details class="trk">
+    <summary><span data-i18n="t4.name">Advocacy in practice</span> <span class="ready">Ready</span> <span class="cnt">4 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t4.blurb">The specific things you will be asked to do, broken into steps.</p>
+      <div class="mod live" data-mod="m15"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m15.listtitle">Two minutes of public comment</h4><p data-i18n="m15.listdesc">The most common ask, and the one most people are nervous about.</p></div><div class="mod-t">9 min</div></div>
+      <div class="mod live" data-mod="m16"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m16.listtitle">Meeting an elected official</h4><p data-i18n="m16.listdesc">What happens in the room, and what to do with the staffer.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m17"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m17.listtitle">Writing something that gets read</h4><p data-i18n="m17.listdesc">Emails and letters that do not go in the pile.</p></div><div class="mod-t">7 min</div></div>
+      <div class="mod live" data-mod="m18"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m18.listtitle">Building a coalition</h4><p data-i18n="m18.listdesc">Working with people who are not in this movement yet.</p></div><div class="mod-t">9 min</div></div>
+    </div>
+  </details>
+
+  <details class="trk">
+    <summary><span data-i18n="t5.name">Running the union</span> <span class="ready">Ready</span> <span class="cnt">5 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t5.blurb">The work of keeping this thing going. Take these when you are ready to take something on.</p>
+      <div class="mod live" data-mod="m19"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m19.listtitle">Facilitating a meeting</h4><p data-i18n="m19.listdesc">Holding time, handling interruptions, making room for quiet people.</p></div><div class="mod-t">12 min</div></div>
+      <div class="mod live" data-mod="m20"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m20.listtitle">Planning an event</h4><p data-i18n="m20.listdesc">Budget, access, logistics, and what always goes wrong.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m21"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m21.listtitle">Notes people actually use</h4><p data-i18n="m21.listdesc">Recording decisions and commitments, not everything said.</p></div><div class="mod-t">6 min</div></div>
+      <div class="mod live" data-mod="m22"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m22.listtitle">Becoming a BISC Buddy</h4><p data-i18n="m22.listdesc">Welcoming new members and staying with them through the first months.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m23"><div class="mod-n">5</div><div class="mod-b"><h4 data-i18n="m23.listtitle">Conflict and repair</h4><p data-i18n="m23.listdesc">What to do when it goes wrong between members.</p></div><div class="mod-t">10 min</div></div>
+    </div>
+  </details>
+
+  <details class="trk">
+    <summary><span data-i18n="t6.name">Getting it out there</span> <span class="ready">Ready</span> <span class="cnt">4 modules</span></summary>
+    <div class="trk-b">
+      <p data-i18n="t6.blurb">Reaching people beyond the room, without putting yourself at risk.</p>
+      <div class="mod live" data-mod="m24"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m24.listtitle">Using what comms makes</h4><p data-i18n="m24.listdesc">Graphics and posts ready to share, and how to add your voice.</p></div><div class="mod-t">6 min</div></div>
+      <div class="mod live" data-mod="m25"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m25.listtitle">Making your own</h4><p data-i18n="m25.listdesc">Filming and writing something short that sounds like you.</p></div><div class="mod-t">9 min</div></div>
+      <div class="mod live" data-mod="m26"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m26.listtitle">Talking to press</h4><p data-i18n="m26.listdesc">On the record, off the record, and how to prepare for it.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m27"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m27.listtitle">Staying safe online</h4><p data-i18n="m27.listdesc">Protecting yourself once you are publicly political.</p></div><div class="mod-t">8 min</div></div>
+    </div>
+  </details>
+
+  <div class="card orange">
+    <h3 data-i18n="lr.missing.h">Something missing?</h3>
+    <p style="font-size:15px;margin:0" data-i18n="lr.missing.p">This list came from the onboarding team, not from a curriculum consultant. If there is something you need that is not here, or something here you could teach, tell us — members are building this.</p>
+  </div>
+</section>
+
+<!-- MODULE READER -->
+<section class="screen" id="s-module">
+  <button class="back" data-go="learning">‹ All learning</button>
+  <p id="mEnNote" hidden lang="es" style="background:var(--yellow);color:#5C4A0C;font-size:13.5px;border-radius:10px;padding:10px 13px;margin:0 0 14px">Este módulo todavía no está traducido. Lo estamos preparando.</p>
+  <p class="m-meta" id="mMeta"></p>
+  <h1 id="mTitle"></h1>
+  <p class="lede" id="mLede"></p>
+  <div class="m-body" id="mBody"></div>
+  <div class="m-key"><p id="mKey"></p></div>
+  <div class="m-try">
+    <h3>Try this</h3>
+    <p id="mTry"></p>
+  </div>
+  <div class="m-nav" id="mNav"></div>
+</section>
+
+<!-- AUTH -->
+<section class="screen" id="s-auth">
+  <h1>Members only</h1>
+  <p class="lede">Meeting notes and the project companion apps are for members. Sign in with the email you joined with.</p>
+
+  <div id="authStep1" class="authbox">
+    <p style="font-size:15px;color:var(--ink-soft)">We'll email you a six-digit code. No password to remember.</p>
+    <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" inputmode="email">
+    <button class="btn gold" id="sendCode">Email me a code</button>
+    <p id="authMsg"></p>
+  </div>
+
+  <div id="authStep2" class="authbox" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">Enter the six digits we sent to <strong id="sentTo"></strong>. It works for ten minutes.</p>
+    <input type="text" id="codeInput" placeholder="000000" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+    <button class="btn gold" id="verifyCode">Sign in</button>
+    <div class="btn-row">
+      <button class="btn ghost" id="backToEmail">Use a different email</button>
+    </div>
+    <p id="authMsg2"></p>
+  </div>
+
+  <div id="authDone" hidden>
+    <div class="whoami"><strong id="whoName"></strong> — you're signed in on this device for 30 days.</div>
+    <div class="btn-row"><button class="btn ghost" id="signOut">Sign out</button></div>
+  </div>
+
+  <div class="card sky" style="margin-top:18px">
+    <h3>Not a member yet?</h3>
+    <p style="font-size:15px;margin:0 0 11px">Joining takes about two minutes and it's free.</p>
+    <button class="btn sm gold" data-go="join">Join the union</button>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="screen" id="s-learn">
+  <h1 data-i18n="ab.h1">About the union</h1>
+
+  <div class="panel-green">
+  <h2 data-i18n="ab.story.h">Our story</h2>
+  <div class="card">
+    <p>In June of 2025, more than 80 pilot participants came together at the Basic Income Guarantee (BIG) Conference in Washington DC. We took part in a closed session designed by and for pilot participants to share their experiences and talk about their collective power.</p>
+    <p style="margin-bottom:0">From these conversations, in partnership with Income Movement, an Organizing Committee made exclusively of pilot participants came together in September to envision our future. Coming together weekly, we brainstormed what this group most needed, and documented a bit of what we didn't want to experience, too. Pillars evolved during the visioning process, laying the groundwork for our current work and ethos.</p>
+  </div>
+  </div>
+
+  <div class="card green"><p style="margin:0"><strong>Inclusion means everyone.</strong> Religion, age, race, gender, economic status — everyone is welcomed here.</p></div>
+
+  <h2 data-i18n="ab.values.h">Our values</h2>
+  <div class="vals">
+    <span class="val">Learning &amp; shared knowledge</span><span class="val">Collective power &amp; solidarity</span>
+    <span class="val">Respect &amp; representation</span><span class="val">Dignity</span><span class="val">Inclusion</span>
+    <span class="val">Integrity &amp; transparency</span><span class="val">Curiosity &amp; growth</span><span class="val">Safety &amp; support</span>
+  </div>
+
+  <h2 data-i18n="ab.faq.h">Common questions</h2>
+  <details><summary>Does this cost anything?</summary><p>No. There are no dues and no fees. Membership is free.</p></details>
+  <details><summary>Will joining affect my benefits?</summary><p><strong>Draft answer — needs review before launch.</strong> Joining is free and no money changes hands, so there's nothing to report as income. If you have a question about your own situation, ask your BISC Buddy and we'll help you find someone who can answer it properly.</p></details>
+  <details><summary>Do I have to prove I was in a pilot?</summary><p>No. You tell us your pilot and we take your word for it. You've been asked to prove enough.</p></details>
+  <details><summary>What does membership ask of me?</summary><p>Nothing required. Come to what you can, take on what interests you, step back when life demands it. You stay a member either way.</p></details>
+  <details><summary>What's an Active Member?</summary><p><strong>Draft — pending confirmation from the structures team.</strong> Members who take part in three meetings, events, or volunteer tasks within six months become Active Members, which carries binding voting rights in union decisions.</p></details>
+  <details><summary>What is a BISC Buddy?</summary><p>A member who's been around a while and checks in with you over your first months. They answer questions, point you toward work that fits, and make sure you're not navigating a new organization alone.</p></details>
+  <details><summary>Who can join right now?</summary><p>People who took part in a guaranteed income or basic income pilot, current or past. We're starting there and opening wider as the union grows.</p></details>
+
+  <h2 data-i18n="ab.ask.h">Questions before you join?</h2>
+  <p style="font-size:15px;color:var(--ink-soft)">Ask anything — whether it costs money, whether it affects your benefits, what you'd actually be signing up for. A person answers.</p>
+
+  <div class="card" id="askCard">
+    <form id="askForm" novalidate>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="aName">Your name</label>
+        <input type="text" id="aName" placeholder="First name is fine" autocomplete="given-name">
+        <div class="err" id="e-aName" hidden>Please add a name so we know who we're replying to.</div>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="aEmail">Your email</label>
+        <input type="email" id="aEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="err" id="e-aEmail" hidden>Please add an email we can reply to.</div>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="aMsg">Your question</label>
+        <textarea id="aMsg" placeholder="Whatever you want to know."></textarea>
+        <div class="err" id="e-aMsg" hidden>Add your question and we'll get back to you.</div>
+      </div>
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <label for="aWebsite">Leave this blank</label>
+        <input type="text" id="aWebsite" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn" type="submit">Send my question</button>
+      <div class="err" id="e-ask" hidden>We couldn't send that just now. Check your connection and try again — your question is still here.</div>
+      <p class="note">Goes to the onboarding lead. Your email is used to reply to you and nothing else.</p>
+    </form>
+  </div>
+
+</section>
+
+</div>
+
+<script>
+/* =========================================================
+   STORAGE SHIM
+   Inside the Claude preview, window.storage already exists.
+   Hosted anywhere else (GitHub Pages, your own server), this
+   falls back to the browser's own storage so the app still
+   works. Note: without a real backend, saved data lives only
+   on that one device — the member count is per-device, not
+   global. Swap in a real endpoint before launch.
+   ========================================================= */
+if(!window.storage){
+  const k = (key, shared) => (shared ? 'bisc.shared.' : 'bisc.mine.') + key;
+  window.storage = {
+    async get(key, shared){
+      const v = localStorage.getItem(k(key, shared));
+      if(v === null) throw new Error('Key not found: ' + key);
+      return {key, value:v, shared:!!shared};
+    },
+    async set(key, value, shared){
+      localStorage.setItem(k(key, shared), value);
+      return {key, value, shared:!!shared};
+    },
+    async delete(key, shared){
+      localStorage.removeItem(k(key, shared));
+      return {key, deleted:true, shared:!!shared};
+    },
+    async list(prefix = '', shared){
+      const pre = k(prefix, shared);
+      const keys = Object.keys(localStorage)
+        .filter(x => x.startsWith(pre))
+        .map(x => x.replace(k('', shared), ''));
+      return {keys, prefix, shared:!!shared};
+    }
+  };
+}
+
+/* =========================================================
+   TRANSLATIONS — TIER ONE
+   Every entry below has the English filled in and es:'' empty
+   and waiting. Fill the es values in and the toggle picks them
+   up. Anything still empty falls back to English, so a partly
+   translated app never breaks and never shows anything
+   machine-generated.
+
+   Use TÚ, not usted (see the note above).
+   To see what is still outstanding, open the browser console
+   and run:  untranslated()
+   ========================================================= */
+const I18N = {
+  'nav.home': {en:'Home', es:''},
+  'nav.about': {en:'About', es:''},
+  'nav.join': {en:'Join', es:''},
+  'nav.meetings': {en:'Meetings', es:''},
+  'nav.agenda': {en:'Agenda', es:''},
+  'nav.learning': {en:'Learning', es:''},
+  'home.h1': {en:'You got the money.<br>Now let\'s get the power.', es:''},
+  'home.lede': {en:'A national union of people who have been through a guaranteed income pilot. We know what direct cash did. We should be the ones saying so.', es:''},
+  'home.qr.h': {en:'Share the union', es:''},
+  'home.qr.p': {en:'Point a camera at this to open the app. Show it to someone who was in a pilot — there\'s nothing to install.', es:''},
+  'home.who.h': {en:'Who this is for', es:''},
+  'home.why.h': {en:'Why join?', es:''},
+  'home.ways.h': {en:'Ways to take part', es:''},
+  'join.h1': {en:'Join', es:''},
+  'join.lede': {en:'About two minutes. We don\'t ask you to prove anything.', es:''},
+  'join.after.h': {en:'What happens after you join', es:''},
+  'join.flow.h': {en:'How onboarding works', es:''},
+  'join.form.h': {en:'Join us', es:''},
+  'f.name.l': {en:'Your name', es:''},
+  'f.name.h': {en:'First and last.', es:''},
+  'f.email.l': {en:'Email', es:''},
+  'f.reach.l': {en:'How should we reach you?', es:''},
+  'f.lang.l': {en:'What language should we use?', es:''},
+  'f.where.l': {en:'Where you are', es:''},
+  'f.pilot.l': {en:'Your pilot', es:''},
+  'f.pilot.h': {en:'If you don\'t remember the name, the organization that ran it is fine — or just the city where you were living. Whatever you\'ve got.', es:''},
+  'f.int.l': {en:'What are you interested in?', es:''},
+  'f.int.h': {en:'Check anything that sounds like you. You\'re not committing to it.', es:''},
+  'f.extras.l': {en:'Anything you\'d like from us?', es:''},
+  'ph.first': {en:'First', es:''},
+  'ph.last': {en:'Last', es:''},
+  'ph.email': {en:'you@example.com', es:''},
+  'ph.phone': {en:'(555) 555-5555', es:''},
+  'ph.state': {en:'State', es:''},
+  'ph.zip': {en:'ZIP', es:''},
+  'ph.pilot': {en:'Pilot, organization, or city', es:''},
+  'ph.lang': {en:'Which language?', es:''},
+  'f.submit': {en:'Join the union', es:''},
+  'f.note': {en:'Free, and always will be. We won\'t flood your inbox. You can step back any time and still be a member.', es:''},
+  'mtg.h1': {en:'Meetings and events', es:''},
+  'mtg.lede': {en:'All on Zoom. Nothing to download — you join from a browser link.', es:''},
+  'mtg.two.h': {en:'Two sessions, same meeting', es:''},
+  'mtg.rhythm.h': {en:'The rhythm', es:''},
+  'mtg.access.h': {en:'Access', es:''},
+  'ag.h1': {en:'Agenda', es:''},
+  'ag.notes.h': {en:'Notes from the last meeting', es:''},
+  'ag.later.h': {en:'Later this season', es:''},
+  'ab.h1': {en:'About the union', es:''},
+  'ab.story.h': {en:'Our story', es:''},
+  'ab.values.h': {en:'Our values', es:''},
+  'ab.faq.h': {en:'Common questions', es:''},
+  'ab.ask.h': {en:'Questions before you join?', es:''},
+  'lr.h1': {en:'Learning', es:''},
+  'lr.lede': {en:'Short trainings for your phone. Ten minutes at a time, whenever you have them.', es:''},
+  'lr.how.h': {en:'How this works', es:''},
+  'lr.start.h': {en:'Start here', es:''},
+
+  /* --- tier two: learning page --- */
+  'lr.how.p1': {en:'Nothing here is a course you have to finish. Take any module, in any order, as many times as you want. Nothing is graded and nobody is watching.', es:''},
+  'lr.how.p2': {en:'Every module ends with one thing to try, not something to memorize. Most are under ten minutes and work on a phone without much data.', es:''},
+  'lr.start.p': {en:'If you only ever do one track, do the first one. Someone who can speak about their own experience on their own terms is already an advocate — the rest is amplification.', es:''},
+  'lr.missing.h': {en:'Something missing?', es:''},
+  'lr.missing.p': {en:'This list came from the onboarding team, not from a curriculum consultant. If there is something you need that is not here, or something here you could teach, tell us — members are building this.', es:''},
+  't1.name': {en:'Your story as evidence', es:''},
+  't2.name': {en:'The case for basic income', es:''},
+  't3.name': {en:'How power actually works', es:''},
+  't4.name': {en:'Advocacy in practice', es:''},
+  't5.name': {en:'Running the union', es:''},
+  't6.name': {en:'Getting it out there', es:''},
+  't1.blurb': {en:'Everything else builds on this one. Start here even if you have been organizing for years.', es:''},
+  't2.blurb': {en:'What the movement is asking for, what the pilots showed, and how to answer the pushback.', es:''},
+  't3.blurb': {en:'Who decides what, and where the money already sits.', es:''},
+  't4.blurb': {en:'The specific things you will be asked to do, broken into steps.', es:''},
+  't5.blurb': {en:'The work of keeping this thing going. Take these when you are ready to take something on.', es:''},
+  't6.blurb': {en:'Reaching people beyond the room, without putting yourself at risk.', es:''},
+  'm1.listtitle': {en:'What lived expertise means', es:''},
+  'm1.listdesc': {en:'The difference between telling your story and being an expert on it.', es:''},
+  'm2.listtitle': {en:'What you share, what you keep', es:''},
+  'm2.listdesc': {en:'Deciding your own limits before anyone asks you to cross them.', es:''},
+  'm3.listtitle': {en:'From experience to argument', es:''},
+  'm3.listdesc': {en:'Turning what happened to you into a case about what should change.', es:''},
+  'm4.listtitle': {en:'Hard and hostile questions', es:''},
+  'm4.listdesc': {en:'What to do when someone asks something extractive, and how to end it.', es:''},
+  'm5.listtitle': {en:'Knowing what your time is worth', es:''},
+  'm5.listdesc': {en:'Rates, scope, and how to say no to unpaid asks.', es:''},
+  'm6.listtitle': {en:'Guaranteed income and UBI', es:''},
+  'm6.listdesc': {en:'The same family, different arguments. Where BISC sits.', es:''},
+  'm7.listtitle': {en:'What the pilots found', es:''},
+  'm7.listdesc': {en:'Stockton, Magnolia, Compton and others, in plain numbers.', es:''},
+  'm8.listtitle': {en:'The four objections', es:''},
+  'm8.listdesc': {en:'Work, cost, jobs instead, and who deserves it. Answers to each.', es:''},
+  'm9.listtitle': {en:'The federal picture', es:''},
+  'm9.listdesc': {en:'Where a national basic income would actually come from.', es:''},
+  'm10.listtitle': {en:'Changing the pitch', es:''},
+  'm10.listdesc': {en:'The same case for a neighbor, a council member, and a reporter.', es:''},
+  'm11.listtitle': {en:'Who decides what', es:''},
+  'm11.listdesc': {en:'City, county, state, federal — which one to aim at.', es:''},
+  'm12.listtitle': {en:'How a bill really moves', es:''},
+  'm12.listdesc': {en:'Committees, markups, and where things quietly die.', es:''},
+  'm13.listtitle': {en:'Reading a budget', es:''},
+  'm13.listdesc': {en:'Enough to find the money and name it out loud.', es:''},
+  'm14.listtitle': {en:'Mapping your own area', es:''},
+  'm14.listdesc': {en:'Finding the people who can actually say yes where you live.', es:''},
+  'm15.listtitle': {en:'Two minutes of public comment', es:''},
+  'm15.listdesc': {en:'The most common ask, and the one most people are nervous about.', es:''},
+  'm16.listtitle': {en:'Meeting an elected official', es:''},
+  'm16.listdesc': {en:'What happens in the room, and what to do with the staffer.', es:''},
+  'm17.listtitle': {en:'Writing something that gets read', es:''},
+  'm17.listdesc': {en:'Emails and letters that do not go in the pile.', es:''},
+  'm18.listtitle': {en:'Building a coalition', es:''},
+  'm18.listdesc': {en:'Working with people who are not in this movement yet.', es:''},
+  'm19.listtitle': {en:'Facilitating a meeting', es:''},
+  'm19.listdesc': {en:'Holding time, handling interruptions, making room for quiet people.', es:''},
+  'm20.listtitle': {en:'Planning an event', es:''},
+  'm20.listdesc': {en:'Budget, access, logistics, and what always goes wrong.', es:''},
+  'm21.listtitle': {en:'Notes people actually use', es:''},
+  'm21.listdesc': {en:'Recording decisions and commitments, not everything said.', es:''},
+  'm22.listtitle': {en:'Becoming a BISC Buddy', es:''},
+  'm22.listdesc': {en:'Welcoming new members and staying with them through the first months.', es:''},
+  'm23.listtitle': {en:'Conflict and repair', es:''},
+  'm23.listdesc': {en:'What to do when it goes wrong between members.', es:''},
+  'm24.listtitle': {en:'Using what comms makes', es:''},
+  'm24.listdesc': {en:'Graphics and posts ready to share, and how to add your voice.', es:''},
+  'm25.listtitle': {en:'Making your own', es:''},
+  'm25.listdesc': {en:'Filming and writing something short that sounds like you.', es:''},
+  'm26.listtitle': {en:'Talking to press', es:''},
+  'm26.listdesc': {en:'On the record, off the record, and how to prepare for it.', es:''},
+  'm27.listtitle': {en:'Staying safe online', es:''},
+  'm27.listdesc': {en:'Protecting yourself once you are publicly political.', es:''},
+};
+
+let LANG = 'en';
+
+function t(key){
+  const e = I18N[key];
+  if(!e) return '';
+  return (LANG === 'es' && e.es) ? e.es : e.en;
+}
+
+function untranslated(){
+  const left = Object.keys(I18N).filter(k => !I18N[k].es);
+  console.log(left.length + ' of ' + Object.keys(I18N).length + ' strings still need Spanish:');
+  left.forEach(k => console.log('  ' + k + '  =  ' + I18N[k].en));
+  return left;
+}
+
+function applyLang(){
+  document.documentElement.lang = LANG;
+  $$('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n);
+    if(v) el.innerHTML = v;
+  });
+  $$('[data-i18n-ph]').forEach(el => {
+    const v = t(el.dataset.i18nPh);
+    if(v) el.placeholder = v;
+  });
+  const btn = $('#langBtn');
+  if(btn){
+    btn.textContent = LANG === 'en' ? 'Español' : 'English';
+    btn.setAttribute('aria-label', LANG === 'en' ? 'Cambiar a español' : 'Switch to English');
+  }
+  const note = $('#langNote');
+  if(note) note.hidden = !(LANG === 'es' && Object.keys(I18N).some(k => !I18N[k].es));
+}
+
+async function setLang(l){
+  LANG = l;
+  applyLang();
+  if(curMod && $('#s-module').classList.contains('on')) openModule(curMod);
+  try{ await window.storage.set('bisc:lang', l, false); }catch(e){}
+}
+
+/* =========================================================
+   SPANISH STYLE DECISION
+   All Spanish copy in this app uses TÚ, never USTED.
+   Usted is grammatically correct and reads like a benefits
+   letter — the exact register this union is built against.
+   Tú is what a person who knows you uses. Keep it consistent
+   across the app, the print materials, and anything a Buddy
+   sends. Translators: informal second person throughout.
+   ========================================================= */
+
+/* =========================================================
+   BACKEND — paste your Google Apps Script Web App URL here.
+   It should end in /exec. Until you do, forms fall back to
+   opening the person's email app instead of posting.
+   ========================================================= */
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxUGWTsKLXm0Qby0BFzdovWxvqsO2PvKOKWwEyaA49HzllYoL81WKuEICgQQnx_RctQsg/exec';
+
+async function sendToSheet(payload){
+  if(!ENDPOINT) return {ok:false, reason:'no-endpoint'};
+  try{
+    const res = await fetch(ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const out = await res.json().catch(()=>null);
+    return (out && out.ok) ? {ok:true} : {ok:false, reason:'server'};
+  }catch(err){
+    return {ok:false, reason:'network'};
+  }
+}
+
+function busy(btn, on, label){
+  btn.disabled = on;
+  if(on){ btn.dataset.was = btn.textContent; btn.textContent = label || 'Sending…'; }
+  else if(btn.dataset.was){ btn.textContent = btn.dataset.was; }
+}
+
+/* =========================================================
+   CONTACT — edit these three lines and everything updates.
+   Questions from the form are composed to LEAD.email.
+   ========================================================= */
+const LEAD = {
+  name:  'Loren Dalbert',
+  role:  'Onboarding Lead',
+  email: 'loren@dalbert.design'
+};
+
+const ICON = {
+  mail:'<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>'
+};
+
+function contactBlock(blurb, fine){
+  return `<div class="contact">
+    <p class="who">${LEAD.name}</p>
+    <p class="role">${LEAD.role}</p>
+    <p class="blurb">${blurb}</p>
+    <div class="reach one">
+      <a href="mailto:${LEAD.email}">${ICON.mail}Email${LEAD.name.split(' ')[0]}<span class="sub">${LEAD.email}</span></a>
+    </div>
+    ${fine ? `<p class="fine">${fine}</p>` : ''}
+  </div>`;
+}
+
+function paintContacts(){
+  $$('[data-contact]').forEach(el=>{
+    el.innerHTML = contactBlock(el.dataset.blurb, el.dataset.fine || '');
+  });
+}
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const ET='America/New_York', PT='America/Los_Angeles';
+let me=null;
+
+/* ---- time zone helpers ---- */
+function zoned(y,mo,d,hh,mm,tz){
+  let guess = Date.UTC(y,mo,d,hh,mm);
+  for(let i=0;i<3;i++){
+    const parts = new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric',month:'2-digit',
+      day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date(guess));
+    const g = t => parseInt(parts.find(p=>p.type===t).value,10);
+    const cur = Date.UTC(g('year'),g('month')-1,g('day'),g('hour')%24,g('minute'));
+    const diff = Date.UTC(y,mo,d,hh,mm) - cur;
+    if(diff===0) break;
+    guess += diff;
+  }
+  return new Date(guess);
+}
+const fmtT = (dt,tz) => new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}).format(dt);
+const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const tzAbbr = dt => {
+  const p = new Intl.DateTimeFormat('en-US',{timeZoneName:'short'}).formatToParts(dt).find(x=>x.type==='timeZoneName');
+  return p ? p.value : '';
+};
+
+/* ---- schedule rules ---- */
+const RULES = [
+  {id:'nm-e', kind:'nm', title:'New member meeting', session:'Eastern session',
+   dow:3, week:2, hh:18, mm:0, tz:ET,
+   desc:'Introductions, how the union works, and time for your questions.'},
+  {id:'nm-p', kind:'nm', title:'New member meeting', session:'Pacific session',
+   dow:3, week:2, hh:18, mm:0, tz:PT,
+   desc:'Introductions, how the union works, and time for your questions.'},
+  {id:'fu-e', kind:'fu', title:'Full union meeting', session:'Eastern session',
+   dow:3, week:'last', hh:18, mm:0, tz:ET,
+   desc:'The whole membership. Priorities, decisions, and project updates.'},
+  {id:'fu-p', kind:'fu', title:'Full union meeting', session:'Pacific session',
+   dow:3, week:'last', hh:18, mm:0, tz:PT,
+   desc:'The whole membership. Priorities, decisions, and project updates.'},
+  {id:'sx-s', kind:'sx', title:'Saturday mixer', session:'One session, everyone together',
+   dow:6, week:2, hh:13, mm:0, tz:PT,
+   desc:'The whole union in one room. Bring your kids, your dog, your lunch.'}
+];
+
+/* ---- one-off events: conferences, local actions, anything not on the union's own cycle ---- */
+const EVENTS = [
+  {kind:'ac', title:'Basic Income Guarantee (BIG) Conference',
+   y:2026, mo:8, days:[17,18],
+   when:'September 17–18, 2026', where:'Portland, Oregon',
+   link:{url:'bisc-info-session_1.html', label:'Open the session companion'}}
+];
+
+function monthEvents(y, mo){
+  const map = {};
+  RULES.forEach(r=>{
+    const dim = new Date(y, mo+1, 0).getDate();
+    let seen = 0;
+    for(let d=1; d<=dim; d++){
+      if(new Date(y,mo,d).getDay() !== r.dow) continue;
+      seen++;
+      if(r.week !== null){
+        const hit = r.week === 'last' ? (d + 7 > dim)
+                  : Array.isArray(r.week) ? r.week.includes(seen)
+                  : seen === r.week;
+        if(!hit) continue;
+      }
+      (map[d] = map[d] || []).push({...r, dt: zoned(y,mo,d,r.hh,r.mm,r.tz), y, mo, day:d});
+    }
+  });
+  EVENTS.forEach(e=>{
+    if(e.y!==y || e.mo!==mo) return;
+    e.days.forEach(d=>{
+      (map[d] = map[d] || []).push({...e, day:d, allDay:true, dt:new Date(y,mo,d,9,0)});
+    });
+  });
+  Object.values(map).forEach(a => a.sort((x,z)=>x.dt-z.dt));
+  return map;
+}
+
+function nextOfKind(kind){
+  const now = new Date(), n = new Date();
+  for(let i=0;i<3;i++){
+    const probe = new Date(n.getFullYear(), n.getMonth()+i, 1);
+    const ev = monthEvents(probe.getFullYear(), probe.getMonth());
+    const hits = Object.keys(ev).map(Number).sort((a,b)=>a-b)
+      .flatMap(d => ev[d]).filter(e => e.kind===kind && e.dt > now);
+    if(hits.length) return hits[0];
+  }
+  return null;
+}
+
+function nextEventFrom(y, mo){
+  const now = new Date();
+  for(let i=0;i<3;i++){
+    const ev = monthEvents(y, mo+i);
+    const days = Object.keys(ev).map(Number).sort((a,b)=>a-b);
+    for(const d of days){
+      if(ev[d].some(e => e.dt > now)){
+        const probe = new Date(y, mo+i, 1);
+        return {y:probe.getFullYear(), mo:probe.getMonth(), d};
+      }
+    }
+  }
+  return null;
+}
+
+const MODULES = {
+  m1: {
+    track:'Your story as evidence', n:1, mins:7, title:'What lived expertise means',
+    lede:'The difference between telling your story and being an expert on it. This distinction changes how you get treated in every room you walk into.',
+    sections:[
+      {h:'Two different things get called the same word',
+       p:['When someone asks for your story, they usually mean: tell us what happened to you. When someone asks for your expertise, they mean: tell us what it means.',
+          'Those are not the same request, and the second one is what you actually have. What happened to you is the raw material. What you understand about how the system works, because you moved through it, is the finding.',
+          'Nobody asks an economist to relive their worst year before presenting their research. The data is the data. You are entitled to the same footing.']},
+      {h:'Three things you know that the report does not',
+       p:['<strong>How it felt to navigate.</strong> Not whether the program worked, but what it cost you to use it. The phone calls, the waiting, the proving. That cost never shows up in the outcome data, and it is the thing that determines whether people finish an application at all.',
+          '<strong>Where the design broke.</strong> You know the exact point where a rule stopped matching real life. The month the payment landed two days late and what that meant. The form that assumed something untrue about your household. Designers rarely find these. Participants always do.',
+          '<strong>What you did that was not measured.</strong> The workarounds. The trades. The things you did not report because there was no box for them. This is usually the most valuable thing in the room and the least likely to be asked for.']},
+      {h:'You are not the exhibit',
+       p:['There is a version of these rooms where a participant speaks first, emotionally, and then the experts discuss what it means. You are the opening act and someone else does the analysis.',
+          'You can decline that arrangement. Not by refusing to speak, but by speaking as the analyst — leading with what you concluded rather than what you endured.',
+          'The shift is small in words and large in effect. "It was really hard when the payments changed" becomes "The mid-program change to payment timing broke household budgeting for anyone paying rent on the first. That is a design flaw, not a participant failure."']},
+      {h:'Why this matters for the union',
+       p:['A union of people who are treated as stories has no power. A union of people who are recognized as experts on a policy area sets terms.',
+          'Every member who makes this shift makes it easier for the next one. That is most of what BISC is for.']}
+    ],
+    key:'Your experience is the data. What you understand about it is the expertise. You own both.',
+    tryit:'Write one sentence about your pilot that is a finding, not a feeling. Start it with "The problem with…" or "What actually happens when…" — not with "I felt".'
+  },
+
+  m2: {
+    track:'Your story as evidence', n:2, mins:8, title:'What you share, what you keep',
+    lede:'Deciding your own limits before anyone asks you to cross them. Do this once and you will not have to decide under pressure again.',
+    sections:[
+      {h:'The decision gets made either way',
+       p:['If you have not decided in advance what you will talk about, you will decide in the moment — in a room, with people waiting, under pressure to be useful. That is the worst possible condition for the decision.',
+          'People who do this work for years almost all arrive at the same practice: they write it down beforehand, once, and then they are done deciding.']},
+      {h:'Three zones',
+       p:['<strong>Open.</strong> Things you would say to anyone, anywhere, including on camera. Usually the structural stuff: how the application worked, what the money changed about your week, what you would redesign.',
+          '<strong>Conditional.</strong> Things you will share in the right room, for the right purpose, with the right preparation, and usually for pay. Often the harder specifics — a period of homelessness, a health crisis, what the money interrupted. These are yours to spend deliberately, not to hand over on request.',
+          '<strong>Closed.</strong> Things you do not discuss publicly at all. No explanation owed, ever.']},
+      {h:'What usually belongs in closed',
+       p:['Details about your children. Anyone can find a child from enough detail, and your child did not consent to being part of your advocacy.',
+          'Medical and mental health specifics, unless that is precisely the policy point you are making.',
+          'Anything involving a criminal record, immigration status, or benefits eligibility that could be used against you later. These rooms are recorded more often than you think.',
+          'Other people\u2019s stories. Your mother, your partner, your neighbor. You cannot consent on their behalf.']},
+      {h:'The warm-up trap',
+       p:['The most common way limits get crossed is not a hostile question. It is a friendly organizer asking, before the session, whether you would mind just briefly sharing a bit of your background to set the scene.',
+          'That request feels small and is not. It is unprepared, unpaid, and it establishes for the whole room that your history is the thing you are there to provide.',
+          'A clean answer: "I keep my personal history for the parts we planned. Happy to open with what the pilot showed instead."']},
+      {h:'Redirecting without apologizing',
+       p:['You do not owe a reason. "That is not something I go into" is a complete sentence. Adding "sorry" or "I hope that is okay" invites negotiation.',
+          'If you want to keep it warm, name what you will do instead: "I don\u2019t talk about that part, but I can tell you exactly what happened to my rent."']}
+    ],
+    key:'You decide once, in advance, in private. Then in the room you are not deciding — you are just following your own instructions.',
+    tryit:'Write your three lists now. Text them to yourself so they are on your phone before your first meeting or interview.'
+  },
+
+  m3: {
+    track:'Your story as evidence', n:3, mins:10, title:'From experience to argument',
+    lede:'Turning what happened to you into a case about what should change. A structure you can use every time.',
+    sections:[
+      {h:'The shape: specific, pattern, change',
+       p:['Almost every effective piece of testimony has the same three parts, in the same order.',
+          '<strong>One specific thing.</strong> Concrete, small, real. A date, an amount, a sentence someone said to you.',
+          '<strong>What it reveals.</strong> Why that specific thing is not just your bad luck — what it shows about how the system is built.',
+          '<strong>What should be different.</strong> The change you are asking for, stated plainly enough that someone could act on it.']},
+      {h:'Why the specific comes first',
+       p:['People do not remember arguments. They remember one image and then the argument attached to it.',
+          'The specific has to be small. "I struggled financially" is not specific. "The recertification appointment was at 9am on a Tuesday forty minutes away and I lost a shift every time" is specific. The second one, people can see.']},
+      {h:'What it sounds like assembled',
+       p:['"In the fourth month, my payment arrived on the third instead of the first. My rent is due on the first. That two-day gap cost me a fifty dollar late fee — more than the increase we had been arguing about at the county level."',
+          '"That is not a story about me being disorganized. It is a design flaw. Any program that pays after rent is due will produce this for every renter in it, every time it slips."',
+          '"So: payment dates should be set to land three business days before the most common rent due date, and that should be written into the program design, not left to whoever runs payroll that month."']},
+      {h:'Resist the timeline',
+       p:['The strongest pull you will feel is to explain everything from the beginning so the room understands the full context. Almost every first-time speaker does it, and it is almost always what weakens the testimony.',
+          'The room does not need your whole history to understand one design flaw. Giving it moves you back into being the story rather than the expert — and it uses the time you needed for the ask.']},
+      {h:'Build the ninety second version',
+       p:['Most of the openings you get are short. A public comment slot, a hallway conversation, thirty seconds at the end of someone else\u2019s meeting.',
+          'Have one built and rehearsed: specific, pattern, change, in ninety seconds. If you have longer, you can expand. If you only have ninety seconds, you are ready.']}
+    ],
+    key:'One specific thing. What it reveals. What should change. In that order, every time.',
+    tryit:'Pick one thing about your pilot and write the three parts. Keep the whole thing under 150 words, then read it out loud and time it.'
+  },
+
+  m4: {
+    track:'Your story as evidence', n:4, mins:9, title:'Hard and hostile questions',
+    lede:'What to do when someone asks something extractive or aggressive — and how to end it without losing the room.',
+    sections:[
+      {h:'Four kinds of question',
+       p:['<strong>Genuine.</strong> Someone wants to understand. Answer it.',
+          '<strong>Testing.</strong> Someone is checking whether you know your material. Slightly rude, entirely answerable, and worth answering well — this is where credibility gets built.',
+          '<strong>Extractive.</strong> Someone wants more of your personal life than the point requires. Usually well-meaning. Redirect.',
+          '<strong>Hostile.</strong> Someone wants you to be wrong, or wants you to be an example of why people like you should not get money. Do not take the bait.',
+          'You owe a real answer to the first two. You owe nothing to the last two.']},
+      {h:'The redirect',
+       p:['One line, used the same way every time, so you never have to invent it under pressure:',
+          '"I don\u2019t go into that. What I can tell you is —" and then go straight to your material.',
+          'It works because it does not argue, does not apologize, and does not leave a silence for someone to fill with a follow-up.']},
+      {h:'The three hostile questions you will get',
+       p:['<strong>"What did you spend it on?"</strong> The question is a trap regardless of the answer — it asks you to prove you deserved it. The answer is the pattern, not your receipts: "Across the pilots, the largest categories are consistently food, housing, and transport. Mine looked like that too. The interesting question is why we ask this about cash and not about tax deductions."',
+          '<strong>"Why should someone get money for nothing?"</strong> Do not accept the framing. "It is not for nothing. It is for being a person in a country this wealthy. We already do this for people over 65 and we call it Social Security."',
+          '<strong>"Doesn\u2019t it stop people working?"</strong> This is answerable with evidence and you should have it ready. Employment effects in the pilots are small, and where hours dropped it was usually caregiving or education. Know one number.']},
+      {h:'You are allowed to end it',
+       p:['You can stop answering. You can say "I think we have gone as far as this is useful" and hand it back to the facilitator. You can leave the room.',
+          'None of these are failures. A person who can end a conversation is more credible than one who can be pushed indefinitely.']},
+      {h:'This is not only your job',
+       p:['A facilitator who lets a member get worked over is not doing their job. Before you agree to any panel or meeting, ask who is moderating and what happens if a question goes wrong.',
+          'If the answer is vague, that tells you something about how prepared the room is for you — and you can decline.']}
+    ],
+    key:'One redirect line, memorized, used identically every time. You never have to think of it in the moment.',
+    tryit:'Say your redirect line out loud five times until it sounds flat and ordinary. It needs to be boring to you before it is useful in a room.'
+  },
+
+  m5: {
+    track:'Your story as evidence', n:5, mins:8, title:'Knowing what your time is worth',
+    lede:'Unpaid asks are the default in this work. They are not neutral, and you can change them.',
+    sections:[
+      {h:'What you are actually being paid for',
+       p:['People think they are paying for the twenty minutes you speak. They are paying for three things.',
+          '<strong>Preparation.</strong> Deciding what to say, building it, rehearsing it. Usually several times the length of the appearance.',
+          '<strong>The appearance itself.</strong> The part everyone sees.',
+          '<strong>The aftermath.</strong> What it costs you to have said it — the rest of that day, sometimes the rest of that week. This is real and it is almost never priced.']},
+      {h:'The number',
+       p:['Speaking fees for lived experience consultants commonly run from a few hundred dollars for a short panel to several thousand for a keynote or a full day. Advisory work is often billed hourly.',
+          'The exact figure matters less than having one before you are asked. People who improvise a number under pressure go low, every time.',
+          'For the union: BISC has a position that this work should be compensated. You are not being difficult by asking. You are doing what the union exists to establish.']},
+      {h:'Scope, in writing',
+       p:['Before you agree, get four things in an email: what exactly you are being asked to do, how long it will take including prep, who else will be there, and what you are being paid.',
+          'If any of the four is vague, ask. Scope creep in this work is constant — a panel becomes a panel plus a pre-call plus a follow-up interview plus "would you mind if we film it".']},
+      {h:'"Exposure" is not payment',
+       p:['You will be offered visibility, a platform, a chance to be heard. Sometimes those are genuinely valuable and you may choose to take them.',
+          'But notice who else in the room is being paid. If the researchers, the facilitator, the caterer, and the venue are all being paid and the person with the lived experience is getting exposure, that is not a budget problem. That is a decision about whose time counts.',
+          'You can name it plainly: "I see there is a budget for the event. What is the line for participant compensation?"']},
+      {h:'Saying no, and countering',
+       p:['"I am not able to do that unpaid, but if there is budget I would be glad to." Complete, unapologetic, and it leaves the door open.',
+          'If they say there is no budget: "Understood. Keep me in mind when there is." Then stop. The silence is not yours to fill.']}
+    ],
+    key:'Name your number before anyone asks you for it. Get scope in writing. Exposure is not payment.',
+    tryit:'Write down your rate for a one-hour panel, including prep. Just the number, saved on your phone. You are not committing to it — you are making sure you never have to invent one on the spot.'
+  },
+
+  m6: {
+    track:'The case for basic income', n:1, mins:6, title:'Guaranteed income and UBI',
+    lede:'Two terms that get used interchangeably and should not be. Knowing the difference keeps you from defending something you were not arguing for.',
+    sections:[
+      {h:'Guaranteed income',
+       p:['Regular, unconditional cash to a specific group of people. No work requirement, no spending restrictions, no proving you deserved it.',
+          'Targeted — a city picks a group, usually by income or neighborhood or circumstance. Every pilot you have heard of is this. Stockton, Magnolia Mother\u2019s Trust, Compton, Chelsea. Yours.']},
+      {h:'Universal basic income',
+       p:['The same unconditional cash, but to everyone. No means test, no eligibility, no application. A teacher gets it, a millionaire gets it, you get it.',
+          'Universality is not a detail. It is what makes a program impossible to means-test into a bureaucracy, and impossible to frame as something taken from one group and given to another.']},
+      {h:'Why the difference matters in an argument',
+       p:['Opponents almost always attack UBI\u2019s price tag, because a universal program is expensive on paper. Then they use that number against a targeted pilot that costs a fraction of it.',
+          'When that happens, name it: "That figure is for a universal program. What we are discussing is targeted, and here is what it actually costs."',
+          'The reverse trap exists too. Someone dismisses pilot evidence as too small to tell us anything about a national program. That is a fair point, and the honest answer is that pilots tell us about effects on people, not about macroeconomics. Do not overclaim.']},
+      {h:'Things that already look like this',
+       p:['<strong>Social Security.</strong> Unconditional cash, conditioned only on age. Nobody asks a retiree what they spent it on.',
+          '<strong>Alaska Permanent Fund Dividend.</strong> Paid annually to nearly every Alaska resident since 1982. Genuinely universal, and politically untouchable there.',
+          '<strong>The 2021 expanded Child Tax Credit.</strong> The closest the United States has come to a national guaranteed income, and the clearest evidence we have. More on that in module four.',
+          'These matter because they move the argument from "should we invent this" to "should we extend what we already do".']}
+    ],
+    key:'Guaranteed income is targeted. UBI is universal. Pilots test the first. Opponents price the second and blame the first.',
+    tryit:'Say out loud, in one sentence each, what guaranteed income is and what UBI is — without using the other term to define it.'
+  },
+
+  m7: {
+    track:'The case for basic income', n:2, mins:10, title:'What the pilots found',
+    lede:'The real evidence, including the parts that are inconvenient. Knowing those parts first is what makes you credible.',
+    sections:[
+      {h:'Stockton, the one everyone cites',
+       p:['SEED gave 125 residents $500 a month for two years, starting February 2019. First-year results showed full-time employment among recipients rising from 28% to 40%, while the control group moved from 32% to 37%. Recipients reported less anxiety and depression and steadier month-to-month income.',
+          'Spending was tracked: roughly 37% food, 22% merchandise, 11% utilities, 10% auto. Under 1% on alcohol or tobacco.',
+          '<strong>The part to know before someone else tells you.</strong> The final two-year study did not find the employment effect statistically significant. The sample was small and was never designed to measure employment. If you cite the 28-to-40 figure without that caveat and someone knows the literature, you lose the room. Cite it as a first-year finding from an underpowered study, and you keep it.']},
+      {h:'The big one: OpenResearch',
+       p:['The largest US trial. 1,000 people in Illinois and Texas received $1,000 a month for three years; 2,000 in the control group got $50. Ran from 2020 to 2023.',
+          'Recipients worked about 1.3 to 1.4 fewer hours a week and were around 2 percentage points less likely to be employed. Income excluding the transfers fell roughly $1,500 to $2,000 a year. Researchers found no measurable improvement in job quality.',
+          'This is the finding opponents will bring. Do not be surprised by it and do not try to talk around it.']},
+      {h:'What those hours actually were',
+       p:['The same study shows where the time went. Recipients stayed unemployed about a month longer on average but applied to fewer jobs — they were being more selective. They were 5.5 percentage points more likely to say meaningful work was essential to them.',
+          'Single parents reduced hours most: about 2.8 fewer per week. Separate analysis found parents supervised children more closely, disciplined more consistently, and spent more on their children.',
+          'So: a modest reduction in paid hours, concentrated among parents, spent partly on caregiving and partly on holding out for better work. That is a defensible outcome. It is not the same as "people stopped working," and both groups\u2019 employment rose over the study period.']},
+      {h:'Holding both at once',
+       p:['The honest summary is this. Cash reliably reduces material hardship and income volatility, and reliably improves mental health at least in the short term. Its effect on employment is small, sometimes slightly negative, and depends heavily on who is receiving it and how much.',
+          'A member who says "the pilots prove people work more" is one question away from being embarrassed. A member who says "the evidence on hardship is strong and the evidence on employment is mixed, and here is what the largest study actually found" is very hard to knock over.']},
+      {h:'Where to check',
+       p:['Stockton results are published by the Center for Guaranteed Income Research at the University of Pennsylvania. OpenResearch publishes its findings and the underlying NBER working papers openly at openresearchlab.org.',
+          'Look at the primary sources at least once. Being the person in the room who has actually read the study changes how you are treated in it.']}
+    ],
+    key:'Strong on hardship. Strong on stress. Mixed on employment. Say all three, in that order, before anyone asks.',
+    tryit:'Write down the OpenResearch employment numbers and keep them on your phone. Practice saying them out loud without sounding defensive — they are not a problem, they are the finding.'
+  },
+
+  m8: {
+    track:'The case for basic income', n:3, mins:12, title:'The four objections',
+    lede:'You will hear these four in some form every single time. Have an answer ready and you never get caught flat.',
+    sections:[
+      {h:'One: people will stop working',
+       p:['Lead with the honest number, because it disarms the trap. In the largest study, recipients worked about 1.3 hours less a week — roughly fifteen minutes a day.',
+          'Then say where it went: caregiving, health, and longer job searches for better-matched work. Single parents accounted for the biggest reduction.',
+          'Then reframe: "The question is not whether someone works fifteen fewer minutes. It is whether a parent being home more, and a person not taking the first bad job out of desperation, is worth that. I think it is."',
+          'Never claim cash makes people work more. That is not what the evidence says.']},
+      {h:'Two: we cannot afford it',
+       p:['Ask which program they are pricing. A universal payment to every adult is a very different number from a targeted program, and people slide between them deliberately.',
+          'Point at what is already spent. The United States already moves enormous sums through Social Security, tax expenditures, and the mortgage interest deduction without anyone demanding recipients prove they deserved it.',
+          'And name the cost of the current system: means testing, verification, caseworkers, appeals, and the fraud-prevention apparatus. Some of the money spent keeping people out could be the money given to them.']},
+      {h:'Three: why not jobs, or services, instead',
+       p:['This one is usually sincere and deserves a real answer rather than a slogan.',
+          '"Because services assume someone else knows what I need. A bus pass does not help if what I needed was a car battery. A food voucher does not cover the electricity bill that was actually the emergency."',
+          'The evidence backs this: in Stockton, people spent it on food, utilities, and transport. On the things they said they needed.',
+          'And it is not either-or. Cash does not replace healthcare or housing. It fills the gap those systems leave, which is the gap that pushes people over.']},
+      {h:'Four: who deserves it',
+       p:['This is the real objection under most of the others, and it is not an evidence question. Nobody changes their mind about deservingness because of a chart.',
+          'Do not argue the premise. Move it: "We already give unconditional money to people over 65 and we do not ask what they spent it on. We decided that being old is enough. I am asking us to decide that being a person is enough."',
+          'Or use the mirror: "Did you get the mortgage interest deduction? Did anyone ask you to prove you deserved it?"']},
+      {h:'When it is not a real question',
+       p:['Some of these are asked to understand and some are asked to corner you. You will learn the difference quickly.',
+          'For the second kind, you have your redirect from Track 1. You do not have to win every argument, and you are not obliged to be the person who convinces a hostile stranger.']}
+    ],
+    key:'Concede the small true thing first, then reframe. The person who admits the inconvenient number is the person who gets believed on everything else.',
+    tryit:'Pick the objection you dread most. Write your answer in three sentences and say it out loud until it stops feeling like a fight.'
+  },
+
+  m9: {
+    track:'The case for basic income', n:4, mins:9, title:'The federal picture',
+    lede:'What a national basic income would actually mean, and the closest thing we have already tried.',
+    sections:[
+      {h:'The 2021 Child Tax Credit',
+       p:['For six months in 2021, most American families with children received monthly cash payments with no work requirement. It was not called basic income, but it functioned as one.',
+          'Child poverty, measured by the Supplemental Poverty Measure, fell to a record low of 5.2% in 2021. When the payments ended, it rose to 12.4% the following year — more than doubling.',
+          'This is the single most useful fact in the federal argument. It was national, it was recent, it was measured, and the reversal was immediate. It is not a pilot in one city that critics can dismiss as too small.']},
+      {h:'What a federal program has to answer',
+       p:['<strong>How much.</strong> Enough to matter, low enough to pass. Most serious proposals sit between a few hundred and around a thousand dollars a month.',
+          '<strong>Paid for how.</strong> Taxation, a sovereign wealth fund on the Alaska model, or consolidating existing programs. Each has different enemies.',
+          '<strong>What happens to existing benefits.</strong> This is the one that matters most to members and gets discussed least.']},
+      {h:'The benefits cliff',
+       p:['If a basic income counts as income for SNAP, Medicaid, or housing assistance, it can push someone over an eligibility threshold and leave them worse off than before. Some pilots negotiated waivers for exactly this reason.',
+          'Any member of this union can speak to this with authority, because it is the thing you had to worry about in your own pilot. Policymakers routinely miss it.',
+          'It is also why "just give people cash" is not a complete policy. The interaction with everything else is the hard part, and it is where lived expertise is worth more than modelling.']},
+      {h:'Where BISC sits',
+       p:['The union\u2019s goal is a basic income for every person in America. That is a federal ask, and it will not arrive in one bill.',
+          'The path runs through state and local programs that build evidence and constituency, and through defending the things that already work when they come under attack. Both are places a member can be useful this year, not in a decade.']}
+    ],
+    key:'The 2021 Child Tax Credit is your strongest federal evidence: national, measured, and reversed. Use it.',
+    tryit:'Learn the two Child Tax Credit numbers — 5.2% in 2021, 12.4% in 2022. They are the shortest complete argument you can make.'
+  },
+
+  m10: {
+    track:'The case for basic income', n:5, mins:8, title:'Changing the pitch',
+    lede:'The same case, aimed at four very different rooms. What changes, and the one thing that never should.',
+    sections:[
+      {h:'A neighbor',
+       p:['Drop every piece of jargon. No "guaranteed income", no "unconditional cash transfer", no "income volatility".',
+          '"What if everyone got a few hundred dollars a month, no questions asked, so a car repair did not turn into losing your job?"',
+          'Start from a problem they have had. Most people have had a month where one unexpected bill wrecked everything. That is the shared ground, and it is bigger than politics.']},
+      {h:'A legislator or their staffer',
+       p:['You will usually get the staffer. Do not be disappointed by that — staffers write the policy.',
+          'Three things, in order: you are a constituent, here is the specific problem, here is the one thing you are asking for. Name your city or district in the first sentence.',
+          'Bring one number and one story, not five of each. And leave something behind on paper with your contact on it.']},
+      {h:'A reporter',
+       p:['Reporters need a specific person and a specific detail. That is the job. The abstract argument is not a story.',
+          'Decide before the call what is on the record and what is not, and remember your zones from Track 1. "I am happy to talk about the program design. I do not discuss my children."',
+          'Ask how they plan to describe you. "Former pilot participant and member of the BISC Union" is different from "single mother who received free money", and you are allowed to ask for the first.']},
+      {h:'A hostile room',
+       p:['Find the shared value before you make the argument. Most people who disagree with you still believe that work should pay, that children should not be hungry, and that people should not be humiliated to get help.',
+          'Start there: "I think we probably agree that someone working full time should not need food assistance." Then make your case from that ground.',
+          'And you are allowed to not win. Leaving a hostile room with your dignity intact is a good outcome.']},
+      {h:'What never changes',
+       p:['Your specific. The one concrete detail from your own experience does the same work in every room — it is the thing people remember after the numbers have gone.',
+          'Everything else is packaging. The specific is the argument.']}
+    ],
+    key:'Change the language, the length, and the ask. Never change the specific.',
+    tryit:'Take your ninety-second version from Track 1 and rewrite the opening line three times — once for a neighbor, once for a staffer, once for a reporter.'
+  },
+
+  m11: {
+    track:'How power actually works', n:1, mins:8, title:'Who decides what',
+    lede:'Most advocacy fails because it is aimed at the wrong level of government. Ten minutes here saves months of pushing on a door that does not open.',
+    sections:[
+      {h:'The four levels, and what each one controls',
+       p:['<strong>City.</strong> Local ordinances, city budget, police and fire, zoning, and most pilot programs. Small budgets, fast decisions, and the easiest room to get into. Most guaranteed income pilots started here for exactly that reason.',
+          '<strong>County.</strong> This is the level people miss. Counties usually run social services, public health, homelessness response, and elections. If your question involves benefits administration, the county probably touches it.',
+          '<strong>State.</strong> Benefits eligibility rules, tax policy, and the big money. States decide how federal programs are actually implemented, which is why the same federal benefit works differently in Texas and Illinois.',
+          '<strong>Federal.</strong> Social Security, tax credits, and anything nationwide. Slow, enormous, and the only level that can deliver a basic income for everyone.']},
+      {h:'The rule of thumb',
+       p:['Aim at the lowest level that can actually give you what you are asking for.',
+          'A city council cannot change SNAP eligibility. A member of Congress will not return your call about a county pilot. Asking the wrong body wastes your time and marks you as someone who has not done the homework.']},
+      {h:'Where the money already sits',
+       p:['Every level has money already committed to things adjacent to what you want. Emergency assistance funds, homelessness prevention dollars, workforce development budgets, opioid settlement money.',
+          'A new program needs a new fight. Redirecting money that already exists is often a smaller fight with the same result. Ask what is already funded before you ask for something new.']},
+      {h:'Who actually decides',
+       p:['Elected officials vote. Staff write. Department directors implement, and often have more discretion than anyone admits.',
+          'A program can pass and still fail in implementation because a department decided to add a verification step. That decision was made by someone who was never elected, and it is often reversible if the right person hears about it.']}
+    ],
+    key:'Aim at the lowest level that can say yes. Find out what is already funded before asking for something new.',
+    tryit:'Name the specific body that could grant the thing you most want changed. If you cannot name it, that is your first piece of research.'
+  },
+
+  m12: {
+    track:'How power actually works', n:2, mins:10, title:'How a bill really moves',
+    lede:'The version you were taught in school leaves out the part where most bills quietly die. Knowing where that happens tells you where to push.',
+    sections:[
+      {h:'The stages that matter',
+       p:['<strong>Introduction.</strong> Easy. Any member can introduce anything, and most introduced bills go nowhere. A bill being introduced is not news.',
+          '<strong>Committee.</strong> Where bills die. The chair decides whether it gets a hearing at all. No hearing, no bill, no vote, no story.',
+          '<strong>Markup.</strong> The committee rewrites it. This is where a good bill becomes a weak one — work requirements added, funding cut, sunset clauses inserted.',
+          '<strong>Floor vote.</strong> The part that gets covered. By this point the outcome is usually known.',
+          '<strong>The other chamber.</strong> All of it again.',
+          '<strong>Signature.</strong> And then implementation, which is its own fight.']},
+      {h:'Where to push',
+       p:['Almost all effective advocacy happens before the floor vote, and most of it happens at committee.',
+          'If a bill is stuck, the question is not "how do we get more votes" — it is "who chairs that committee and what do they need". Sometimes the answer is a single member.',
+          'By the time something reaches a floor vote, positions are set and your call is being tallied, not considered.']},
+      {h:'Budget is different, and often better',
+       p:['A budget line can do what a bill cannot, and moves on a fixed annual calendar you can plan around.',
+          'Budgets also have public comment periods that are genuinely open and frequently under-attended. Twenty people showing up to a budget hearing is a lot of people.',
+          'Find out when your city and county budget cycles run. That is a date you can organize toward.']},
+      {h:'What a staffer is actually tracking',
+       p:['Whether constituents in the district care. How much it costs. Who else supports it. Whether it creates a problem for their boss.',
+          'You can affect the first and third directly. A constituent with a specific story and a coalition behind them addresses two of the four, which is more than most people who walk in.']}
+    ],
+    key:'Bills die in committee, not on the floor. Budgets move on a calendar you can plan around.',
+    tryit:'Look up when your city or county holds budget hearings this year. Put the date in your phone.'
+  },
+
+  m13: {
+    track:'How power actually works', n:3, mins:12, title:'Reading a budget',
+    lede:'Enough to find the money and name it out loud. You do not need accounting; you need to know where to look.',
+    sections:[
+      {h:'Why this is worth learning',
+       p:['"There is no money" is the most common answer you will get, and it is almost never literally true. There is money; it is committed to other things.',
+          'A person who can say "there is $4 million in the contingency fund and $12 million unspent from last year" is having a completely different conversation than one who says "surely we can find it somewhere".']},
+      {h:'The three documents',
+       p:['<strong>The proposed budget.</strong> What the executive wants. Published before adoption, and the moment when changes are still cheap.',
+          '<strong>The adopted budget.</strong> What passed. The official plan.',
+          '<strong>The actuals, or year-end report.</strong> What was really spent. This is the interesting one, because the gap between adopted and actual is where unspent money lives.']},
+      {h:'Four things to look for',
+       p:['<strong>General fund versus restricted.</strong> General fund money can go anywhere. Restricted money is locked to a purpose. When someone says the money is committed, ask which kind.',
+          '<strong>One-time versus ongoing.</strong> A pilot funded with one-time money dies when that money does. If you want permanence, you need an ongoing line.',
+          '<strong>Reserves.</strong> Most governments hold reserves well above their own stated policy. That surplus is a legitimate thing to ask about.',
+          '<strong>Unspent allocations.</strong> Money budgeted and not used, often because a position went unfilled. It frequently rolls back into the general fund quietly.']},
+      {h:'The question that changes a room',
+       p:['"What is the current general fund balance, and how does that compare with the reserve policy?"',
+          'It is a normal question, publicly answerable, and it signals immediately that you have read the document. The tone of the conversation usually changes after it.']},
+      {h:'Getting help',
+       p:['You do not have to do this alone. Most jurisdictions have a budget office that will answer questions from the public. Local advocacy organizations often have someone who does this full time.',
+          'Ask the union too. If one member learns the Contra Costa budget, that knowledge should be shared rather than rebuilt by everyone.']}
+    ],
+    key:'The money is rarely absent. It is committed, restricted, or unspent — and each of those has a different answer.',
+    tryit:'Find your city or county budget online and locate one number: the general fund reserve. That is the whole exercise.'
+  },
+
+  m14: {
+    track:'How power actually works', n:4, mins:10, title:'Mapping your own area',
+    lede:'Finding the handful of people who can actually say yes where you live, and what each of them needs.',
+    sections:[
+      {h:'Build the list',
+       p:['Write down, for the place you live: your city council member, your county supervisor or commissioner, your state representative and senator, and your member of Congress.',
+          'Most people cannot name all six. Once you can, you are ahead of nearly everyone who walks into a meeting.',
+          'Add the department directors who touch your issue — social services, housing, public health. They are not elected and they matter enormously.']},
+      {h:'Then add the second layer',
+       p:['For each elected official, find the staffer who handles your issue area. That name is usually on the website or available by calling the office and asking.',
+          'The staffer is who you will actually work with. Officials rotate; good staffers stay for years and remember who was reliable.']},
+      {h:'Sort them by disposition',
+       p:['<strong>Champions.</strong> Already with you. They need material, cover, and someone to show up when they stick their neck out. Do not spend your time convincing them.',
+          '<strong>Persuadable.</strong> Where almost all your effort should go. They need a reason, constituent pressure, and a way to say yes that does not cost them.',
+          '<strong>Opposed.</strong> Know their arguments so you are not surprised. Do not build your plan around converting them.']},
+      {h:'Find who else is already working',
+       p:['You are rarely the only group. Food banks, tenant organizations, labor councils, faith congregations, and mutual aid networks are usually working nearby on adjacent things.',
+          'A coalition already halfway built is worth more than a perfect argument delivered alone.']},
+      {h:'Bring it back to the union',
+       p:['A map like this is useful to one person and valuable to a hundred. When you build one, share it with the union so the next member in your region starts from your work rather than from nothing.',
+          'That accumulation is most of what a national organization is actually for.']}
+    ],
+    key:'Six elected officials, their staffers, and three or four organizations already working nearby. That is your map.',
+    tryit:'Write down your six. Look up whichever ones you cannot name. It takes about fifteen minutes.'
+  },
+
+  m15: {
+    track:'Advocacy in practice', n:1, mins:9, title:'Two minutes of public comment',
+    lede:'The most common thing you will be asked to do, and the one most people are most nervous about. It is also the most learnable.',
+    sections:[
+      {h:'What it actually is',
+       p:['Most public bodies set aside time for anyone to speak. You do not need permission, an invitation, or an organization behind you. You sign up, usually on a card or a form, and you get your turn.',
+          'Two minutes is standard. Three if you are lucky. The timer is real and it will cut you off.']},
+      {h:'The structure that fits',
+       p:['<strong>Ten seconds.</strong> Your name and that you live in the district. "My name is ___ and I live in ___." That sentence establishes your standing to be there.',
+          '<strong>Sixty seconds.</strong> Your specific, and what it reveals. This is your Track 1 material, barely changed.',
+          '<strong>Thirty seconds.</strong> The ask. One thing, stated plainly. "I am asking you to vote yes on item 12."',
+          '<strong>Ten seconds.</strong> Thank them and stop. Stopping early is far better than being cut off mid-sentence.']},
+      {h:'The things nobody tells you',
+       p:['Write it out and read it. Nobody minds, everybody does it, and it is what stops you running over.',
+          'They will often look like they are not listening. Some are on laptops. Comment is recorded, transcribed, counted, and read later by staff. Speak to the record, not the faces.',
+          'Say the agenda item number if there is one. Otherwise your comment may not attach to anything.',
+          'Time yourself at home. Two minutes of speaking is about 250 words, which is shorter than people expect.']},
+      {h:'If your voice shakes',
+       p:['It probably will the first time. It does not diminish what you said and most rooms read it as sincerity rather than weakness.',
+          'Bring water. Put one hand flat on the podium. Read slower than feels natural — nerves speed everyone up.']},
+      {h:'Bring someone',
+       p:['Three people saying versions of the same thing lands far harder than one person saying it well. Coordinate so you are not repeating each other word for word.',
+          'And bring a member with you your first time, even just to sit in the room. The union should never send anyone to their first comment alone.']}
+    ],
+    key:'Name and district. Your specific. One ask. Thank them. Written out, timed at home, and never alone the first time.',
+    tryit:'Write your two-minute comment now and read it aloud with a timer. Adjust until it lands at 1:45.'
+  },
+
+  m16: {
+    track:'Advocacy in practice', n:2, mins:10, title:'Meeting an elected official',
+    lede:'What actually happens in the room, why the staffer matters more than you think, and how to leave with something.',
+    sections:[
+      {h:'Getting the meeting',
+       p:['Call or email the district office and ask for a meeting about a specific issue. Say you are a constituent in the first line.',
+          'You will usually be offered a staffer rather than the official. Take it. Staffers write policy, brief their boss, and remember who was useful. A good staff relationship outlasts several election cycles.']},
+      {h:'What the room is like',
+       p:['Short. Fifteen to thirty minutes, often less, sometimes moved or cut without warning.',
+          'Usually friendly. Almost nobody is hostile to your face. Warmth is not agreement, and you should not read it as a win.',
+          'They will take notes and say they will look into it. That is the normal ending, not a brush-off, but it is why the follow-up matters more than the meeting.']},
+      {h:'How to use the time',
+       p:['<strong>Decide your one ask before you go.</strong> Not three. One. Everything else in the meeting is support for it.',
+          '<strong>Open with your standing.</strong> Constituent, where you live, and that you were in a guaranteed income pilot. That last part is why they are talking to you.',
+          '<strong>Your specific, then the ask.</strong> Same shape as everything else.',
+          '<strong>Ask a question back.</strong> "What would your office need in order to support this?" It turns a presentation into a conversation and often produces the most useful information in the room.']},
+      {h:'Leave something behind',
+       p:['One page. The ask at the top, one or two facts, one story, your name and contact.',
+          'That page gets attached to the file and outlives your visit. Verbal-only meetings evaporate.']},
+      {h:'The follow-up is the work',
+       p:['Email within 48 hours. Thank them, restate the ask in one sentence, and answer anything you could not answer in the room.',
+          'Then follow up again in a few weeks. Most advocacy fails at this step, which means doing it puts you ahead of most people who walked through the same door.']}
+    ],
+    key:'One ask, one page left behind, one email within 48 hours. The staffer is the relationship.',
+    tryit:'Draft your one-page leave-behind. If you cannot fit it on one page, your ask is not specific enough yet.'
+  },
+
+  m17: {
+    track:'Advocacy in practice', n:3, mins:7, title:'Writing something that gets read',
+    lede:'Emails and letters that do not go in the pile. Mostly a matter of length and one clear ask.',
+    sections:[
+      {h:'Why most of it is ignored',
+       p:['Offices sort mail into: form letters, angry mail, and real constituent mail. The first two get counted; only the third gets read.',
+          'Form letters are counted but not read. Personal ones are read. That is the whole reason to write your own.']},
+      {h:'The shape',
+       p:['<strong>Subject line with the ask in it.</strong> "Please support item 12: guaranteed income pilot funding" — not "Concerned constituent".',
+          '<strong>First line: who you are and where you live.</strong> The district is the only credential that matters.',
+          '<strong>Second paragraph: your specific.</strong> Three or four sentences. This is the part that makes it real mail.',
+          '<strong>Third: the ask.</strong> One sentence, plainly stated.',
+          '<strong>Close with your full name and address.</strong> Offices verify constituency.']},
+      {h:'Length',
+       p:['Under 250 words. A short letter that is read beats a long one that is skimmed.',
+          'If you have more to say, say it in the follow-up after they respond. That exchange is worth more than the first message.']},
+      {h:'What weakens it',
+       p:['Insults, however deserved. Once it is angry mail it is counted, not read.',
+          'Multiple asks. Pick one.',
+          'Pasting talking points from an organization. Staffers recognize them instantly and it moves you into the form-letter pile.']},
+      {h:'Where else this works',
+       p:['The same structure works for a letter to the editor, a public comment submitted in writing, or a message to a department director.',
+          'Local papers still print letters and elected officials still read them. It is one of the few channels that has not been drowned out.']}
+    ],
+    key:'Ask in the subject line. District in the first sentence. Under 250 words. One ask.',
+    tryit:'Write yours now, then cut it by a third. It will be better.'
+  },
+
+  m18: {
+    track:'Advocacy in practice', n:4, mins:9, title:'Building a coalition',
+    lede:'Working with people who are not in this movement yet, without losing what makes the union what it is.',
+    sections:[
+      {h:'Why bother',
+       p:['A room of people who already agree with each other does not move a vote. An unexpected combination does.',
+          'The most effective testimony is often the group nobody predicted: a food bank, a small business association, and a pilot participant, all asking for the same thing for different reasons.']},
+      {h:'Who is already nearby',
+       p:['Food banks and pantries see the same households you do. Tenant organizations fight the same instability. Labor councils care about income floors more than people assume. Faith congregations run emergency assistance and know exactly where it runs out.',
+          'Also: pediatricians, school social workers, and public health departments. All of them have data on the same problem from a different angle.']},
+      {h:'What you actually ask for',
+       p:['Start smaller than a partnership. "Would you sign a letter?" is a much easier yes than "will you join our coalition".',
+          'Then: would you send someone to speak? Would you share this with your list? Each yes makes the next one easier.']},
+      {h:'Different reasons, same ask',
+       p:['You do not need allies who share your politics. You need allies who want the same outcome.',
+            'A business group may support cash because it stabilizes their customers. A hospital may support it because it reduces emergency visits. Let them make their own argument in their own words — a coalition where everyone uses your talking points looks exactly like what it is.']},
+      {h:'What not to trade away',
+       p:['Coalition partners will sometimes suggest softening the ask. Work requirements, spending restrictions, a narrower group. These are usually offered in good faith and they are the whole thing.',
+          'The union exists because unconditional means unconditional. You can lose a vote and keep that. Winning a conditional program and calling it basic income costs more than it gains.']}
+    ],
+    key:'Ask for a signature before you ask for a partnership. Let allies argue their own reasons. Do not trade away unconditional.',
+    tryit:'Name three organizations within ten miles of you that touch the same households. Find out who runs each one.'
+  },
+
+  m19: {
+    track:'Running the union', n:1, mins:12, title:'Facilitating a meeting',
+    lede:'Holding time, handling interruptions, and making room for the people who have not spoken. The core skill of running anything.',
+    sections:[
+      {h:'Your job is not to talk',
+       p:['A facilitator is not the chair, the expert, or the main speaker. The job is to make sure the meeting does what it came to do and that everyone who wanted to contribute could.',
+          'If you finish a meeting having spoken the most, something went wrong.']},
+      {h:'Before it starts',
+       p:['Know the purpose in one sentence. Not the agenda — the purpose. "By the end, we will have decided X."',
+          'Know how long each item gets, and write it on the agenda where people can see it. Visible time budgets do most of your enforcement for you.',
+          'Line up a notetaker and someone watching the chat. Doing all three yourself means doing none of them well.']},
+      {h:'The opening two minutes',
+       p:['Say what the meeting is for and how long it will run. Say the norms out loud: cameras optional, chat welcome, and that you will keep contributions short so everyone gets a turn.',
+          'Naming the time norm at the start is what makes interrupting acceptable later. Without it, cutting someone off looks like rudeness. With it, it looks like fairness — which is what it is.']},
+      {h:'Interrupting well',
+       p:['Use the same words every time so it reads as procedure rather than personal: "I am going to pause you there so we can hear from a few more people — can you land your point in one sentence?"',
+          'Warm, specific, and it gives them a way to finish with dignity.',
+          'If someone has spoken three times and others have not spoken once, say so plainly: "I want to hear from someone who has not spoken yet."']},
+      {h:'Making room',
+       p:['Silence is not agreement. Ask directly: "Anyone who has not said anything — anything you are thinking?" Then wait longer than is comfortable. Five full seconds.',
+          'Offer the chat as an equal channel and read it aloud, so that people who cannot or will not speak are still in the meeting.',
+          'For a group that includes people who were talked over by caseworkers for years, this is not a nicety. It is the whole difference between a meeting and a performance.']},
+      {h:'Closing',
+       p:['Never end on the last agenda item. Reserve five minutes to say what was decided, who is doing what by when, and when you meet next.',
+          'A meeting that ends without named owners and dates produces nothing, however good the discussion was.']}
+    ],
+    key:'Say the time norm at the start. Use the same interruption line every time. Reserve five minutes to name decisions and owners.',
+    tryit:'Write your interruption sentence and say it out loud until it sounds friendly rather than apologetic.'
+  },
+
+  m20: {
+    track:'Running the union', n:2, mins:10, title:'Planning an event',
+    lede:'Budget, access, logistics, and the things that always go wrong. A checklist more than a philosophy.',
+    sections:[
+      {h:'Start from the purpose and the number',
+       p:['What has to be true at the end for this to have been worth it? Twenty new members, one media hit, a decision made, ten people trained. Write it down first.',
+          'Then the number of people. Everything else — room, food, budget, staffing — follows from that, and guessing it wrong is the most common way events fail.']},
+      {h:'Access is not the last item',
+       p:['Decide these before you book anything: is the venue actually step-free, including the bathroom and the stage. Is there parking and transit. Will there be captions, interpretation, or childcare.',
+            'Ask people what they need when they register, not at the door. And budget for it — access provided only when someone is brave enough to ask is not access.',
+            'For a union of people who have been excluded from rooms, an inaccessible event is not a logistics failure. It is a message.']},
+      {h:'Food, money, and time',
+       p:['Feed people. It is the single cheapest thing that makes an event feel like it respects attendees.',
+          'If you are asking members to travel, cover the travel. Otherwise the event is only for people who can afford to attend it.',
+          'Run shorter than you think. Two well-used hours beat four with drift.']},
+      {h:'What always goes wrong',
+       p:['Technology. Test it in the actual room, on the actual connection, the day before.',
+          'The room being set up wrong. Arrive early enough to move chairs.',
+          'A speaker not showing. Have a plan for the gap.',
+          'Fewer people than you registered. Expect 50 to 70 percent of registrations to actually attend and plan the room accordingly.']},
+      {h:'Afterwards',
+       p:['Follow up within 48 hours, while it is still warm. Thank people, share what came out of it, and give one next step.',
+          'Write down what went wrong while you still remember. Nobody does this and it is the only reason the second event is better than the first.']}
+    ],
+    key:'Purpose and headcount first. Access before booking. Feed people. Follow up within 48 hours.',
+    tryit:'Take an event you have attended and list three access barriers it had. That list is your checklist for the one you run.'
+  },
+
+  m21: {
+    track:'Running the union', n:3, mins:6, title:'Notes people actually use',
+    lede:'Recording decisions and commitments, not everything that was said. Shorter is better and more useful.',
+    sections:[
+      {h:'The mistake',
+       p:['Most notes try to capture the conversation. Nobody reads them, including the person who wrote them.',
+          'Notes exist so that people who were not there know what happened, and people who were there know what they agreed to.']},
+      {h:'Four headings, nothing else',
+       p:['<strong>Decisions.</strong> What was actually settled. One line each.',
+          '<strong>Actions.</strong> Who is doing what, by when. A name and a date or it is not an action.',
+          '<strong>Open questions.</strong> What was raised and not resolved, so it does not vanish.',
+          '<strong>For next time.</strong> What needs to be on the next agenda.',
+          'Discussion that produced none of these does not need recording.']},
+      {h:'During the meeting',
+       p:['Say it out loud when you write a decision down: "So the decision is X — have I got that right?" It confirms accuracy and forces the group to notice they decided something.',
+          'Same for actions. "That is you, by Friday?" Unclaimed actions do not happen.']},
+      {h:'Sending them',
+       p:['Within 24 hours, to everyone invited — not just those who attended. Someone who missed a meeting should be able to catch up in two minutes.',
+          'Keep them somewhere findable. Notes scattered across email threads are lost notes.']},
+      {h:'A note about care',
+       p:['Meetings in this union will sometimes include people saying difficult things about their own lives. That does not go in the notes.',
+          'Record the decision, not the disclosure. If something personal is relevant to a decision, describe it in a way the person would be comfortable seeing.']}
+    ],
+    key:'Decisions, actions with names and dates, open questions, next agenda. Nothing else.',
+    tryit:'Take notes from the next meeting you attend using only those four headings. See how much shorter they get.'
+  },
+
+  m22: {
+    track:'Running the union', n:4, mins:10, title:'Becoming a BISC Buddy',
+    lede:'Welcoming new members and staying with them through their first months. The role the whole union depends on.',
+    sections:[
+      {h:'What a Buddy is for',
+       p:['A new member has joined an organization they have not met yet. Somewhere between signing up and belonging, most people quietly drift away.',
+          'A Buddy is the person who makes that not happen. Not a mentor, not a caseworker, not a recruiter. A member who has been around slightly longer.']},
+      {h:'The first contact',
+       p:['Within a week of them joining, by whichever method they asked for. Not a form, not a group email. A message with your name on it.',
+          'Keep it short and low-demand. Who you are, that you are their Buddy, one question, and an easy way out. "No need to reply if now is not a good time — I will check back."',
+          'That last part matters. Someone who cannot respond this week should not feel they have already failed at membership.']},
+      {h:'What to actually talk about',
+       p:['How they heard about the union. What made them join. Whether they have questions about how anything works.',
+          'Not: their pilot story. Do not ask a new member to tell you what they went through. If they want to, they will.',
+          'The two questions you should be ready for are whether it costs anything and whether it affects their benefits. Know the union\u2019s current answers before your first call.']},
+      {h:'Over the first months',
+       p:['Check in around week three or four — the point where people drift. One message.',
+          'Nudge them toward one concrete thing: a new member meeting, a working group, a mixer. One, not a menu.',
+          'Then step back. The goal is that they know other members, not that they know you.']},
+      {h:'What this is not',
+       p:['You are not responsible for their wellbeing, and you are not a crisis service. If someone shares something serious, you can listen, and you should tell the onboarding lead rather than carrying it alone.',
+          'You are also allowed to have capacity limits. Say how many people you can hold, and say when that changes. A Buddy who burns out helps nobody.']}
+    ],
+    key:'Contact within a week, by their chosen method. Check in at week three. Point at one thing, not a menu. Do not ask for their story.',
+    tryit:'Write your first-contact message now, before you are assigned anyone. Keep it under five sentences.'
+  },
+
+  m23: {
+    track:'Running the union', n:5, mins:10, title:'Conflict and repair',
+    lede:'What to do when it goes wrong between members. Every organization has this; the ones that last have a practice for it.',
+    sections:[
+      {h:'It is going to happen',
+       p:['A national union of people who have been through hard things, working on something they care about, with limited resources and no money for most of it. Conflict is guaranteed.',
+          'The question is never whether. It is whether there is a process, and whether people trust it before they need it.']},
+      {h:'Sort it early',
+       p:['<strong>Misunderstanding.</strong> Two people reading the same message differently. Usually resolves with one direct conversation.',
+          '<strong>Real disagreement.</strong> About direction or priorities. Legitimate, and often useful. Needs a decision, not a reconciliation.',
+          '<strong>Harm.</strong> Someone was treated in a way that was not acceptable. Different process entirely, and it should not be handled as a disagreement.',
+          'Most damage comes from treating one of these as another.']},
+      {h:'The direct conversation first',
+       p:['Where it is safe and both people are willing, one-to-one first. Most conflict never needs to become organizational.',
+          'Go in with the specific: what happened, what it did, what you want to be different. Not a character assessment.',
+          'And go in able to be wrong about part of it.']},
+      {h:'When it needs someone else',
+       p:['The union\u2019s practice is that two members of the Organizing Committee speak with each person separately before anything joint happens.',
+          'Separately matters. Putting two people in a room together to work it out in front of an audience usually makes it worse, and it disadvantages whoever is less comfortable speaking under pressure.']},
+      {h:'Repair, not verdict',
+       p:['The useful question is not who was right. It is what needs to happen for these people to work together again — or for it to be alright that they will not.',
+          'Sometimes the answer is an apology. Sometimes a change in how something is run. Sometimes people work in different groups and that is a fine outcome.']},
+      {h:'When someone should leave',
+       p:['Rarely, and it should be a stated process rather than an ad hoc decision made by whoever is most upset.',
+          'A union that cannot remove anyone will lose the people who are being harmed. A union that removes people casually will lose everyone else. Both failures are real.']}
+    ],
+    key:'Name which of the three it is first. Direct conversation where safe. Separate conversations before joint ones. Aim at repair, not verdict.',
+    tryit:'Read the union\u2019s conflict process before you need it. If you cannot find one written down, that is worth raising.'
+  },
+
+  m24: {
+    track:'Getting it out there', n:1, mins:6, title:'Using what comms makes',
+    lede:'Graphics and posts the union produces, and how to share them so they sound like you rather than a press release.',
+    sections:[
+      {h:'Why sharing matters more than you think',
+       p:['A union post reaches the people who already follow the union. The same post shared by a member reaches people who have never heard of it — and arrives from someone they know.',
+          'That second version is worth far more, and it is something every member can do in thirty seconds.']},
+      {h:'Add one line of your own',
+       p:['The difference between a share that works and one that scrolls past is a sentence at the top in your own words.',
+          'Not a summary of the post. Your reason. "I was in one of these pilots. This is the part people always get wrong." Then the post.',
+          'One honest line beats a paragraph of enthusiasm.']},
+      {h:'What not to do',
+       p:['Do not post the same wording as ten other members on the same day. Platforms suppress it and people notice.',
+          'Do not add claims that are not in the material. If a graphic says the evidence is mixed, do not caption it as proof.',
+          'Do not tag officials into an argument on the union\u2019s behalf unless the comms team has asked for that. It can burn a relationship someone else is building.']},
+      {h:'Where things actually land',
+       p:['Local community groups on Facebook still reach more of the people you want than anywhere else, particularly for pilot alumni.',
+          'A group chat with people from your own pilot is small and extremely high-value. Most members are still in one.',
+          'Reposting into a group you belong to is worth more than a public post nobody is looking for.']},
+      {h:'Ask for what you need',
+       p:['If the material does not fit your audience — wrong language, wrong platform, too formal — tell comms. They cannot see what is not landing.',
+          'That feedback loop is one of the more useful things a member can offer, and it costs one message.']}
+    ],
+    key:'One line of your own on top. Never identical wording to other members. Small groups beat public posts.',
+    tryit:'Take the union\u2019s most recent post and write your one line for it. Do not post yet — just write the line.'
+  },
+
+  m25: {
+    track:'Getting it out there', n:2, mins:9, title:'Making your own',
+    lede:'Filming or writing something short that sounds like you. Lower effort than you think, and more effective than polished.',
+    sections:[
+      {h:'Rough works better',
+       p:['A phone video in your kitchen outperforms a produced piece almost every time, because it reads as a person rather than an advertisement.',
+          'The bar is not production quality. It is whether it sounds like someone actually means it.']},
+      {h:'The shape of a short video',
+       p:['<strong>First three seconds:</strong> the hook. A claim or a question, not an introduction. "Everyone gets the same thing wrong about guaranteed income."',
+          '<strong>Middle:</strong> your specific. The same one from Track 1.',
+          '<strong>End:</strong> one line of what should change. No sign-off, no logo, no thanks for watching.',
+          'Thirty to sixty seconds total. Shorter than feels complete.']},
+      {h:'Practical things',
+       p:['Face a window. That is the whole lighting lesson.',
+          'Get close to the phone — audio matters far more than picture, and phone microphones are directional.',
+          'Caption it. Most people watch without sound, and captions are an access requirement, not a bonus.',
+          'One take is fine. Re-recording ten times usually makes it worse.']},
+      {h:'Writing instead',
+       p:['Not everyone wants to be on camera and nobody should have to be. A short written post does the same work.',
+          'Same shape: hook, specific, ask. Two hundred words is plenty.',
+          'If you would rather not use your face or your full name, say so. The union should have a way for members to contribute without being publicly identified.']},
+      {h:'Before you post',
+       p:['Check it against your zones from Track 1. Once something is up, it can be screenshotted, and you cannot unpublish a screenshot.',
+          'If it names a specific program, a person, or an official, sleep on it. Almost nothing is more urgent than it feels at the time.']}
+    ],
+    key:'Hook, specific, ask. Under sixty seconds. Face a window, get close to the phone, add captions.',
+    tryit:'Record one take of your ninety-second version on your phone. Do not post it. Just watch it back once.'
+  },
+
+  m26: {
+    track:'Getting it out there', n:3, mins:10, title:'Talking to press',
+    lede:'On the record, off the record, and how to prepare so the story is the one you meant to tell.',
+    sections:[
+      {h:'The terms, and what they really mean',
+       p:['<strong>On the record.</strong> Everything can be used with your name. Assume this by default — it is what applies unless you agreed otherwise beforehand.',
+          '<strong>On background.</strong> Usable, but attributed vaguely. Agree the wording in advance.',
+          '<strong>Off the record.</strong> Not to be published at all. Only works if agreed <em>before</em> you say the thing, and only with a reporter who honors it.',
+          'You cannot make something off the record after you have said it. That is the mistake people make once.']},
+      {h:'Before the call',
+       p:['Ask three questions: what is the story about, who else are you speaking to, and when does it run.',
+          'Ask how they will describe you, and give them the description you want. "Former pilot participant and member of the BISC Union" is available to you instead of something more reductive.',
+          'Decide your zones again for this specific conversation. Reporters are good at their jobs and warm conversations go further than you planned.']},
+      {h:'During',
+       p:['Have three points and return to them. Repetition feels awkward to you and is invisible to the reader, who sees one quote.',
+          'It is fine to say "I do not know" and offer to follow up. It is much better than guessing at a number that gets printed.',
+          'If a question goes somewhere you do not want, use your redirect line from Track 1. It works exactly the same here.']},
+      {h:'The photo',
+       p:['Photographers will often want an image that signals hardship — you looking worried, your empty fridge, your children.',
+          'You can decline. "I would rather be photographed somewhere I feel like myself." Suggest an alternative rather than only refusing.']},
+      {h:'Afterwards',
+       p:['You will not get to approve the piece. You can ask them to check quotes and facts back with you, and many will.',
+          'If it comes out wrong, tell the union rather than only the reporter. A pattern of a publication misrepresenting members is something the organization should know and act on.']}
+    ],
+    key:'Assume on the record. Agree off the record before, never after. Three points, repeated. You may decline the photo.',
+    tryit:'Write the one-line description of yourself you want reporters to use. Have it ready before anyone asks.'
+  },
+
+  m27: {
+    track:'Getting it out there', n:4, mins:8, title:'Staying safe online',
+    lede:'Protecting yourself once you are publicly associated with a political position. Basic, boring, and worth doing before you need it.',
+    sections:[
+      {h:'Why this is in the curriculum',
+       p:['Speaking publicly about receiving cash assistance attracts a specific kind of hostility, and members of this union carry more risk than most advocates — because the argument against you is personal by design.',
+          'None of what follows is a reason not to speak. It is the preparation that makes speaking sustainable.']},
+      {h:'Do these once',
+       p:['Turn on two-factor authentication on your email first, then social accounts. Email is the master key to everything else.',
+          'Search your own name and see what is public. Data broker sites list home addresses; most have an opt-out form, and it is tedious but it works.',
+          'Lock down old accounts you no longer use rather than leaving them open.',
+          'Check what your public profile photos and posts reveal — your street, your workplace, your children\u2019s school uniform.']},
+      {h:'Decide your line before you need it',
+       p:['Will you use your full name. Will you show your face. Will you mention your city or only your region.',
+          'These are all legitimate choices and none of them is more committed than another. A member who contributes under a first name only is still a member doing the work.']},
+      {h:'When it turns nasty',
+       p:['Do not engage. Replying is what escalates and what feeds the algorithm.',
+          'Screenshot, then block and report. The screenshot matters if it becomes a pattern or a legal issue.',
+          'Tell the union. A member being targeted should not be handling it alone, and the organization needs to know if something coordinated is happening.']},
+      {h:'If it becomes a threat',
+       p:['Specific threats against you or your family are a police matter, and they are also something to raise with the union immediately.',
+          'You are allowed to step back from public work at any point, for any reason, without explanation, and come back later. Nobody should be spending their safety on this.']}
+    ],
+    key:'Two-factor on email first. Decide your name and face policy in advance. Never engage — screenshot, block, report, tell the union.',
+    tryit:'Turn on two-factor authentication on your email right now. It takes about two minutes and it is the single highest-value thing on this list.'
+  }
+};
+
+/* =========================================================
+   MODULE TRANSLATIONS — TIER TWO
+   The curriculum. Every key below is empty and waiting.
+   A module only switches to Spanish when EVERY one of its
+   keys is filled — a half-translated module would be worse
+   to read than an English one. Until then that module shows
+   English with a short note.
+   Run  moduleProgress()  in the console to see where things
+   stand, track by track.
+   ========================================================= */
+const MODULES_ES = {
+  'm1.title': '',
+  'm1.lede': '',
+  'm1.s1.h': '',
+  'm1.s1.p1': '',
+  'm1.s1.p2': '',
+  'm1.s1.p3': '',
+  'm1.s2.h': '',
+  'm1.s2.p1': '',
+  'm1.s2.p2': '',
+  'm1.s2.p3': '',
+  'm1.s3.h': '',
+  'm1.s3.p1': '',
+  'm1.s3.p2': '',
+  'm1.s3.p3': '',
+  'm1.s4.h': '',
+  'm1.s4.p1': '',
+  'm1.s4.p2': '',
+  'm1.key': '',
+  'm1.try': '',
+  'm2.title': '',
+  'm2.lede': '',
+  'm2.s1.h': '',
+  'm2.s1.p1': '',
+  'm2.s1.p2': '',
+  'm2.s2.h': '',
+  'm2.s2.p1': '',
+  'm2.s2.p2': '',
+  'm2.s2.p3': '',
+  'm2.s3.h': '',
+  'm2.s3.p1': '',
+  'm2.s3.p2': '',
+  'm2.s3.p3': '',
+  'm2.s3.p4': '',
+  'm2.s4.h': '',
+  'm2.s4.p1': '',
+  'm2.s4.p2': '',
+  'm2.s4.p3': '',
+  'm2.s5.h': '',
+  'm2.s5.p1': '',
+  'm2.s5.p2': '',
+  'm2.key': '',
+  'm2.try': '',
+  'm3.title': '',
+  'm3.lede': '',
+  'm3.s1.h': '',
+  'm3.s1.p1': '',
+  'm3.s1.p2': '',
+  'm3.s1.p3': '',
+  'm3.s1.p4': '',
+  'm3.s2.h': '',
+  'm3.s2.p1': '',
+  'm3.s2.p2': '',
+  'm3.s3.h': '',
+  'm3.s3.p1': '',
+  'm3.s3.p2': '',
+  'm3.s3.p3': '',
+  'm3.s4.h': '',
+  'm3.s4.p1': '',
+  'm3.s4.p2': '',
+  'm3.s5.h': '',
+  'm3.s5.p1': '',
+  'm3.s5.p2': '',
+  'm3.key': '',
+  'm3.try': '',
+  'm4.title': '',
+  'm4.lede': '',
+  'm4.s1.h': '',
+  'm4.s1.p1': '',
+  'm4.s1.p2': '',
+  'm4.s1.p3': '',
+  'm4.s1.p4': '',
+  'm4.s1.p5': '',
+  'm4.s2.h': '',
+  'm4.s2.p1': '',
+  'm4.s2.p2': '',
+  'm4.s2.p3': '',
+  'm4.s3.h': '',
+  'm4.s3.p1': '',
+  'm4.s3.p2': '',
+  'm4.s3.p3': '',
+  'm4.s4.h': '',
+  'm4.s4.p1': '',
+  'm4.s4.p2': '',
+  'm4.s5.h': '',
+  'm4.s5.p1': '',
+  'm4.s5.p2': '',
+  'm4.key': '',
+  'm4.try': '',
+  'm5.title': '',
+  'm5.lede': '',
+  'm5.s1.h': '',
+  'm5.s1.p1': '',
+  'm5.s1.p2': '',
+  'm5.s1.p3': '',
+  'm5.s1.p4': '',
+  'm5.s2.h': '',
+  'm5.s2.p1': '',
+  'm5.s2.p2': '',
+  'm5.s2.p3': '',
+  'm5.s3.h': '',
+  'm5.s3.p1': '',
+  'm5.s3.p2': '',
+  'm5.s4.h': '',
+  'm5.s4.p1': '',
+  'm5.s4.p2': '',
+  'm5.s4.p3': '',
+  'm5.s5.h': '',
+  'm5.s5.p1': '',
+  'm5.s5.p2': '',
+  'm5.key': '',
+  'm5.try': '',
+  'm6.title': '',
+  'm6.lede': '',
+  'm6.s1.h': '',
+  'm6.s1.p1': '',
+  'm6.s1.p2': '',
+  'm6.s2.h': '',
+  'm6.s2.p1': '',
+  'm6.s2.p2': '',
+  'm6.s3.h': '',
+  'm6.s3.p1': '',
+  'm6.s3.p2': '',
+  'm6.s3.p3': '',
+  'm6.s4.h': '',
+  'm6.s4.p1': '',
+  'm6.s4.p2': '',
+  'm6.s4.p3': '',
+  'm6.s4.p4': '',
+  'm6.key': '',
+  'm6.try': '',
+  'm7.title': '',
+  'm7.lede': '',
+  'm7.s1.h': '',
+  'm7.s1.p1': '',
+  'm7.s1.p2': '',
+  'm7.s1.p3': '',
+  'm7.s2.h': '',
+  'm7.s2.p1': '',
+  'm7.s2.p2': '',
+  'm7.s2.p3': '',
+  'm7.s3.h': '',
+  'm7.s3.p1': '',
+  'm7.s3.p2': '',
+  'm7.s3.p3': '',
+  'm7.s4.h': '',
+  'm7.s4.p1': '',
+  'm7.s4.p2': '',
+  'm7.s5.h': '',
+  'm7.s5.p1': '',
+  'm7.s5.p2': '',
+  'm7.key': '',
+  'm7.try': '',
+  'm8.title': '',
+  'm8.lede': '',
+  'm8.s1.h': '',
+  'm8.s1.p1': '',
+  'm8.s1.p2': '',
+  'm8.s1.p3': '',
+  'm8.s1.p4': '',
+  'm8.s2.h': '',
+  'm8.s2.p1': '',
+  'm8.s2.p2': '',
+  'm8.s2.p3': '',
+  'm8.s3.h': '',
+  'm8.s3.p1': '',
+  'm8.s3.p2': '',
+  'm8.s3.p3': '',
+  'm8.s3.p4': '',
+  'm8.s4.h': '',
+  'm8.s4.p1': '',
+  'm8.s4.p2': '',
+  'm8.s4.p3': '',
+  'm8.s5.h': '',
+  'm8.s5.p1': '',
+  'm8.s5.p2': '',
+  'm8.key': '',
+  'm8.try': '',
+  'm9.title': '',
+  'm9.lede': '',
+  'm9.s1.h': '',
+  'm9.s1.p1': '',
+  'm9.s1.p2': '',
+  'm9.s1.p3': '',
+  'm9.s2.h': '',
+  'm9.s2.p1': '',
+  'm9.s2.p2': '',
+  'm9.s2.p3': '',
+  'm9.s3.h': '',
+  'm9.s3.p1': '',
+  'm9.s3.p2': '',
+  'm9.s3.p3': '',
+  'm9.s4.h': '',
+  'm9.s4.p1': '',
+  'm9.s4.p2': '',
+  'm9.key': '',
+  'm9.try': '',
+  'm10.title': '',
+  'm10.lede': '',
+  'm10.s1.h': '',
+  'm10.s1.p1': '',
+  'm10.s1.p2': '',
+  'm10.s1.p3': '',
+  'm10.s2.h': '',
+  'm10.s2.p1': '',
+  'm10.s2.p2': '',
+  'm10.s2.p3': '',
+  'm10.s3.h': '',
+  'm10.s3.p1': '',
+  'm10.s3.p2': '',
+  'm10.s3.p3': '',
+  'm10.s4.h': '',
+  'm10.s4.p1': '',
+  'm10.s4.p2': '',
+  'm10.s4.p3': '',
+  'm10.s5.h': '',
+  'm10.s5.p1': '',
+  'm10.s5.p2': '',
+  'm10.key': '',
+  'm10.try': '',
+  'm11.title': '',
+  'm11.lede': '',
+  'm11.s1.h': '',
+  'm11.s1.p1': '',
+  'm11.s1.p2': '',
+  'm11.s1.p3': '',
+  'm11.s1.p4': '',
+  'm11.s2.h': '',
+  'm11.s2.p1': '',
+  'm11.s2.p2': '',
+  'm11.s3.h': '',
+  'm11.s3.p1': '',
+  'm11.s3.p2': '',
+  'm11.s4.h': '',
+  'm11.s4.p1': '',
+  'm11.s4.p2': '',
+  'm11.key': '',
+  'm11.try': '',
+  'm12.title': '',
+  'm12.lede': '',
+  'm12.s1.h': '',
+  'm12.s1.p1': '',
+  'm12.s1.p2': '',
+  'm12.s1.p3': '',
+  'm12.s1.p4': '',
+  'm12.s1.p5': '',
+  'm12.s1.p6': '',
+  'm12.s2.h': '',
+  'm12.s2.p1': '',
+  'm12.s2.p2': '',
+  'm12.s2.p3': '',
+  'm12.s3.h': '',
+  'm12.s3.p1': '',
+  'm12.s3.p2': '',
+  'm12.s3.p3': '',
+  'm12.s4.h': '',
+  'm12.s4.p1': '',
+  'm12.s4.p2': '',
+  'm12.key': '',
+  'm12.try': '',
+  'm13.title': '',
+  'm13.lede': '',
+  'm13.s1.h': '',
+  'm13.s1.p1': '',
+  'm13.s1.p2': '',
+  'm13.s2.h': '',
+  'm13.s2.p1': '',
+  'm13.s2.p2': '',
+  'm13.s2.p3': '',
+  'm13.s3.h': '',
+  'm13.s3.p1': '',
+  'm13.s3.p2': '',
+  'm13.s3.p3': '',
+  'm13.s3.p4': '',
+  'm13.s4.h': '',
+  'm13.s4.p1': '',
+  'm13.s4.p2': '',
+  'm13.s5.h': '',
+  'm13.s5.p1': '',
+  'm13.s5.p2': '',
+  'm13.key': '',
+  'm13.try': '',
+  'm14.title': '',
+  'm14.lede': '',
+  'm14.s1.h': '',
+  'm14.s1.p1': '',
+  'm14.s1.p2': '',
+  'm14.s1.p3': '',
+  'm14.s2.h': '',
+  'm14.s2.p1': '',
+  'm14.s2.p2': '',
+  'm14.s3.h': '',
+  'm14.s3.p1': '',
+  'm14.s3.p2': '',
+  'm14.s3.p3': '',
+  'm14.s4.h': '',
+  'm14.s4.p1': '',
+  'm14.s4.p2': '',
+  'm14.s5.h': '',
+  'm14.s5.p1': '',
+  'm14.s5.p2': '',
+  'm14.key': '',
+  'm14.try': '',
+  'm15.title': '',
+  'm15.lede': '',
+  'm15.s1.h': '',
+  'm15.s1.p1': '',
+  'm15.s1.p2': '',
+  'm15.s2.h': '',
+  'm15.s2.p1': '',
+  'm15.s2.p2': '',
+  'm15.s2.p3': '',
+  'm15.s2.p4': '',
+  'm15.s3.h': '',
+  'm15.s3.p1': '',
+  'm15.s3.p2': '',
+  'm15.s3.p3': '',
+  'm15.s3.p4': '',
+  'm15.s4.h': '',
+  'm15.s4.p1': '',
+  'm15.s4.p2': '',
+  'm15.s5.h': '',
+  'm15.s5.p1': '',
+  'm15.s5.p2': '',
+  'm15.key': '',
+  'm15.try': '',
+  'm16.title': '',
+  'm16.lede': '',
+  'm16.s1.h': '',
+  'm16.s1.p1': '',
+  'm16.s1.p2': '',
+  'm16.s2.h': '',
+  'm16.s2.p1': '',
+  'm16.s2.p2': '',
+  'm16.s2.p3': '',
+  'm16.s3.h': '',
+  'm16.s3.p1': '',
+  'm16.s3.p2': '',
+  'm16.s3.p3': '',
+  'm16.s3.p4': '',
+  'm16.s4.h': '',
+  'm16.s4.p1': '',
+  'm16.s4.p2': '',
+  'm16.s5.h': '',
+  'm16.s5.p1': '',
+  'm16.s5.p2': '',
+  'm16.key': '',
+  'm16.try': '',
+  'm17.title': '',
+  'm17.lede': '',
+  'm17.s1.h': '',
+  'm17.s1.p1': '',
+  'm17.s1.p2': '',
+  'm17.s2.h': '',
+  'm17.s2.p1': '',
+  'm17.s2.p2': '',
+  'm17.s2.p3': '',
+  'm17.s2.p4': '',
+  'm17.s2.p5': '',
+  'm17.s3.h': '',
+  'm17.s3.p1': '',
+  'm17.s3.p2': '',
+  'm17.s4.h': '',
+  'm17.s4.p1': '',
+  'm17.s4.p2': '',
+  'm17.s4.p3': '',
+  'm17.s5.h': '',
+  'm17.s5.p1': '',
+  'm17.s5.p2': '',
+  'm17.key': '',
+  'm17.try': '',
+  'm18.title': '',
+  'm18.lede': '',
+  'm18.s1.h': '',
+  'm18.s1.p1': '',
+  'm18.s1.p2': '',
+  'm18.s2.h': '',
+  'm18.s2.p1': '',
+  'm18.s2.p2': '',
+  'm18.s3.h': '',
+  'm18.s3.p1': '',
+  'm18.s3.p2': '',
+  'm18.s4.h': '',
+  'm18.s4.p1': '',
+  'm18.s4.p2': '',
+  'm18.s5.h': '',
+  'm18.s5.p1': '',
+  'm18.s5.p2': '',
+  'm18.key': '',
+  'm18.try': '',
+  'm19.title': '',
+  'm19.lede': '',
+  'm19.s1.h': '',
+  'm19.s1.p1': '',
+  'm19.s1.p2': '',
+  'm19.s2.h': '',
+  'm19.s2.p1': '',
+  'm19.s2.p2': '',
+  'm19.s2.p3': '',
+  'm19.s3.h': '',
+  'm19.s3.p1': '',
+  'm19.s3.p2': '',
+  'm19.s4.h': '',
+  'm19.s4.p1': '',
+  'm19.s4.p2': '',
+  'm19.s4.p3': '',
+  'm19.s5.h': '',
+  'm19.s5.p1': '',
+  'm19.s5.p2': '',
+  'm19.s5.p3': '',
+  'm19.s6.h': '',
+  'm19.s6.p1': '',
+  'm19.s6.p2': '',
+  'm19.key': '',
+  'm19.try': '',
+  'm20.title': '',
+  'm20.lede': '',
+  'm20.s1.h': '',
+  'm20.s1.p1': '',
+  'm20.s1.p2': '',
+  'm20.s2.h': '',
+  'm20.s2.p1': '',
+  'm20.s2.p2': '',
+  'm20.s2.p3': '',
+  'm20.s3.h': '',
+  'm20.s3.p1': '',
+  'm20.s3.p2': '',
+  'm20.s3.p3': '',
+  'm20.s4.h': '',
+  'm20.s4.p1': '',
+  'm20.s4.p2': '',
+  'm20.s4.p3': '',
+  'm20.s4.p4': '',
+  'm20.s5.h': '',
+  'm20.s5.p1': '',
+  'm20.s5.p2': '',
+  'm20.key': '',
+  'm20.try': '',
+  'm21.title': '',
+  'm21.lede': '',
+  'm21.s1.h': '',
+  'm21.s1.p1': '',
+  'm21.s1.p2': '',
+  'm21.s2.h': '',
+  'm21.s2.p1': '',
+  'm21.s2.p2': '',
+  'm21.s2.p3': '',
+  'm21.s2.p4': '',
+  'm21.s2.p5': '',
+  'm21.s3.h': '',
+  'm21.s3.p1': '',
+  'm21.s3.p2': '',
+  'm21.s4.h': '',
+  'm21.s4.p1': '',
+  'm21.s4.p2': '',
+  'm21.s5.h': '',
+  'm21.s5.p1': '',
+  'm21.s5.p2': '',
+  'm21.key': '',
+  'm21.try': '',
+  'm22.title': '',
+  'm22.lede': '',
+  'm22.s1.h': '',
+  'm22.s1.p1': '',
+  'm22.s1.p2': '',
+  'm22.s2.h': '',
+  'm22.s2.p1': '',
+  'm22.s2.p2': '',
+  'm22.s2.p3': '',
+  'm22.s3.h': '',
+  'm22.s3.p1': '',
+  'm22.s3.p2': '',
+  'm22.s3.p3': '',
+  'm22.s4.h': '',
+  'm22.s4.p1': '',
+  'm22.s4.p2': '',
+  'm22.s4.p3': '',
+  'm22.s5.h': '',
+  'm22.s5.p1': '',
+  'm22.s5.p2': '',
+  'm22.key': '',
+  'm22.try': '',
+  'm23.title': '',
+  'm23.lede': '',
+  'm23.s1.h': '',
+  'm23.s1.p1': '',
+  'm23.s1.p2': '',
+  'm23.s2.h': '',
+  'm23.s2.p1': '',
+  'm23.s2.p2': '',
+  'm23.s2.p3': '',
+  'm23.s2.p4': '',
+  'm23.s3.h': '',
+  'm23.s3.p1': '',
+  'm23.s3.p2': '',
+  'm23.s3.p3': '',
+  'm23.s4.h': '',
+  'm23.s4.p1': '',
+  'm23.s4.p2': '',
+  'm23.s5.h': '',
+  'm23.s5.p1': '',
+  'm23.s5.p2': '',
+  'm23.s6.h': '',
+  'm23.s6.p1': '',
+  'm23.s6.p2': '',
+  'm23.key': '',
+  'm23.try': '',
+  'm24.title': '',
+  'm24.lede': '',
+  'm24.s1.h': '',
+  'm24.s1.p1': '',
+  'm24.s1.p2': '',
+  'm24.s2.h': '',
+  'm24.s2.p1': '',
+  'm24.s2.p2': '',
+  'm24.s2.p3': '',
+  'm24.s3.h': '',
+  'm24.s3.p1': '',
+  'm24.s3.p2': '',
+  'm24.s3.p3': '',
+  'm24.s4.h': '',
+  'm24.s4.p1': '',
+  'm24.s4.p2': '',
+  'm24.s4.p3': '',
+  'm24.s5.h': '',
+  'm24.s5.p1': '',
+  'm24.s5.p2': '',
+  'm24.key': '',
+  'm24.try': '',
+  'm25.title': '',
+  'm25.lede': '',
+  'm25.s1.h': '',
+  'm25.s1.p1': '',
+  'm25.s1.p2': '',
+  'm25.s2.h': '',
+  'm25.s2.p1': '',
+  'm25.s2.p2': '',
+  'm25.s2.p3': '',
+  'm25.s2.p4': '',
+  'm25.s3.h': '',
+  'm25.s3.p1': '',
+  'm25.s3.p2': '',
+  'm25.s3.p3': '',
+  'm25.s3.p4': '',
+  'm25.s4.h': '',
+  'm25.s4.p1': '',
+  'm25.s4.p2': '',
+  'm25.s4.p3': '',
+  'm25.s5.h': '',
+  'm25.s5.p1': '',
+  'm25.s5.p2': '',
+  'm25.key': '',
+  'm25.try': '',
+  'm26.title': '',
+  'm26.lede': '',
+  'm26.s1.h': '',
+  'm26.s1.p1': '',
+  'm26.s1.p2': '',
+  'm26.s1.p3': '',
+  'm26.s1.p4': '',
+  'm26.s2.h': '',
+  'm26.s2.p1': '',
+  'm26.s2.p2': '',
+  'm26.s2.p3': '',
+  'm26.s3.h': '',
+  'm26.s3.p1': '',
+  'm26.s3.p2': '',
+  'm26.s3.p3': '',
+  'm26.s4.h': '',
+  'm26.s4.p1': '',
+  'm26.s4.p2': '',
+  'm26.s5.h': '',
+  'm26.s5.p1': '',
+  'm26.s5.p2': '',
+  'm26.key': '',
+  'm26.try': '',
+  'm27.title': '',
+  'm27.lede': '',
+  'm27.s1.h': '',
+  'm27.s1.p1': '',
+  'm27.s1.p2': '',
+  'm27.s2.h': '',
+  'm27.s2.p1': '',
+  'm27.s2.p2': '',
+  'm27.s2.p3': '',
+  'm27.s2.p4': '',
+  'm27.s3.h': '',
+  'm27.s3.p1': '',
+  'm27.s3.p2': '',
+  'm27.s4.h': '',
+  'm27.s4.p1': '',
+  'm27.s4.p2': '',
+  'm27.s4.p3': '',
+  'm27.s5.h': '',
+  'm27.s5.p1': '',
+  'm27.s5.p2': '',
+  'm27.key': '',
+  'm27.try': '',
+};
+
+function mkeys(id){
+  return Object.keys(MODULES_ES).filter(k => k.split('.')[0] === id);
+}
+function moduleReady(id){
+  const ks = mkeys(id);
+  return ks.length > 0 && ks.every(k => MODULES_ES[k]);
+}
+function tm(id, path, fallback){
+  return (LANG === 'es' && moduleReady(id) && MODULES_ES[id+'.'+path])
+    ? MODULES_ES[id+'.'+path] : fallback;
+}
+function moduleProgress(){
+  const byTrack = {};
+  Object.keys(MODULES).forEach(id => {
+    const t = MODULES[id].track;
+    const ks = mkeys(id);
+    const done = ks.filter(k => MODULES_ES[k]).length;
+    (byTrack[t] = byTrack[t] || []).push(id + ': ' + done + '/' + ks.length);
+  });
+  Object.entries(byTrack).forEach(([t, l]) => console.log(t + '\n  ' + l.join('\n  ')));
+  const all = Object.keys(MODULES_ES);
+  console.log('\nOverall: ' + all.filter(k => MODULES_ES[k]).length + '/' + all.length + ' strings');
+}
+
+let curMod = null;
+
+function openModule(id){
+  const m = MODULES[id]; if(!m) return;
+  curMod = id;
+  const sib = Object.keys(MODULES).filter(k => MODULES[k].track === m.track);
+  const trackKey = {'Your story as evidence':'t1','The case for basic income':'t2',
+    'How power actually works':'t3','Advocacy in practice':'t4',
+    'Running the union':'t5','Getting it out there':'t6'}[m.track];
+  const trackName = (LANG === 'es' && I18N[trackKey+'.name'] && I18N[trackKey+'.name'].es)
+    ? I18N[trackKey+'.name'].es : m.track;
+  const modWord = LANG === 'es' ? 'Módulo' : 'Module';
+  const ofWord = LANG === 'es' ? 'de' : 'of';
+  $('#mMeta').textContent = trackName + ' · ' + modWord + ' ' + m.n + ' ' + ofWord + ' ' + sib.length + ' · ' + m.mins + ' min';
+  $('#mTitle').textContent = tm(id, 'title', m.title);
+  $('#mLede').textContent = tm(id, 'lede', m.lede);
+  $('#mBody').innerHTML = m.sections.map((sec, si) =>
+    '<h2>' + tm(id, 's'+(si+1)+'.h', sec.h) + '</h2>' +
+    sec.p.map((t, pi) => '<p>' + tm(id, 's'+(si+1)+'.p'+(pi+1), t) + '</p>').join('')
+  ).join('');
+  $('#mKey').textContent = tm(id, 'key', m.key);
+  $('#mTry').textContent = tm(id, 'try', m.tryit);
+
+  const notEs = (LANG === 'es' && !moduleReady(id));
+  $('#mEnNote').hidden = !notEs;
+
+  const ids = sib, i = ids.indexOf(id);
+  let nav = '';
+  if(i > 0) nav += '<button class="btn ghost" data-mod-go="' + ids[i-1] + '">‹ Previous</button>';
+  if(i < ids.length-1) nav += '<button class="btn" data-mod-go="' + ids[i+1] + '">Next module ›</button>';
+  else nav += '<button class="btn ghost" data-go="learning">Back to all learning</button>';
+  $('#mNav').innerHTML = nav;
+
+  go('module');
+}
+
+document.addEventListener('click', e => {
+  const card = e.target.closest('[data-mod]');
+  if(card){ openModule(card.dataset.mod); return; }
+  const nx = e.target.closest('[data-mod-go]');
+  if(nx){ openModule(nx.dataset.modGo); }
+});
+
+/* ---- agendas ---- */
+const AGENDAS = {
+  nm: {
+    label: 'New member meeting',
+    items: [
+      [0, 8,  'Welcome', "Who's hosting, how the hour runs, and how to get help if the technology gives you trouble."],
+      [8, 20, "Who's in the room", 'Your name, where you are, and which pilot you were part of. Two sentences. That is the whole ask.'],
+      [20,30, 'What this union is', "Where BISC came from, what it's for, and what's actually happening this month."],
+      [30,40, 'How things work', 'Meetings, BISC Buddies, working groups, and how members come to hold a vote.'],
+      [40,50, 'Where you might fit', "The kinds of work going on, and room to say what interests you."],
+      [50,60, 'Questions and close', "Anything you want to ask, what's coming next, and who follows up with you."]
+    ]
+  },
+  fu: {
+    label: 'Full union meeting',
+    items: [
+      [0, 5,  'Welcome and attendance', 'Who is here. Attendance is recorded, which is how Active Membership is tracked.'],
+      [5, 15, 'Community building', 'Time to actually know each other. Not a warm-up for the real work — part of it.'],
+      [15,30, 'Working group updates', 'What each group has moved since last month, in a few minutes each.'],
+      [30,50, 'Priorities and decisions', 'What the union takes on next, and anything being put to the membership.'],
+      [50,55, 'Open floor', 'Raise something that is not on the agenda.'],
+      [55,60, 'Feedback and goodbyes', 'What felt good about the meeting, and parting in solidarity.']
+    ]
+  }
+};
+
+function nextMeeting(){
+  const now = new Date(), n = new Date();
+  for(let i=0;i<4;i++){
+    const p = new Date(n.getFullYear(), n.getMonth()+i, 1);
+    const ev = monthEvents(p.getFullYear(), p.getMonth());
+    const hits = Object.keys(ev).map(Number).sort((a,b)=>a-b)
+      .flatMap(d => ev[d])
+      .filter(e => (e.kind==='nm'||e.kind==='fu') && e.dt > now)
+      .sort((a,b)=>a.dt-b.dt);
+    if(hits.length) return hits;
+  }
+  return [];
+}
+
+function upcomingMeetings(limit){
+  const now = new Date(), n = new Date(), out = [];
+  for(let i=0;i<5 && out.length<limit*2;i++){
+    const p = new Date(n.getFullYear(), n.getMonth()+i, 1);
+    const ev = monthEvents(p.getFullYear(), p.getMonth());
+    Object.keys(ev).map(Number).sort((a,b)=>a-b)
+      .flatMap(d => ev[d])
+      .filter(e => e.dt > now)
+      .forEach(e => out.push(e));
+  }
+  return out.sort((a,b)=>a.dt-b.dt);
+}
+
+function renderAgenda(){
+  const hits = nextMeeting();
+  if(!hits.length){ $('#nextUp').innerHTML=''; return; }
+
+  const first = hits[0];
+  const sameDay = hits.filter(e =>
+    e.kind===first.kind && e.y===first.y && e.mo===first.mo && e.day===first.day);
+
+  const dateStr = new Intl.DateTimeFormat('en-US',
+    {weekday:'long', month:'long', day:'numeric'}).format(first.dt);
+
+  $('#nextUp').innerHTML = `
+    <div class="card orange">
+      <p class="eyebrow" style="margin-bottom:4px">Next up</p>
+      <h3 style="font-size:21px">${AGENDAS[first.kind].label}</h3>
+      <p style="font-size:16px;font-weight:600;margin:2px 0 10px">${dateStr}</p>
+      ${sameDay.map(e=>`<p style="font-size:15px;margin:0 0 5px">
+        <strong>${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</strong>
+        <span style="color:var(--stone)"> — ${e.session} · ${fmtT(e.dt, ET)} ET / ${fmtT(e.dt, PT)} PT</span></p>`).join('')}
+      <p style="font-size:14px;color:var(--stone);margin:10px 0 0">Both sessions cover the same ground. Come to whichever suits you.</p>
+    </div>`;
+
+  const clock = off => {
+    const total = first.hh*60 + first.mm + off;
+    const h24 = Math.floor(total/60) % 24, m = total % 60;
+    const h12 = (h24 % 12) === 0 ? 12 : h24 % 12;
+    return h12 + ':' + String(m).padStart(2,'0');
+  };
+  const ampm = (first.hh % 24) < 12 ? 'AM' : 'PM';
+
+  $('#agendaTitle').textContent = AGENDAS[first.kind].label + ' — the hour';
+  $('#agendaNote').textContent =
+    'Both sessions run on the same clock: ' + clock(0) + ' ' + ampm +
+    ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.';
+  $('#agendaBody').innerHTML = AGENDAS[first.kind].items.map(([a,b,t,d])=>
+    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d}</p></div></li>`
+  ).join('');
+
+  const firstKey = first.y+'-'+first.mo+'-'+first.day+'-'+first.kind;
+  const seen = new Set([firstKey]);
+  $('#laterList').innerHTML = upcomingMeetings(6).filter(e=>{
+    const k = e.y+'-'+e.mo+'-'+e.day+'-'+e.kind;
+    if(seen.has(k)) return false;
+    seen.add(k); return true;
+  }).slice(0,4).map(e=>`
+    <div class="card" style="padding:14px 16px">
+      <p style="font-size:15px;margin:0"><strong>${e.title}</strong></p>
+      <p style="font-size:14px;color:var(--stone);margin:2px 0 0">${
+        new Intl.DateTimeFormat('en-US',{weekday:'short',month:'long',day:'numeric'}).format(new Date(e.y,e.mo,e.day))
+      }${e.kind==='ac' ? ' · ' + e.where : e.kind==='sx' ? ' · one session' : ' · two sessions'}</p>
+    </div>`).join('');
+}
+
+function renderMeetings(){
+  $('#tzName').textContent = localTZ.split('/').pop().replace(/_/g,' ') + ' (' + tzAbbr(new Date()) + ')';
+  const y = calY, mo = calM;
+  const ev = monthEvents(y, mo);
+  const today = new Date();
+  const isThisMonth = today.getFullYear()===y && today.getMonth()===mo;
+
+  $('#calTitle').textContent = new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric'})
+    .format(new Date(y, mo, 1));
+
+  const first = new Date(y, mo, 1).getDay();
+  const dim = new Date(y, mo+1, 0).getDate();
+  let html = ['S','M','T','W','T','F','S'].map(w=>`<div class="cal-wd">${w}</div>`).join('');
+  for(let i=0;i<first;i++) html += '<div class="cal-day pad"></div>';
+  for(let d=1; d<=dim; d++){
+    const list = ev[d] || [];
+    const kinds = [...new Set(list.map(e=>e.kind))];
+    const past = new Date(y,mo,d,23,59) < today;
+    const cls = ['cal-day'];
+    if(list.length) cls.push('has');
+    if(past) cls.push('past');
+    if(isThisMonth && today.getDate()===d) cls.push('today');
+    if(selDay && selDay.y===y && selDay.mo===mo && selDay.d===d) cls.push('sel');
+    html += `<button class="${cls.join(' ')}" ${list.length?`data-day="${d}"`:'disabled'}>
+      <span>${d}</span>
+      <span class="dots">${kinds.map(k=>`<i class="dot ${k}"></i>`).join('')}</span>
+    </button>`;
+  }
+  $('#calGrid').innerHTML = html;
+  renderDayPanel();
+}
+
+function renderDayPanel(){
+  const p = $('#dayPanel');
+  if(!selDay){ p.innerHTML=''; return; }
+  const ev = monthEvents(selDay.y, selDay.mo)[selDay.d] || [];
+  const dateStr = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
+    .format(new Date(selDay.y, selDay.mo, selDay.d));
+  if(!ev.length){ p.innerHTML = `<h3>${dateStr}</h3><p class="empty-day">Nothing scheduled.</p>`; return; }
+  p.innerHTML = `<h3>${dateStr}</h3>` + ev.map(e=> e.allDay ? `
+    <div class="ev ${e.kind}">
+      <h4>${e.title}</h4>
+      <p class="t1">${e.when}</p>
+      <p class="t2">${e.where}</p>
+      ${e.link ? (signedIn()
+          ? `<a class="ev-link" href="${e.link.url}" target="_blank" rel="noopener">${e.link.label} \u2192</a>`
+          : `<button class="ev-locked" data-go="auth">\ud83d\udd12 ${e.link.label} \u2014 members only</button>`) : ''}
+    </div>` : `
+    <div class="ev ${e.kind}">
+      <h4>${e.title}</h4>
+      <p class="t1">${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</p>
+      <p class="t2">${fmtT(e.dt, ET)} ET · ${fmtT(e.dt, PT)} PT — ${e.session}</p>
+      <p class="d">${e.desc}</p>
+    </div>`).join('');
+}
+
+let calY, calM, selDay = null;
+(function initCal(){
+  const n = new Date();
+  calY = n.getFullYear(); calM = n.getMonth();
+  const nx = nextEventFrom(calY, calM);
+  if(nx){ calY = nx.y; calM = nx.mo; selDay = {y:nx.y, mo:nx.mo, d:nx.d}; }
+})();
+
+$('#calPrev').addEventListener('click', ()=>{ calM--; if(calM<0){calM=11;calY--;} renderMeetings(); });
+$('#calNext').addEventListener('click', ()=>{ calM++; if(calM>11){calM=0;calY++;} renderMeetings(); });
+$('#calGrid').addEventListener('click', e=>{
+  const b = e.target.closest('[data-day]'); if(!b) return;
+  selDay = {y:calY, mo:calM, d:+b.dataset.day};
+  renderMeetings();
+});
+
+/* ---- navigation ---- */
+function go(id){
+  if(typeof GATED !== 'undefined' && GATED.includes(id) && !signedIn()) id = 'auth';
+  $$('.screen').forEach(s=>s.classList.remove('on'));
+  const t=$('#s-'+id); if(t) t.classList.add('on');
+  const navId = id==='welcome' ? 'me' : id;
+  $$('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.go===navId));
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='meetings') renderMeetings();
+  if(id==='agenda') renderAgenda();
+}
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
+
+document.addEventListener('change', e=>{
+  if(e.target.matches('.choice input')){
+    const grp=e.target.closest('.choices');
+    if(e.target.type==='radio') grp.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+    e.target.closest('.choice').classList.toggle('sel', e.target.checked);
+  }
+});
+$$('.choice input').forEach(i=>{ if(i.checked) i.closest('.choice').classList.add('sel'); });
+
+document.addEventListener('change', e=>{
+  if(e.target.name === 'lang'){
+    const other = e.target.value === 'Other';
+    $('#langOtherWrap').hidden = !other;
+    if(other) $('#langOther').focus(); else $('#langOther').value = '';
+  }
+});
+
+/* ---- storage ---- */
+async function loadAll(){
+  try{ const m=await window.storage.get('bisc:me',false); me=m?JSON.parse(m.value):null; }catch(e){ me=null; }
+  paintContacts();
+  paintAuth();
+  try{ const l=await window.storage.get('bisc:lang',false); if(l && l.value==='es') LANG='es'; }catch(e){}
+  applyLang();
+  renderMeetings(); renderAgenda();
+}
+async function saveMe(){ try{ await window.storage.set('bisc:me',JSON.stringify(me),false); }catch(e){ console.error(e); } }
+
+$('#joinForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const v=id=>$('#'+id).value.trim();
+  let ok=true;
+  const set=(id,bad)=>{ $('#'+id).hidden=!bad; if(bad) ok=false; };
+  set('e-name', !(v('fname')&&v('lname')));
+  set('e-email', !/^\S+@\S+\.\S+$/.test(v('email')));
+  set('e-loc', !(v('state')&&v('zip')));
+  set('e-pilot', !v('pilot'));
+  const prefs = $$('#contactPref input:checked').map(i=>i.value);
+  set('e-pref', prefs.length===0);
+  if(!ok){ $('.err:not([hidden])').scrollIntoView({block:'center',behavior:'smooth'}); return; }
+  me={first:v('fname'),last:v('lname'),email:v('email'),phone:v('phone'),
+      pref:prefs,
+      lang:(($('#langPref input:checked')||{}).value === 'Other'
+            ? ($('#langOther').value.trim() || 'Another language')
+            : ($('#langPref input:checked')||{}).value || 'English'),
+      state:v('state'),zip:v('zip'),pilot:v('pilot'),
+      interests:$$('#interests input:checked').map(i=>i.value),
+      extras:$$('#extras input:checked').map(i=>i.value),
+      note:v('anything'),joined:new Date().toISOString(),activities:[]};
+  const btn = $('#joinForm button[type=submit]');
+  busy(btn, true, 'Joining…');
+  $('#e-send').hidden = true;
+
+  const res = await sendToSheet({
+    type:'join', first:me.first, last:me.last, email:me.email, phone:me.phone,
+    contact:prefList(me.pref).join(', '), language:me.lang, state:me.state, zip:me.zip, pilot:me.pilot,
+    interests:me.interests.join(', '), requests:me.extras.join(', '), note:me.note,
+    hp: $('#jWebsite') ? $('#jWebsite').value : ''
+  });
+  busy(btn, false);
+
+  if(!res.ok && res.reason !== 'no-endpoint'){
+    me = null;
+    $('#e-send').hidden = false;
+    $('#e-send').scrollIntoView({block:'center',behavior:'smooth'});
+    return;
+  }
+
+  await saveMe();
+  $('#welcomeH').textContent='Welcome, '+me.first+'.';
+  buildWelcomeSteps(); renderMeetings(); renderAgenda(); go('welcome');
+});
+
+function buildWelcomeSteps(){
+  const buddy=me.extras.includes('buddy'), call=me.extras.includes('call'), how=prefPhrase(me.pref);
+  const next=nextOfKind('nm');
+  const nextTxt = next
+    ? new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'}).format(next.dt)
+      + ' at ' + fmtT(next.dt, localTZ) + ' ' + tzAbbr(next.dt) + '.'
+    : 'Monthly, in two sessions.';
+  const steps=[['Now','Confirmation on its way','A welcome email is landing in '+me.email+'.']];
+  steps.push(buddy
+    ? ['3–7 days','Your BISC Buddy reaches out','A member will contact you by '+how+', the way you asked.']
+    : ['A few days','Ways to take part','We\'ll send you what\'s happening and where you could plug in.']);
+  if(call && !buddy) steps.push(['This week','A call to say hi','A member will reach out to answer whatever you want to ask.']);
+  steps.push(['Next up','New member meeting', nextTxt+' There are two sessions that day — come to whichever fits.']);
+  steps.push(['1 month','We check back in','Someone will ask how it\'s going and what you need. Not a form.']);
+  $('#welcomeSteps').innerHTML=steps.map(s=>
+    '<li><div class="when">'+s[0]+'</div><div class="step-b"><h3>'+s[1]+'</h3><p>'+s[2]+'</p></div></li>').join('');
+}
+
+/* ---- ask a question ---- */
+$('#askForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const v = id => $('#'+id).value.trim();
+  let ok = true;
+  const set = (id, bad) => { $('#'+id).hidden = !bad; if(bad) ok = false; };
+  set('e-aName', !v('aName'));
+  set('e-aEmail', !/^\S+@\S+\.\S+$/.test(v('aEmail')));
+  set('e-aMsg', !v('aMsg'));
+  if(!ok){ $('#askCard .err:not([hidden])').scrollIntoView({block:'center',behavior:'smooth'}); return; }
+
+  const btn = $('#askForm button[type=submit]');
+  $('#e-ask').hidden = true;
+  busy(btn, true);
+
+  const payload = {
+    type: 'question',
+    name: v('aName'),
+    email: v('aEmail'),
+    message: v('aMsg'),
+    hp: $('#aWebsite') ? $('#aWebsite').value : ''
+  };
+  const res = await sendToSheet(payload);
+  busy(btn, false);
+
+  if(res.ok){
+    $('#askCard').innerHTML = `
+      <h3 style="color:var(--green-dk)">Your question is in</h3>
+      <p style="font-size:15px;margin:0 0 6px">A person will read it and get back to you at ${payload.email}. Usually within a couple of days.</p>
+      <p style="font-size:14px;color:var(--stone);margin:0 0 14px">Nothing here is automated — a member of the onboarding team answers these.</p>
+      <button class="btn ghost sm" id="askAgain">Ask another question</button>`;
+    $('#askAgain').addEventListener('click', ()=>location.reload());
+    return;
+  }
+
+  $('#e-ask').hidden = false;
+  $('#e-ask').scrollIntoView({block:'center',behavior:'smooth'});
+});
+
+function prefList(p){
+  const a = Array.isArray(p) ? p : (p ? [p] : []);
+  return a.length ? a : ['Email'];
+}
+function prefPhrase(p){
+  const l = prefList(p).map(x=>x.toLowerCase());
+  if(l.length===1) return l[0];
+  if(l.length===2) return l[0]+' or '+l[1];
+  return l.slice(0,-1).join(', ')+', or '+l[l.length-1];
+}
+
+
+/* =========================================================
+   AUTHENTICATION
+   Gated pages: meetings, agenda, learning.
+   The token lives on the device; the server decides what it
+   unlocks. Anything genuinely sensitive is fetched from the
+   sheet after sign-in, never shipped inside this file.
+   ========================================================= */
+const GATED = [];  // nothing is a whole gated page now
+let AUTH = null;   // {token, name, expires}
+
+function loadAuth(){
+  try{
+    const raw = localStorage.getItem('bisc.auth');
+    if(!raw) return null;
+    const a = JSON.parse(raw);
+    if(new Date(a.expires) < new Date()){ localStorage.removeItem('bisc.auth'); return null; }
+    return a;
+  }catch(e){ return null; }
+}
+function saveAuth(a){
+  AUTH = a;
+  try{ a ? localStorage.setItem('bisc.auth', JSON.stringify(a)) : localStorage.removeItem('bisc.auth'); }catch(e){}
+  paintAuth();
+}
+function signedIn(){ return !!(AUTH && new Date(AUTH.expires) > new Date()); }
+
+function paintAuth(){
+  const inB = signedIn();
+  $('#authBtn').textContent = inB ? (AUTH.name || 'Account') : 'Sign in';
+  $$('#nav button').forEach(b => b.classList.toggle('locked', GATED.includes(b.dataset.go) && !inB));
+  $('#authStep1').hidden = inB;
+  $('#authStep2').hidden = true;
+  $('#authDone').hidden = !inB;
+  if(inB) $('#whoName').textContent = AUTH.name ? 'Signed in as ' + AUTH.name : 'Signed in';
+  const ng = $('#notesGate'), nl = $('#notesLock');
+  if(ng) ng.hidden = !inB;
+  if(nl) nl.hidden = inB;
+  if(typeof renderMeetings === 'function') renderMeetings();
+}
+
+$('#authBtn').addEventListener('click', ()=>go('auth'));
+
+$('#sendCode').addEventListener('click', async ()=>{
+  const email = $('#emailInput').value.trim();
+  const msg = $('#authMsg');
+  if(!/^\S+@\S+\.\S+$/.test(email)){ msg.style.color='#A8341C'; msg.textContent='Please enter a valid email.'; return; }
+  const b = $('#sendCode'); b.disabled = true; b.textContent = 'Sending…';
+  const res = await sendToSheet({type:'auth_request', email});
+  b.disabled = false; b.textContent = 'Email me a code';
+  if(res.ok){
+    $('#sentTo').textContent = email;
+    $('#authStep1').hidden = true;
+    $('#authStep2').hidden = false;
+    $('#codeInput').focus();
+  } else {
+    msg.style.color='#A8341C';
+    msg.textContent='Could not send that just now. Check your connection and try again.';
+  }
+});
+
+$('#backToEmail').addEventListener('click', ()=>{
+  $('#authStep2').hidden = true; $('#authStep1').hidden = false;
+  $('#authMsg').textContent=''; $('#codeInput').value='';
+});
+
+$('#verifyCode').addEventListener('click', async ()=>{
+  const email = $('#emailInput').value.trim();
+  const code = $('#codeInput').value.trim();
+  const msg = $('#authMsg2');
+  if(code.length !== 6){ msg.style.color='#A8341C'; msg.textContent='The code is six digits.'; return; }
+  const b = $('#verifyCode'); b.disabled = true; b.textContent = 'Checking…';
+  let out = null;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'auth_verify', email, code})});
+    out = await r.json().catch(()=>null);
+  }catch(e){}
+  b.disabled = false; b.textContent = 'Sign in';
+  if(out && out.ok){
+    saveAuth({token: out.token, name: out.name, expires: out.expires});
+    msg.textContent = '';
+    $('#codeInput').value = '';
+    go('meetings');
+  } else {
+    msg.style.color='#A8341C';
+    msg.textContent = out && out.error === 'expired'
+      ? 'That code has expired. Ask for a new one.'
+      : out && out.error === 'not a member'
+        ? "That email isn't on our member list yet."
+        : 'That code did not match. Check it and try again.';
+  }
+});
+
+$('#signOut').addEventListener('click', ()=>{ saveAuth(null); go('home'); });
+
+AUTH = loadAuth();
+
+/* ---- gated content fetched from the sheet, not stored here ---- */
+async function fetchGated(){
+  if(!signedIn()) return {ok:false};
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'gated_fetch', token: AUTH.token})});
+    return await r.json().catch(()=>({ok:false}));
+  }catch(e){ return {ok:false}; }
+}
+
+/* =========================================================
+   CO-DESIGN FEEDBACK
+   Set FEEDBACK_ON to false and the button and panel vanish.
+   That is the only change needed before going live.
+   ========================================================= */
+const FEEDBACK_ON = true;
+const APP_NAME = 'Member companion';
+
+(function feedback(){
+  const btn = $('#fbBtn'), wrap = $('#fbWrap');
+  if(!FEEDBACK_ON){ if(btn) btn.remove(); if(wrap) wrap.remove(); return; }
+
+  const PAGES = {home:'Home', learn:'About', join:'Join', meetings:'Meetings and events',
+                 agenda:'Agenda', learning:'Learning', module:'Learning module', welcome:'After joining'};
+  let kind = '', selected = '';
+
+  function whereAmI(){
+    const on = $$('.screen').find(x => x.classList.contains('on'));
+    const id = on ? on.id.replace('s-','') : 'home';
+    let label = PAGES[id] || id;
+    if(id === 'module' && typeof curMod !== 'undefined' && curMod && MODULES[curMod]){
+      label += ' — ' + MODULES[curMod].track + ' / ' + MODULES[curMod].title;
+    }
+    return label;
+  }
+
+  btn.addEventListener('click', ()=>{
+    selected = String(window.getSelection ? window.getSelection() : '').trim().slice(0,600);
+    $('#fbWhere').textContent = 'On: ' + whereAmI();
+    const sel = $('#fbSel');
+    sel.hidden = !selected;
+    sel.textContent = selected ? '\u201C' + selected + '\u201D' : '';
+    $('#fbFrom').value = (()=>{ try{ return localStorage.getItem('bisc.fb.from') || ''; }catch(e){ return ''; } })();
+    $('#fbMsg').textContent = '';
+    wrap.classList.add('on');
+    $('#fbText').focus();
+  });
+
+  const close = ()=>{ wrap.classList.remove('on'); };
+  $('#fbCancel').addEventListener('click', close);
+  wrap.addEventListener('click', e=>{ if(e.target === wrap) close(); });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && wrap.classList.contains('on')) close(); });
+
+  $$('#fbKinds button').forEach(b=>b.addEventListener('click', ()=>{
+    kind = (kind === b.dataset.kind) ? '' : b.dataset.kind;
+    $$('#fbKinds button').forEach(x=>x.classList.toggle('on', x.dataset.kind === kind && kind));
+  }));
+
+  $('#fbSend').addEventListener('click', async ()=>{
+    const text = $('#fbText').value.trim();
+    if(!text){ $('#fbText').focus(); return; }
+    const from = $('#fbFrom').value.trim();
+    try{ localStorage.setItem('bisc.fb.from', from); }catch(e){}
+
+    const send = $('#fbSend');
+    send.disabled = true; send.textContent = 'Sending\u2026';
+    const res = await sendToSheet({
+      type:'feedback', app:APP_NAME, page:whereAmI(), kind:kind || 'General',
+      selected:selected, comment:text, from:from || 'Anonymous',
+      screen: window.innerWidth + '\u00d7' + window.innerHeight, lang:LANG
+    });
+    send.disabled = false; send.textContent = 'Send';
+
+    if(res.ok){
+      $('#fbText').value=''; kind='';
+      $$('#fbKinds button').forEach(x=>x.classList.remove('on'));
+      $('#fbMsg').style.color='var(--green-dk)';
+      $('#fbMsg').textContent='Thanks \u2014 that went straight to the sheet.';
+      setTimeout(close, 1200);
+    } else {
+      $('#fbMsg').style.color='#A8341C';
+      $('#fbMsg').textContent='Could not send. Check your connection and try again.';
+    }
+  });
+})();
+
+loadAll();
+</script>
+
+<button id="fbBtn" type="button" aria-label="Give feedback">&#9998; Feedback</button>
+
+<div id="fbWrap" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div id="fbPanel">
+    <h3 id="fbTitle">Feedback</h3>
+    <p id="fbWhere"></p>
+    <div id="fbSel" hidden></div>
+    <div class="fb-kinds" id="fbKinds">
+      <button data-kind="Bug" type="button">Bug</button>
+      <button data-kind="Wording" type="button">Wording</button>
+      <button data-kind="Idea" type="button">Idea</button>
+      <button data-kind="Don't like" type="button">Don't like</button>
+    </div>
+    <textarea id="fbText" placeholder="What did you notice?"></textarea>
+    <input type="text" id="fbFrom" placeholder="Your name">
+    <div class="fb-row">
+      <button id="fbCancel" type="button">Cancel</button>
+      <button id="fbSend" type="button">Send</button>
+    </div>
+    <p id="fbMsg"></p>
+  </div>
+</div>
+
+</body>
+</html>

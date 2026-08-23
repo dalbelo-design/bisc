@@ -2822,6 +2822,7 @@ function openModule(id){
   $('#mNav').innerHTML = nav;
 
   go('module');
+  rememberScreen('module');
 }
 
 document.addEventListener('click', e => {
@@ -2993,10 +2994,19 @@ function renderAgenda(){
 
   const posted = postedAgendaFor(first);
   const items = posted ? posted.items : AGENDAS[first.kind].items;
-  $('#agendaTitle').textContent = AGENDAS[first.kind].label + ' — the hour';
-  $('#agendaNote').textContent =
-    'Both sessions run on the same clock: ' + clock(0) + ' ' + ampm +
-    ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.';
+  // duration comes from the agenda itself, so the title can never go stale
+  const mins = items.length ? items[items.length-1][1] : 0;
+  const dur = mins >= 60 && mins % 60 === 0
+      ? (mins/60 === 1 ? 'one hour' : (['','one','two','three','four'][mins/60] || (mins/60)) + ' hours')
+      : mins > 60
+        ? Math.floor(mins/60) + 'h ' + (mins%60) + 'm'
+        : mins + ' minutes';
+  $('#agendaTitle').textContent = AGENDAS[first.kind].label + ' \u2014 ' + dur;
+  $('#agendaNote').textContent = sameDay.length > 1
+    ? 'Both sessions run on the same clock: ' + clock(0) + ' ' + ampm +
+      ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.'
+    : 'One session, starting ' + clock(0) + ' ' + ampm + ' ' +
+      (first.tz === PT ? 'Pacific' : 'Eastern') + '.';
   $('#agendaBody').innerHTML = items.map(([a,b,t,d])=>
     `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d||''}</p></div></li>`
   ).join('');
@@ -3114,8 +3124,29 @@ $('#calGrid').addEventListener('click', e=>{
 });
 
 /* ---- navigation ---- */
+// Screens that should not be restored on refresh: 'welcome' only makes
+// sense straight after joining, and 'auth' should not trap someone.
+const NO_RESTORE = ['welcome','auth','module'];
+
+function rememberScreen(id){
+  const hash = (id === 'module' && curMod) ? 'module:' + curMod : id;
+  try{ history.replaceState(null, '', '#' + hash); }catch(e){}
+}
+
+function restoreScreen(){
+  const h = (location.hash || '').replace('#','');
+  if(!h) return;
+  if(h.startsWith('module:')){
+    const id = h.split(':')[1];
+    if(typeof MODULES !== 'undefined' && MODULES[id]){ openModule(id); return; }
+  }
+  const ok = $('#s-' + h) && !NO_RESTORE.includes(h);
+  if(ok) go(h);
+}
+
 function go(id){
   if(typeof GATED !== 'undefined' && GATED.includes(id) && !signedIn()) id = 'auth';
+  rememberScreen(id);
   $$('.screen').forEach(s=>s.classList.remove('on'));
   const t=$('#s-'+id); if(t) t.classList.add('on');
   const navId = id==='welcome' ? 'me' : id;
@@ -3151,10 +3182,19 @@ async function loadAll(){
   try{ const l=await window.storage.get('bisc:lang',false); if(l && l.value==='es') LANG='es'; }catch(e){}
   applyLang();
   renderMeetings(); renderAgenda();
+  restoreScreen();
   loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
   loadAgendas().then(()=>renderAgenda());
 }
-async function saveMe(){ try{ await window.storage.set('bisc:me',JSON.stringify(me),false); }catch(e){ console.error(e); } }
+async function saveMe(){
+  // The full record goes to the sheet. All that stays on this device is a
+  // first name and a date — enough to greet someone, not enough to leak.
+  const slim = me ? {first: me.first, joined: me.joined} : null;
+  try{
+    if(slim) await window.storage.set('bisc:me', JSON.stringify(slim), false);
+    else await window.storage.delete('bisc:me', false);
+  }catch(e){ console.error(e); }
+}
 
 $('#joinForm').addEventListener('submit', async e=>{
   e.preventDefault();
@@ -3197,6 +3237,17 @@ $('#joinForm').addEventListener('submit', async e=>{
   }
 
   await saveMe();
+
+  // clear every field so nobody's details sit in the form afterwards
+  $('#joinForm').reset();
+  $$('#joinForm .choice').forEach(c=>c.classList.remove('sel'));
+  $$('#joinForm input[type=checkbox]').forEach(i=>i.checked=false);
+  const dflt = $('#extras input[value=buddy]'); if(dflt){ dflt.checked=true; dflt.closest('.choice').classList.add('sel'); }
+  const eml = $('#contactPref input[value=Email]'); if(eml){ eml.checked=true; eml.closest('.choice').classList.add('sel'); }
+  const en = $('#langPref input[value=English]'); if(en){ en.checked=true; en.closest('.choice').classList.add('sel'); }
+  $('#langOtherWrap').hidden = true;
+  $$('#joinForm .err').forEach(e=>e.hidden=true);
+
   $('#welcomeH').textContent='Welcome, '+me.first+'.';
   buildWelcomeSteps(); renderMeetings(); renderAgenda(); go('welcome');
 });

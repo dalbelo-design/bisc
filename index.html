@@ -1307,10 +1307,16 @@ async function loadCalendar(){
 
 const ymd = (y,mo,d) => y + '-' + String(mo+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
 
+function kindForTitle(title){
+  const t = String(title).toLowerCase();
+  const r = RULES.find(x => x.title.toLowerCase() === t);
+  return r ? r.kind : null;
+}
+
 function changeFor(y, mo, d, title){
   return CAL.changes.find(c =>
     c.date === ymd(y,mo,d) &&
-    (!c.meeting || c.meeting.toLowerCase() === String(title).toLowerCase()));
+    (!c.meeting || meetingMatches(c.meeting, kindForTitle(title))));
 }
 
 function monthEvents(y, mo){
@@ -1355,7 +1361,7 @@ function monthEvents(y, mo){
   CAL.changes.filter(c => c.change === 'added').forEach(c=>{
     const [cy,cm,cd] = c.date.split('-').map(Number);
     if(cy!==y || cm-1!==mo) return;
-    RULES.filter(r => !c.meeting || r.title.toLowerCase() === c.meeting.toLowerCase())
+    RULES.filter(r => meetingMatches(c.meeting, r.kind))
       .forEach(r=>{
         const already = (map[cd]||[]).some(e => e.id === r.id);
         if(already) return;
@@ -2913,13 +2919,31 @@ async function loadAgendas(){
   return agendaCache;
 }
 
+
+/* The Meeting column in the sheet is typed by hand, so accept the
+   obvious variations rather than failing silently on "OC meeting". */
+const MEETING_ALIASES = {
+  nm: ['new member meeting','new member','new members meeting','new members','nm'],
+  fu: ['full union meeting','full union','union meeting','full member meeting','fu'],
+  oc: ['organizing committee','organizing committee meeting','oc','oc meeting','organising committee'],
+  sx: ['saturday mixer','mixer','social mixer']
+};
+
+function meetingMatches(typed, kind){
+  const t = String(typed || '').trim().toLowerCase();
+  if(!t) return true;                       // blank matches whatever is on that date
+  const list = MEETING_ALIASES[kind] || [];
+  if(list.includes(t)) return true;
+  const label = AGENDAS[kind] ? AGENDAS[kind].label.toLowerCase() : '';
+  return t === label;
+}
+
 function postedAgendaFor(ev){
   if(!signedIn()) return null;
   if(!agendaCache || !agendaCache.length) return null;
   const key = ev.y + '-' + String(ev.mo+1).padStart(2,'0') + '-' + String(ev.day).padStart(2,'0');
-  const label = AGENDAS[ev.kind] ? AGENDAS[ev.kind].label.toLowerCase() : '';
   const rows = agendaCache.filter(a =>
-    a.date === key && (!a.meeting || a.meeting.toLowerCase() === label));
+    a.date === key && meetingMatches(a.meeting, ev.kind));
   if(!rows.length) return null;
 
   let at = 0;

@@ -32,20 +32,23 @@ button,input{font-family:inherit;font-size:inherit;color:inherit}
 .sessionbar button{flex:1;background:var(--raised);border:none;border-bottom:5px solid transparent;
   color:var(--ink);font-family:var(--display);font-weight:700;font-size:14px;cursor:pointer;
   padding:13px 8px;min-height:52px;letter-spacing:.01em;transition:background .15s}
-/* each session keeps its own colour whether it is selected or not */
-.sessionbar button[data-session="info"]{border-bottom-color:#BEEBFF}
+/* each session keeps its own color whether it is selected or not */
+.sessionbar button[data-session="plenary"]{border-bottom-color:#BEEBFF}
 .sessionbar button[data-session="sprint"]{border-bottom-color:#FDDFA1}
-.sessionbar button[data-session="both"]{border-bottom-color:#FFF0CC}
+.sessionbar button[data-session="lounge"]{border-bottom-color:#C7E3CB}
+.sessionbar button[data-session="all"]{border-bottom-color:#FFF0CC}
 .sessionbar button:hover{background:#F6F5E6}
-.sessionbar button.on[data-session="info"]{background:var(--sky);border-bottom-color:#1FA5D8}
+.sessionbar button.on[data-session="plenary"]{background:var(--sky);border-bottom-color:#1FA5D8}
 .sessionbar button.on[data-session="sprint"]{background:var(--orange);border-bottom-color:#B87C08}
-.sessionbar button.on[data-session="both"]{background:var(--yellow);border-bottom-color:#C79A2A}
+.sessionbar button.on[data-session="lounge"]{background:var(--green-md);border-bottom-color:#2F6B44;color:#fff}
+.sessionbar button.on[data-session="all"]{background:var(--yellow);border-bottom-color:#C79A2A}
 @media (max-width:400px){.sessionbar button{font-size:12.5px;padding:12px 4px}}
 
-/* the section nav picks up the colour of the session you are in */
-body[data-session="info"] .nav button.on{background:var(--sky);border-color:var(--sky);color:var(--ink)}
+/* the section nav picks up the color of the session you are in */
+body[data-session="plenary"] .nav button.on{background:var(--sky);border-color:var(--sky);color:var(--ink)}
 body[data-session="sprint"] .nav button.on{background:var(--orange);border-color:var(--orange);color:var(--ink)}
-body[data-session="both"] .nav button.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+body[data-session="lounge"] .nav button.on{background:var(--green-md);border-color:var(--green-md);color:#fff}
+body[data-session="all"] .nav button.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
 
 .nav{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line);
  display:flex;gap:6px;overflow-x:auto;padding:9px 14px;-webkit-overflow-scrolling:touch}
@@ -226,487 +229,515 @@ details.q .qb p{font-size:15px}
 <div class="top">
   <p class="kicker">Event toolkit</p>
   <h1>BIG 2026 Toolkit</h1>
-  <p class="when">BIG Conference · Portland, OR · September 17–18, 2026</p>
+  <p class="when">BIG Conference · Portland, OR · Friday, September 18, 2026</p>
 </div>
 <p class="status" id="status"></p>
 
 <div class="sessionbar" id="sessionbar">
-  <button data-session="sprint" class="on">Design sprint</button>
-  <button data-session="info">Info session</button>
-  <button data-session="both">Both rooms</button>
+  <button data-session="plenary" class="on">Plenary</button>
+  <button data-session="sprint">Design Sprint</button>
+  <button data-session="lounge">Lounge</button>
+  <button data-session="all">Everyone</button>
 </div>
 
 <nav class="nav" id="nav">
-  <button data-view="ds-brief" data-session="sprint" class="on">Brief</button>
+  <button data-view="pl-brief" data-session="plenary" class="on">Brief</button>
+  <button data-view="pl-questions" data-session="plenary">Panel questions</button>
+  <button data-view="notes" data-session="plenary">Notes</button>
+  <button data-view="ds-brief" data-session="sprint">Brief</button>
+  <button data-view="ds-flow" data-session="sprint">The sprint</button>
   <button data-view="ds-kit" data-session="sprint">Materials</button>
   <button data-view="notes" data-session="sprint">Notes</button>
-  <button data-view="brief" data-session="info">Brief</button>
-  <button data-view="timing" data-session="info">Timing</button>
-  <button data-view="tables" data-session="info">Table guides</button>
-  <button data-view="kit" data-session="info">Kit &amp; capture</button>
-  <button data-view="notes" data-session="info">Notes</button>
-  <button data-view="wrong" data-session="info">If it goes wrong</button>
-  <button data-view="rooms" data-session="both">Between the rooms</button>
-  <button data-view="coord" data-session="both">Coordination</button>
+  <button data-view="lo-brief" data-session="lounge">Brief</button>
+  <button data-view="lo-areas" data-session="lounge">The two areas</button>
+  <button data-view="lo-kit" data-session="lounge">Materials</button>
+  <button data-view="lo-art" data-session="lounge">Gratitude &amp; art</button>
+  <button data-view="notes" data-session="lounge">Notes</button>
+  <button data-view="who" data-session="all">Who is where</button>
+  <button data-view="coord" data-session="all">Coordination</button>
+  <button data-view="disclosure" data-session="all">Content consent</button>
 </nav>
 
-<!-- ================= DESIGN SPRINT: BRIEF ================= -->
-<div class="view" id="v-ds-brief">
-  <div class="fill"><strong>Skeleton, not a plan.</strong> The sprint team owns what actually happens in this room. This is here so the two sessions share a document and nobody is working from a different version.</div>
+<!-- ============ PLENARY ============ -->
+<div class="view on" id="v-pl-brief">
+  <h2>Participant Power Building</h2>
+  <p class="lede">90 minutes, main stage. A panel of pilot administrators, facilitated by participants — which is the point.</p>
 
-  <h2>What this session is</h2>
+  <div class="panel">
+    <h3>Why this session matters</h3>
+    <p>In almost every room like this, the pilot administrator leads and the participant answers. Here it is the other way round.</p>
+    <p><strong>Zyera and Daniela facilitate. The administrators answer.</strong> That inversion is not a staging choice — it is the argument the union is making, performed in front of the movement.</p>
+  </div>
+
+  <h2>The question we are trying to answer</h2>
+  <div class="card sky">
+    <p style="font-size:16px;margin:0"><strong>How will building participant power launch our mission of basic income for all?</strong></p>
+  </div>
+
+  <h2>Who is on stage</h2>
+  <div class="card">
+    <ul>
+      <li><strong>GroFund — In Her Hands.</strong> Participants engaged in design and research.</li>
+      <li><strong>Bread for the City.</strong> Participants determine their own payment amounts and schedule.</li>
+      <li><strong>Path Home.</strong> Space for participants to connect and build social capital with each other.</li>
+      <li><strong>MyPath — Bill of RYTS.</strong> A participant-created set of policy recommendations centring young BIPOC community members.</li>
+      <li><strong>Community Change.</strong> Not confirmed. Would speak to the artist organizing work Columbine is part of.</li>
+    </ul>
+    <div class="fill" style="margin:0">Confirm Community Change before printing anything with the line-up on it.</div>
+  </div>
+
+  <h2>Who is running it</h2>
   <div class="card green">
-    <p style="font-size:15px"><strong>Participant Led Community Design Sprint by BISC Union</strong> — Friday, 2:10 pm, running alongside the info session.</p>
-    <p style="font-size:15px;margin:0">For pilot participants and members who want to <em>do</em> the work. The info session next door is for people who don't know BISC yet.</p>
+    <p style="font-size:15px;margin:0 0 8px"><strong>Facilitating:</strong> Zyera (Thrive) and Daniela (The Bridge Project)</p>
+    <p style="font-size:15px;margin:0"><strong>Supporting:</strong> Paris, Tracy, Champagne</p>
   </div>
 
-  <h2>Who's running it</h2>
-  <p class="sub">Fill these in before the day. Names save on this device.</p>
+  <h2>Materials</h2>
   <div class="card">
-    <div class="role"><div class="role-l"><strong>Lead</strong><span>Runs the room</span></div><input type="text" data-role="ds1" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Facilitator</strong><span>Holds time and turns</span></div><input type="text" data-role="ds2" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Notes</strong><span>Captures the output</span></div><input type="text" data-role="ds3" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Support</strong><span>Door, access, materials</span></div><input type="text" data-role="ds4" placeholder="Name"></div>
+    <ul>
+      <li><strong>BINGO card.</strong> The audience engagement tool. Squares carry key words and definitions so listening becomes active.</li>
+      <li>QR code to the BISC landing page</li>
+      <li>BISC logo</li>
+    </ul>
+    <div class="fill" style="margin:0"><strong>Still needed:</strong> the session description, and three session takeaways. Both are blank in the design doc.</div>
   </div>
 
-  <h2>Questions to settle first</h2>
+  <h2>Two things worth watching</h2>
   <div class="card orange">
-    <p style="font-size:15px">Answer these before Portland and the rest of the design follows:</p>
-    <ul>
-      <li><strong>What comes out of the room?</strong> A decision, a draft, a list of priorities, a prototype. Name the artifact.</li>
-      <li><strong>Who is it for?</strong> Something the union will use, or something to hand to pilot administrators.</li>
-      <li><strong>How many people?</strong> Small-group work breaks differently at 8 than at 30.</li>
-      <li><strong>Is it participants only?</strong> If yes, say so at the door, warmly, and have somewhere to send everyone else.</li>
-      <li><strong>Is anyone observing?</strong> See the note on the Both rooms tab before agreeing to it.</li>
-    </ul>
-  </div>
-
-  <h2>A shape that usually works</h2>
-  <div class="card">
-    <p style="font-size:15px">If the team wants a starting structure for 85 minutes:</p>
-    <ul>
-      <li><strong>10 min</strong> — Welcome, who's here, what we're making today</li>
-      <li><strong>15 min</strong> — Frame the problem. One question, stated plainly, on the wall</li>
-      <li><strong>25 min</strong> — Small groups of four or five. Generate, don't evaluate</li>
-      <li><strong>20 min</strong> — Groups report. Look for what repeats across them</li>
-      <li><strong>10 min</strong> — Decide what carries forward, and who owns it</li>
-      <li><strong>5 min</strong>  — Close. Name what happens to the output and by when</li>
-    </ul>
-    <p style="font-size:15px;margin:0">The last five minutes matter most. A sprint whose output goes nowhere teaches members their time was decorative.</p>
+    <p style="font-size:15px"><strong>Mic and call-and-response, not intellectual marketing.</strong> The 8/20 notes name this explicitly. If the panel drifts into organizational messaging, the facilitators should pull it back to the room.</p>
+    <p style="font-size:15px;margin:0"><strong>10 to 30 pilot participants will be in that audience</strong> — some leading state coalition policy work, some in storytelling cohorts. They are not a passive audience and the session should not treat them as one.</p>
   </div>
 </div>
 
-<!-- ================= DESIGN SPRINT: MATERIALS ================= -->
+<!-- ============ PLENARY QUESTIONS ============ -->
+<div class="view" id="v-pl-questions">
+  <h2>Questions for the panel</h2>
+  <p class="lede">Drafted in the design doc. Grouped here by what each one is actually digging at.</p>
+
+  <h2>Barriers the field built</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"What are some traditional barriers to community that we should do away with?"</p>
+    <p style="font-size:15.5px;margin:0">"Are there misconceptions of basic income that have made it hard to socialize beyond your pilot community?"</p>
+    <p class="clock" style="margin-top:12px">Listening for: research norms that keep participants apart. The 8/20 notes name one directly — not wanting participants to speak to one another.</p>
+  </div>
+
+  <h2>What happens when a pilot ends</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"How does your organization stay in touch with people who participated, beyond the pilot?"</p>
+    <p style="font-size:15.5px;margin:0">"What feels unsettling about the way pilots typically sunset, and what are your hopes for a soft landing? How does the union energise you and your organization?"</p>
+    <p class="clock" style="margin-top:12px">This is the union's opening. Most administrators are uneasy about how pilots end and rarely get asked.</p>
+  </div>
+
+  <h2>What the data misses</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"What was the most unexpected outcome of your pilot that has stuck with you and reshaped how you think?"</p>
+    <p style="font-size:15.5px;margin:0">"Which findings are most persuasive to policymakers — and what are you noticing in the gap between what policymakers want and what participants actually need?"</p>
+    <p class="clock" style="margin-top:12px">That gap is the union's whole argument. If a panellist names it themselves, let it sit.</p>
+  </div>
+
+  <h2>Consulting the union</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px;margin:0">"Community voice is always there — but how are the important stories actually being shared, and who decides?"</p>
+  </div>
+
+  <div class="card orange">
+    <h3>For the facilitators</h3>
+    <p style="font-size:15px;margin:0">You do not have to get through all of these. Four answered properly beats nine skimmed. Pick the three you most want on the record and let the room take the rest.</p>
+  </div>
+</div>
+
+<!-- ============ DESIGN SPRINT ============ -->
+<div class="view" id="v-ds-brief">
+  <h2>Design Sprint &amp; Hackathon</h2>
+  <p class="lede">80 minutes. Room 1 of the breakouts.</p>
+
+  <div class="panel">
+    <p><strong>An opportunity to design a solution for lifting participant power across the movement</strong> — and to create things the union will actually try to implement.</p>
+    <p style="margin:0">BISC organizers are there to guide and support, not to run it. The people in the room do the work.</p>
+  </div>
+
+  <h2>Who is running it</h2>
+  <div class="card green">
+    <p style="font-size:15px;margin:0">Columbine · Chemareéa · Faye · Florence</p>
+  </div>
+
+  <h2>What comes out of the room</h2>
+  <div class="card orange">
+    <p style="font-size:15px"><strong>Pitches.</strong> Individually or in small teams. Each one names a need, an audience, and a thing to build.</p>
+    <p style="font-size:15px;margin:0"><strong>The top three get a meeting with the union.</strong> Say that at the start — it changes how seriously people take the hour, and it is a promise the union then has to keep.</p>
+  </div>
+
+  <h2>Before anyone leaves</h2>
+  <div class="card">
+    <p style="font-size:15px"><strong>Photograph every sheet.</strong> Paper gets left in hotel conference rooms. A photo takes ten seconds and is the only copy that survives the flight home.</p>
+    <p style="font-size:15px;margin:0">Collect names and contact details for anyone who pitched. You cannot follow up on a good idea with no name attached.</p>
+  </div>
+</div>
+
+<!-- ============ SPRINT FLOW ============ -->
+<div class="view" id="v-ds-flow">
+  <h2>The sprint</h2>
+  <p class="lede">The structure from the 8/20 notes, laid out as a worksheet. Roughly 80 minutes.</p>
+
+  <div class="beat"><div class="beat-n">1</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Identify a need</h3>
+    <div class="say">"What is the challenge you would like to approach?"<em>On your own or with two or three others. Write it as a problem, not a solution.</em></div>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">2</div><div class="beat-b">
+    <p class="t">15 minutes</p><h3>Ideas for solutions</h3>
+    <p>Generate, do not evaluate. Quantity first. The judging comes later and someone else's bad idea is often the start of your good one.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">3</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Who is your audience?</h3>
+    <p>Be specific. "The community" is not an audience. Pilot participants in one state, or county supervisors, or people who have never heard of guaranteed income — those are audiences.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">4</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>What is the messaging?</h3>
+    <p>One sentence that would land with that audience. Not a mission statement.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">5</div><div class="beat-b">
+    <p class="t">15 minutes</p><h3>What would you build?</h3>
+    <div class="say">"What is a cool medium that will activate your audience and get folks excited?"<em>A zine, a video, a workshop, a tool, a campaign, a card game. Analogue counts.</em></div>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">6</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>How could the union help?</h3>
+    <p>The bridge from idea to something real. People, money, reach, credibility, or a room to test it in. Be honest about what would actually be needed.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">7</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Pitch</h3>
+    <p><strong>Need, audience, blurb.</strong> Ninety seconds each. Three sentences is plenty.</p>
+    <p style="margin-top:6px">Then the room picks. Top three get a meeting with the union.</p>
+  </div></div>
+
+  <div class="card sky">
+    <h3>The one-page worksheet</h3>
+    <p style="font-size:15px;margin:0 0 8px">Print one per person. Six boxes, in this order:</p>
+    <ul style="margin:0">
+      <li>The need I want to work on</li>
+      <li>Ideas for solving it</li>
+      <li>Who this is for</li>
+      <li>What I would say to them, in one sentence</li>
+      <li>The thing I would build, and in what medium</li>
+      <li>What the union could do to help</li>
+    </ul>
+  </div>
+
+  <div class="card orange">
+    <h3>A case worth having ready</h3>
+    <p style="font-size:15px;margin:0">The Marie Equity Center came up in the 8/20 notes as a reference — basic income aimed at a specific community, with members doing the community work themselves. Useful if the room stalls on what "a thing we could build" means.</p>
+  </div>
+</div>
+
+<!-- ============ SPRINT MATERIALS ============ -->
 <div class="view" id="v-ds-kit">
   <h2>Materials</h2>
   <p class="sub">Print and pack the week before. One owner. Ticks save on this device.</p>
   <div class="card">
-    <label class="chk"><input type="checkbox" data-kit="d1"><span>Door sign — <strong>Design Sprint · participants and members</strong></span></label>
-    <label class="chk"><input type="checkbox" data-kit="d2"><span>Sign pointing to the info session room, for anyone in the wrong place</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d3"><span>Flip chart or large paper — one sheet per small group</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d4"><span>Thick markers, several colors, at least two per group</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d5"><span>Sticky notes — two pads per group</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d6"><span>Dot stickers for prioritizing</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d7"><span>Masking tape for putting paper on walls</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d8"><span>Name tags and a marker that writes big</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d9"><span>The framing question, printed large</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d10"><span>Paper sign-in sheet</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d11"><span>Timer — a phone works, but out where everyone can see it</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d12"><span>Water and something to eat</span></label>
-    <label class="chk"><input type="checkbox" data-kit="d13"><span>Charged phone for photographing the output</span></label>
-  </div>
-
-  <h2>Before anyone leaves</h2>
-  <div class="card orange">
-    <p style="font-size:15px"><strong>Photograph every sheet.</strong> Paper gets left in hotel conference rooms. A photo takes ten seconds and is the only copy that survives the flight home.</p>
-    <p style="font-size:15px;margin:0">Then collect the sign-in sheet and hand it to whoever is consolidating both rooms.</p>
+    <label class="chk"><input type="checkbox" data-kit="s1"><span>Worksheets — one per person, plus 15 spare</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s2"><span>Door sign — <strong>Design Sprint · participants and members</strong></span></label>
+    <label class="chk"><input type="checkbox" data-kit="s3"><span>Sign pointing to the Lounge, for anyone in the wrong room</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s4"><span>Flip chart paper — one sheet per small group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s5"><span>Thick markers, several colors, two per group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s6"><span>Sticky notes — two pads per group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s7"><span>Dot stickers for picking the top three</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s8"><span>Masking tape for putting paper on walls</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s9"><span>Name tags and a marker that writes big</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s10"><span>Timer, out where everyone can see it</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s11"><span>Paper sign-in sheet</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s12"><span>Charged phone for photographing every sheet</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s13"><span>Water and something to eat</span></label>
   </div>
 
   <h2>Access</h2>
   <div class="card sky">
-    <p style="font-size:15px;margin:0">Small-group work assumes people can move, see, hear, and write. Ask what people need when they arrive, not after they have struggled. Someone who cannot write on a flip chart can still shape what goes on it — pair them with a writer rather than leaving them out of that part.</p>
+    <p style="font-size:15px;margin:0">Small-group work assumes people can move, see, hear and write. Ask what people need as they arrive, not after they have struggled. Someone who cannot write on a flip chart can still shape what goes on it — pair them with a writer rather than leaving them out of that part.</p>
   </div>
 </div>
 
-<!-- ================= BRIEF ================= -->
-<div class="view on" id="v-brief">
-  <h2>Who this is for</h2>
-  <table class="tbl">
-    <tr><th>Audience</th><th>What they want</th><th>What we want</th></tr>
-    <tr><td>Non-members</td><td>To know if this is for them, and what it costs</td><td>A sign-up, today, in the room</td></tr>
-    <tr><td>Pilot administrators</td><td>To know what we want and whether it makes work</td><td>A named month for a follow-up call</td></tr>
-    <tr><td>Funders</td><td>What exists, what's next, what it costs</td><td>A card and what they'd need to see</td></tr>
-  </table>
-  <div class="note"><strong>Not for members already doing the work.</strong> Send them to the Design Sprint next door. Make sure the door sign and the program blurb say so.</div>
+<!-- ============ LOUNGE ============ -->
+<div class="view" id="v-lo-brief">
+  <h2>Discovery Lounge</h2>
+  <p class="lede">80 minutes. Room 2 of the breakouts. Sponsored by Usio.</p>
 
-  <h2>Who's on what</h2>
-  <p class="sub">Fill these in before the day. Names save on this device and appear on the table guides.</p>
-  <div class="card">
-    <div class="role"><div class="role-l"><strong>Host</strong><span>Opens, times, closes, floats</span></div><input type="text" data-role="host" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 1</strong><span>Members — lead</span></div><input type="text" data-role="t1a" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 1</strong><span>Members — capture</span></div><input type="text" data-role="t1b" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 2</strong><span>Administrators — lead</span></div><input type="text" data-role="t2a" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 2</strong><span>Administrators — capture</span></div><input type="text" data-role="t2b" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 3</strong><span>Funders — lead</span></div><input type="text" data-role="t3a" placeholder="Name"></div>
-    <div class="role"><div class="role-l"><strong>Table 3</strong><span>Funders — capture</span></div><input type="text" data-role="t3b" placeholder="Name"></div>
+  <div class="panel">
+    <p><strong>An opportunity to connect with a BISC bestie in real life and explore what we are building with the union.</strong></p>
+    <p style="margin:0">Union literature and outreach materials, with BISC Buddies there in person to talk to.</p>
   </div>
-  <div class="note">Four people speak in the opening — drawn from the seven above, no extra bodies. Nobody memorizes the whole union; each person owns one audience.</div>
 
-  <h2>Room setup</h2>
+  <h2>Who is running it</h2>
   <div class="card green">
-    <p style="font-size:15px"><strong>Arrive 1:40.</strong> Test the projector on the actual connection, set the signs, walk the room once.</p>
-    <ul>
-      <li>Three round tables, spread out, each with a sign readable from the door</li>
-      <li>Signs: <strong>WERE YOU IN A PILOT?</strong> / <strong>DO YOU RUN A PILOT?</strong> / <strong>DO YOU FUND THIS WORK?</strong></li>
-      <li>Front chairs loosely arranged for the opening — people move at 2:35 and stay</li>
-      <li>QR poster at the door, QR card on every table</li>
-      <li>Paper sign-in sheet at the door as backup</li>
-    </ul>
-    <p style="font-size:15px;margin:0"><strong>Fixed theater seating?</strong> Drop the tables, use three corners instead, and say so twice.</p>
-  </div>
-</div>
-
-<!-- ================= TIMING ================= -->
-<div class="view" id="v-timing">
-  <h2>Timing</h2>
-
-  <div class="seg" data-start="130" data-end="133">
-    <div class="seg-t"><span class="hh">2:10</span><span class="mm">3 min</span></div>
-    <div class="seg-b"><p class="who">Host</p><h3>Doors and welcome</h3>
-      <p>What this is, who it's for, the shape of the next ninety minutes. Name the three tables now so people start deciding.</p>
-      <p class="quote">"If you're already doing the work with us, the Design Sprint next door is where you want to be — no hard feelings."</p></div>
+    <p style="font-size:15px;margin:0">Leslie · Champagne · Loren · Mark · Xen</p>
   </div>
 
-  <div class="seg" data-start="133" data-end="149">
-    <div class="seg-t"><span class="hh">2:13</span><span class="mm">16 min</span></div>
-    <div class="seg-b"><p class="who">Four members · 4 min each</p><h3>One story, told by members</h3>
-      <p>The only thing at this conference that only BISC can do. No slides. Told as one arc, not four testimonies.</p>
-      <ol>
-        <li>What my pilot was, and what it changed — one specific thing</li>
-        <li>What happened when we found each other — June 2025, eighty people at BIG</li>
-        <li>What we've built since — the OC, the structure, the app, the curriculum</li>
-        <li>What we're asking for now</li>
-      </ol>
-      <p style="margin-top:9px"><strong>Rehearse the handoffs once beforehand</strong> or this runs to twenty-five minutes.</p></div>
-  </div>
-
-  <div class="seg" data-start="149" data-end="153">
-    <div class="seg-t"><span class="hh">2:29</span><span class="mm">4 min</span></div>
-    <div class="seg-b"><p class="who">Host</p><h3>The three asks</h3>
-      <p>Say all three out loud so everyone hears what everyone else is being asked.</p>
-      <p class="quote">"If you were in a pilot: we want you in this union, and it's free. If you run a pilot: we want to talk about your alumni. If you fund this work: we'll tell you exactly what we're building and what it costs."</p></div>
-  </div>
-
-  <div class="seg" data-start="153" data-end="155">
-    <div class="seg-t"><span class="hh">2:33</span><span class="mm">2 min</span></div>
-    <div class="seg-b"><p class="who">Host + capture people</p><h3>Move to tables</h3>
-      <p>Name each table, point at it, wait. Don't rush this. Help anyone hesitating.</p></div>
-  </div>
-
-  <div class="seg" data-start="155" data-end="200">
-    <div class="seg-t"><span class="hh">2:35</span><span class="mm">45 min</span></div>
-    <div class="seg-b"><p class="who">Three pairs</p><h3>Table conversations</h3>
-      <p>The heart of the session. Not presentations — the same short conversation, several times over.</p>
-      <button class="jumpto" data-goto="tables">Open the table guides →</button></div>
-  </div>
-
-  <div class="seg" data-start="200" data-end="210">
-    <div class="seg-t"><span class="hh">3:20</span><span class="mm">10 min</span></div>
-    <div class="seg-b"><p class="who">Host</p><h3>Back together — and commitments</h3>
-      <p>One person per table reports <strong>one thing they heard</strong>. Ninety seconds each, not a summary.</p>
-      <p style="margin-top:9px">Then ask for commitments <strong>while phones are already out</strong>:</p>
-      <ol>
-        <li>Members: scan and join <em>now</em>, not tonight</li>
-        <li>Administrators: name a month for a call — write it down</li>
-        <li>Funders: take a card, say what they'd need to see</li>
-      </ol></div>
-  </div>
-
-  <div class="seg" data-start="210" data-end="215">
-    <div class="seg-t"><span class="hh">3:30</span><span class="mm">5 min</span></div>
-    <div class="seg-b"><p class="who">Everyone</p><h3>Thanks and hand off</h3>
-      <p>Point at Conference Reflections at 3:45. Then stay standing near the door — the best conversations happen in the ten minutes after a session ends.</p></div>
-  </div>
-</div>
-
-<!-- ================= TABLE GUIDES ================= -->
-<div class="view" id="v-tables">
-  <div class="sub-nav" id="subnav">
-    <button data-t="how" class="on">How a table works</button>
-    <button data-t="t1">1 · Members</button>
-    <button data-t="t2">2 · Administrators</button>
-    <button data-t="t3">3 · Funders</button>
-  </div>
-
-  <!-- HOW -->
-  <div class="tpane on" id="t-how">
-    <h2>Read this first</h2>
-    <p class="lede">Your 45 minutes is not a 45-minute talk. It's the same short conversation, six or seven times over, with different people.</p>
-
-    <div class="panel">
-      <h3>What the 45 minutes actually looks like</h3>
-      <p><strong>2:35–2:45 · The rush.</strong> Everyone arrives at once. You may have four people standing around you. Don't try to talk to each separately — run one conversation out loud and let the others listen in.</p>
-      <p><strong>2:45–3:10 · The middle.</strong> The real work. People arrive in ones and twos, stay eight or ten minutes, move on.</p>
-      <p><strong>3:10–3:20 · The tail.</strong> It thins. Finish capture, catch anyone hovering, get commitments from whoever's still there.</p>
-    </div>
-
-    <h2>The two of you</h2>
-    <div class="card orange">
-      <p><strong>One talks. One writes.</strong> Agree which before 2:35, and swap halfway if you want.</p>
-      <p><strong>The one talking</strong> never breaks eye contact to write something down. That's the whole reason there are two of you.</p>
-      <p><strong>The one writing</strong> catches names and contact details, and watches the edge of the group for the person hovering who hasn't spoken. Go get them — that person is usually the one who most needed to be there.</p>
-    </div>
-
-    <h2>Five rules for the table</h2>
-    <div class="card">
-      <ul>
-        <li><strong>Ask before you tell.</strong> Every conversation opens with a question.</li>
-        <li><strong>Never ask anyone for their story.</strong> Not here, not as a warm-up. If they offer it, listen. Don't request it.</li>
-        <li><strong>One ask per person.</strong> Don't stack three requests. Get the one that matters and stop.</li>
-        <li><strong>Say "I don't know" plainly.</strong> Write the question down, say who'll follow up. Guessing costs more than not knowing.</li>
-        <li><strong>End conversations on purpose.</strong> "I want to catch a few more people — can I get your email and follow up properly?" is a complete, friendly exit.</li>
-      </ul>
-    </div>
-
-    <h2>When nobody's at your table</h2>
-    <div class="card sky">
-      <p>It will happen, probably around 3:05. Don't stand there looking at your phone.</p>
-      <ul>
-        <li>Write up the conversations you just had, while you remember them</li>
-        <li>Find someone standing alone and go say hello</li>
-        <li>Check whether another table needs a hand</li>
-      </ul>
-      <p style="margin:0">An empty table isn't a failure. Three real conversations beat twelve rushed ones.</p>
-    </div>
-
-    <h2>What every table captures</h2>
-    <div class="card green">
-      <p>Same four things at all three tables, on paper, as it happens:</p>
-      <ul><li>Name</li><li>Email (and phone if offered)</li><li>Who they are — pilot, organization, or funder</li><li>The one thing to do next, and by when</li></ul>
-      <p style="margin:0"><strong>Hand every sheet to the Host before you leave the room.</strong></p>
-    </div>
-  </div>
-
-  <!-- TABLE 1 -->
-  <div class="tpane" id="t-t1">
-    <h2>Table 1 · Prospective members</h2>
-    <p class="staffed" id="staff-t1"></p>
-    <p class="lede">People who were in a pilot and haven't joined. Get them signed up before they walk away.</p>
-
-    <div class="card orange"><p style="margin:0"><strong>Remember all afternoon:</strong> most people at this table have never met another pilot participant. That fact does more work than anything you can say. Let it happen before you start explaining.</p></div>
-
-    <h2>The conversation · about 8 minutes</h2>
-
-    <div class="beat"><div class="beat-n">1</div><div class="beat-b"><p class="t">1 minute</p><h3>Open with a question</h3>
-      <div class="say">"Which pilot were you in?"<em>Then stop talking. Let them answer properly.</em></div>
-      <p>Follow with "How long ago did it end?" or "What was that like?" — and mean it. You're not waiting for your turn.</p></div></div>
-
-    <div class="beat"><div class="beat-n">2</div><div class="beat-b"><p class="t">30 seconds</p><h3>Connect them to the room</h3>
-      <p>If someone else at the table was in a pilot, introduce them. If you were in one, say which.</p>
-      <div class="say">"You're the third person at this table today from a Texas pilot."</div>
-      <p>This is the moment the union stops being an abstraction.</p></div></div>
-
-    <div class="beat"><div class="beat-n">3</div><div class="beat-b"><p class="t">90 seconds</p><h3>What BISC is</h3>
-      <div class="say">"About eighty of us met at this conference last year, in a closed session for pilot participants. We realized we'd all been studied, written about, and quoted — and none of us had ever met each other. So we built a union. People who've been through pilots, organizing for a basic income for everyone."</div>
-      <p>Don't go longer unless they ask. The next beat matters more.</p></div></div>
-
-    <div class="beat"><div class="beat-n">4</div><div class="beat-b"><p class="t">2 minutes</p><h3>What membership actually involves</h3>
-      <ul>
-        <li><strong>It's free.</strong> No dues, no fees, ever.</li>
-        <li><strong>You don't have to prove anything.</strong> You tell us your pilot and we take your word for it.</li>
-        <li><strong>You're never asked to tell your story</strong> as the price of belonging. When storytelling is the work, it's chosen and prepared.</li>
-        <li><strong>Nothing is required.</strong> A monthly meeting if you want it. Work you pick. Step back any time and you're still a member.</li>
-      </ul></div></div>
-
-    <div class="beat"><div class="beat-n">5</div><div class="beat-b"><p class="t">1 minute</p><h3>What happens after they join</h3>
-      <div class="say">"You'll get a welcome email straight away. Within a week, a member — a BISC Buddy — reaches out however you asked, call or text or email. Then there's a new member meeting on the second Wednesday, two sessions so you can pick the time that works."</div></div></div>
-
-    <div class="beat"><div class="beat-n">6</div><div class="beat-b"><p class="t">2 minutes</p><h3>Sign them up, right now</h3>
-      <p>Not tonight. Not when they get home. Here, phone already in hand.</p>
-      <div class="say">"Can I get you signed up before you go? It's about two minutes — scan this."<em>Hand them the QR card. Stay with them while they do it.</em></div>
-      <p>If they won't do it on their phone, take name and email on paper and sign them up yourself that evening.</p></div></div>
-
-    <div class="beat"><div class="beat-n">7</div><div class="beat-b"><p class="t">30 seconds</p><h3>Close</h3>
-      <div class="say">"Your Buddy will be in touch within the week. If you don't hear from anyone, email me — here's a card."</div></div></div>
-
-    <h2>If they stay longer</h2>
-    <div class="card"><ul>
-      <li><strong>The app.</strong> Show them. The learning tracks land well — twenty-seven modules on speaking, advocacy, and how power works, free, on their phone.</li>
-      <li><strong>The working groups.</strong> Storytelling, advocacy, tools and policy, training. Ask which sounds like them and write it down.</li>
-      <li><strong>Becoming a Buddy.</strong> For someone clearly ready to do more.</li>
-      <li><strong>Their own cohort.</strong> "Are you still in touch with anyone from your pilot?" This is how the union grows — one person bringing twenty.</li>
-    </ul></div>
-
-    <h2>Questions you'll get</h2>
-    <details class="q" open><summary>Does this cost anything?</summary><div class="qb"><p>No. No dues, no fees, no minimum. Say it plainly and without hedging.</p></div></details>
-    <details class="q"><summary>Will this affect my benefits?</summary><div class="qb">
-      <div class="fill"><strong>Check the union's current answer before Friday.</strong> This was still being confirmed. Don't improvise a benefits answer.</div>
-      <p>Safe version: "Membership is free and no money changes hands, so there's nothing to report. If you want a proper answer for your own situation, give me your email and we'll get you one from someone who actually knows."</p></div></details>
-    <details class="q"><summary>Do I have to prove I was in a pilot?</summary><div class="qb"><p>"No. You tell us your pilot and we take your word for it. You've been asked to prove enough."</p></div></details>
-    <details class="q"><summary>I don't want to speak publicly.</summary><div class="qb"><p>"Then don't. Plenty of members never speak publicly. There's tool-building, policy tracking, welcoming new members, running meetings. And you can just be a member."</p></div></details>
-    <details class="q"><summary>I'm not really political.</summary><div class="qb"><p>"Neither were most of us. This isn't a party thing. It's people who got money and know what it did, saying so."</p></div></details>
-    <details class="q"><summary>My pilot ended years ago.</summary><div class="qb"><p>"That's fine — most of ours did. Current or past, it counts."</p></div></details>
-    <details class="q"><summary>What do you do with my information?</summary><div class="qb"><p>"It stays with the union. We don't share or sell it. We use your email to reach you and that's it."</p></div></details>
-    <details class="q"><summary>I don't have time for this.</summary><div class="qb"><p>"Nothing's required. Join, see what comes through, do something when you feel like it. Being on the list costs you nothing."</p></div></details>
-
-    <p class="clock">Aim for 6 to 8 sign-ups in the room. Ten is a very good afternoon.</p>
-  </div>
-
-  <!-- TABLE 2 -->
-  <div class="tpane" id="t-t2">
-    <h2>Table 2 · Pilot administrators</h2>
-    <p class="staffed" id="staff-t2"></p>
-    <p class="lede">The highest-leverage table in the room. One administrator can reach a whole cohort — nothing else here scales like that.</p>
-
-    <div class="card orange"><p style="margin:0"><strong>What you're asking for:</strong> an introduction to their alumni. <strong>Not</strong> a contact list, not a data handover. Say that early and unprompted — it removes the fear before they have to voice it.</p></div>
-
-    <h2>The conversation · about 12 minutes</h2>
-
-    <div class="beat"><div class="beat-n">1</div><div class="beat-b"><p class="t">2 minutes</p><h3>Ask about their pilot, properly</h3>
-      <div class="say">"Which pilot do you run?" · "How many participants?" · "Where's it at now — still running, or wrapped?"</div>
-      <p>Be genuinely interested. These are people who built something hard without enough money, and almost nobody asks them about it.</p>
-      <p><strong>Listen for the one thing that matters:</strong> is it ending, or has it ended? That's the opening.</p></div></div>
-
-    <div class="beat"><div class="beat-n">2</div><div class="beat-b"><p class="t">2 minutes</p><h3>Name the problem you both have</h3>
-      <div class="say">"What happens to your participants when the pilot ends?"<em>Let them answer. Most will say some version of: not much, and it bothers them.</em></div>
-      <div class="say">"That's the thing we kept running into. Pilots end, the report comes out, everyone scatters. All that experience just disperses."</div></div></div>
-
-    <div class="beat"><div class="beat-n">3</div><div class="beat-b"><p class="t">2 minutes</p><h3>What BISC is, in their terms</h3>
-      <div class="say">"We're a national union of people who've been through pilots. Founded by participants, run by participants. About eighty of us met here at BIG last year and built it from there."</div>
-      <ul>
-        <li>Their alumni get somewhere to go when the pilot ends</li>
-        <li>Their participants become experienced advocates for this work</li>
-        <li>They get a channel to people they can no longer contact directly</li>
-        <li>The evidence base gets a constituency, not just a report</li>
-      </ul></div></div>
-
-    <div class="beat"><div class="beat-n">4</div><div class="beat-b"><p class="t">2 minutes</p><h3>The ask</h3>
-      <div class="say">"Would you be willing to tell your alumni we exist? Not give us anything — just forward something, or mention us where they already are."</div>
-      <p>Then, before they ask:</p>
-      <div class="say">"We're not asking for contact details. You make the introduction, people come to us if they want to. Nothing about your consent commitments changes."</div></div></div>
-
-    <div class="beat"><div class="beat-n">5</div><div class="beat-b"><p class="t">3 minutes</p><h3>Work through whatever comes up</h3>
-      <p>Take their concerns seriously. Don't push. An administrator who feels pressured will politely agree and then do nothing.</p>
-      <p>If the answer's no, ask what would make it possible. That answer is worth as much as a yes.</p></div></div>
-
-    <div class="beat"><div class="beat-n">6</div><div class="beat-b"><p class="t">1 minute</p><h3>Get a month, and write it down</h3>
-      <div class="say">"Could we set up a proper call? What month works — October, November?"</div>
-      <p>Write down: <strong>name, organization, pilot, month, and anything they said they'd need.</strong> A vague "stay in touch" is a no with better manners.</p></div></div>
-
-    <h2>If they stay longer</h2>
-    <div class="card"><ul>
-      <li><strong>Co-design.</strong> Members with lived expertise, prepared and compensated, helping design the next pilot. Often what they actually want.</li>
-      <li><strong>What we hear across pilots.</strong> Patterns they can't see from inside one program — payment timing, benefits cliffs, recertification burden.</li>
-      <li><strong>Their current participants.</strong> People still enrolled can join too.</li>
-      <li><strong>Speakers.</strong> They may want participant voices at their own events. Say yes — and say members are compensated for that work.</li>
-    </ul></div>
-
-    <h2>Questions you'll get</h2>
-    <details class="q" open><summary>We made privacy commitments at enrollment. I can't share contacts.</summary><div class="qb">
-      <p>"Completely understood, and we're not asking for that. You send them something, they decide. Nothing comes to us unless a person chooses it."</p>
-      <p>This is the most common concern. Getting it right is most of the conversation.</p></div></details>
-    <details class="q"><summary>Does this cost my organization anything?</summary><div class="qb"><p>"Nothing. No fee, no partnership agreement. We're asking you to forward something."</p></div></details>
-    <details class="q"><summary>Are you going to criticize our program?</summary><div class="qb">
-      <p>"Members say what they experienced, and sometimes that's critical of a design choice. What we don't do is attack individual programs or the people running them. Mostly it's aimed at the systems around the pilot — benefits cliffs, payment timing, the proving."</p>
-      <p>"Frankly, that feedback is more useful to you than a satisfaction survey."</p></div></details>
-    <details class="q"><summary>My participants are still enrolled. Is that a problem?</summary><div class="qb"><p>"Not at all. Current or former, both count."</p></div></details>
-    <details class="q"><summary>We already have an alumni network.</summary><div class="qb"><p>"That's great, and it's not a competitor. Yours is local — ours is national. Your people can be in both, and a strong local group is exactly who we most want to hear from."</p></div></details>
-    <details class="q"><summary>What's your relationship with Income Movement?</summary><div class="qb"><p>"They're a partner. The union was founded by participants and is run by participants — Income Movement supports the work, they don't direct it."</p></div></details>
-    <details class="q"><summary>Who's funding you?</summary><div class="qb"><div class="fill"><strong>Agree the answer with Loren before Friday.</strong> Don't name funders who haven't confirmed.</div></div></details>
-
-    <p class="clock">Aim for 3 to 5 real conversations with a named follow-up month. Two good ones beat eight polite ones.</p>
-  </div>
-
-  <!-- TABLE 3 -->
-  <div class="tpane" id="t-t3">
-    <h2>Table 3 · Funders</h2>
-    <p class="staffed" id="staff-t3"></p>
-    <p class="lede">Be concrete and unembarrassed. This audience respects specificity and distrusts vagueness.</p>
-
-    <div class="card orange"><p style="margin:0"><strong>You're not asking for money in this room.</strong> You're asking what they'd need to see. Smaller question, easier to answer, and it gets you something real instead of something polite.</p></div>
-
-    <div class="fill"><strong>Before Friday, get these from Loren:</strong> the actual budget ask, fiscal sponsorship status, what's currently funded and by whom, and what's confirmed versus pipeline. Don't work this table without real numbers.</div>
-
-    <h2>The conversation · about 12 minutes</h2>
-
-    <div class="beat"><div class="beat-n">1</div><div class="beat-b"><p class="t">2 minutes</p><h3>Find out what they fund</h3>
-      <div class="say">"What brings you to BIG?" · "What are you funding in this space at the moment?"</div>
-      <p>You're listening for whether they fund pilots, advocacy, movement infrastructure, or research. It changes everything you say next.</p></div></div>
-
-    <div class="beat"><div class="beat-n">2</div><div class="beat-b"><p class="t">2 minutes</p><h3>Name the gap</h3>
-      <div class="say">"There's been a lot of money into pilots, and it's produced good evidence. What hasn't been funded is the participants themselves being organized. Forty thousand people have been through a guaranteed income pilot in this country, and until last year almost none of them had met each other."</div>
-      <div class="say">"That's the most credible constituency this policy area has, and it was completely unorganized."</div></div></div>
-
-    <div class="beat"><div class="beat-n">3</div><div class="beat-b"><p class="t">3 minutes</p><h3>What exists now — be specific</h3>
-      <ul>
-        <li>An Organizing Committee made entirely of pilot participants, meeting weekly since September</li>
-        <li>A governance structure — membership tiers, voting rights, a conflict process</li>
-        <li>An onboarding system with trained member volunteers</li>
-        <li>A member platform: joining, meetings, agendas, notes</li>
-        <li>A six-track curriculum — twenty-seven modules on advocacy, policy, facilitation, public speaking</li>
-        <li>Soft launch underway, national from there</li>
-      </ul>
-      <p><strong>Show them the app.</strong> It's the single most convincing thing you have. It exists, it works, and participants built it.</p></div></div>
-
-    <div class="beat"><div class="beat-n">4</div><div class="beat-b"><p class="t">2 minutes</p><h3>What's next, and what it costs</h3>
-      <div class="fill" style="margin-bottom:9px">Use the real figures from Loren.</div>
-      <p>What the next twelve months look like, what it costs, what's funded, what the gap is. Name a number. Vagueness reads as not having thought it through.</p></div></div>
-
-    <div class="beat"><div class="beat-n">5</div><div class="beat-b"><p class="t">1 minute</p><h3>Member compensation — say it plainly</h3>
-      <div class="say">"One thing we're firm about: members get paid for their work. This is a movement that has asked people to tell their hardest stories for free for years. We're not doing that. It's a principle, not a line item we'll cut when the budget gets tight."</div>
-      <p>Some funders find this refreshing. Some push back. Either way you've learned something useful about them.</p></div></div>
-
-    <div class="beat"><div class="beat-n">6</div><div class="beat-b"><p class="t">2 minutes</p><h3>The ask</h3>
-      <div class="say">"What would you need to see to consider supporting something like this?"</div>
-      <p>Write down exactly what they say. That sentence is the whole reason this table exists — it's the follow-up plan, in their words.</p>
-      <p>Get a card. Give a card.</p></div></div>
-
-    <h2>Questions you'll get</h2>
-    <details class="q" open><summary>What's your theory of change?</summary><div class="qb">
-      <p>"Forty thousand people have received guaranteed income in this country. Organized, they're the most credible constituency in this policy area — and the only one that can't be dismissed as speculation."</p>
-      <p>If they want more: pilots build evidence, evidence needs a constituency, and a constituency is what moves federal policy.</p></div></details>
-    <details class="q"><summary>Why fund this rather than more pilots?</summary><div class="qb">
-      <p>"Both. But we have a lot of pilot evidence now and not much political power. The 2021 Child Tax Credit cut child poverty to a record low and then expired, because there wasn't an organized constituency to defend it. That's the gap."</p></div></details>
-    <details class="q"><summary>What's your legal structure? Are you a 501(c)(3)?</summary><div class="qb"><div class="fill"><strong>Get the current answer from Loren.</strong> Fiscal sponsorship arrangements must be described accurately.</div></div></details>
-    <details class="q"><summary>How do you measure success?</summary><div class="qb">
-      <p>Members recruited and retained. Members trained and active. Policy engagements — comments, meetings, testimony. Over time, participants at the table when programs are designed.</p>
-      <p>Honest addition: "We're building the measurement alongside the organization. I'd rather tell you that than give you a dashboard we invented for this conversation."</p></div></details>
-    <details class="q"><summary>Isn't this lobbying?</summary><div class="qb"><div class="fill"><strong>Confirm with Loren.</strong> This has real legal implications and must be answered precisely, not approximately.</div></div></details>
-    <details class="q"><summary>Who else is funding you?</summary><div class="qb"><div class="fill"><strong>Only name confirmed funders.</strong> Naming a prospect as a supporter is the fastest way to lose both.</div></div></details>
-    <details class="q"><summary>What happens if this doesn't work?</summary><div class="qb"><p>"Then forty thousand people met each other and learned to advocate, and that doesn't un-happen. The curriculum, the connections, the skills — those stay with members whatever becomes of the organization."</p></div></details>
-
-    <p class="clock">Aim for 2 to 4 real conversations with a card and a named next step. One serious funder conversation justifies this table.</p>
-  </div>
-</div>
-
-<!-- ================= KIT ================= -->
-<div class="view" id="v-kit">
-  <h2>Materials</h2>
-  <p class="sub">Print and pack the week before. One owner. Ticks save on this device.</p>
-  <div class="card">
-    <label class="chk"><input type="checkbox" data-kit="k1"><span>3 table signs, large type, readable from the door</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k2"><span>QR poster for the door</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k3"><span>3 small QR cards, one per table</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k4"><span>60+ member one-pagers (Stacey's 2-pager)</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k5"><span>20 funder one-pagers — what exists, what's next, what it costs</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k6"><span>20 administrator one-pagers — the alumni introduction ask</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k7"><span>Paper sign-in sheets, 3 copies</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k8"><span>Pens — more than you think</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k9"><span>Charged phone or tablet per table for live sign-ups</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k10"><span>Business cards for all seven</span></label>
-    <label class="chk"><input type="checkbox" data-kit="k11"><span>Water for the speakers</span></label>
-  </div>
-
-  <h2>Capture plan</h2>
+  <h2>What we want people to leave with</h2>
   <div class="card orange">
-    <p style="font-size:16px"><strong>Nobody leaves this room uncaptured.</strong> Conference contacts you didn't write down are gone.</p>
-    <ul>
-      <li>Each table's capture person owns their sheet</li>
-      <li>Host collects every sheet before anyone leaves</li>
-      <li><strong>Same evening:</strong> everything typed into the sheet</li>
-      <li><strong>Within 48 hours:</strong> follow-up email out</li>
+    <ul style="margin:0">
+      <li><strong>A relationship</strong> with the union, in real life — not a leaflet</li>
+      <li><strong>Knowing how to get involved</strong>, specifically, not in principle</li>
+      <li><strong>Having felt the values in practice</strong>. The room is the argument.</li>
     </ul>
-    <p style="font-size:15px;margin:0">None of that last part is optional. A room full of interest with no follow-up is a room you didn't need to be in.</p>
+  </div>
+
+  <h2>How it runs</h2>
+  <div class="card">
+    <p style="font-size:15px">This is not a session with a start time and an agenda. People drift in and out across 80 minutes. Nobody presents.</p>
+    <p style="font-size:15px;margin:0">Someone should be watching the door the whole time. The most valuable person in the room is usually the one hovering at the edge who has not spoken.</p>
+  </div>
+</div>
+
+<!-- ============ LOUNGE AREAS ============ -->
+<div class="view" id="v-lo-areas">
+  <h2>Two areas, one room</h2>
+  <p class="lede">Participants on one side, administrators and organizations on the other. Different conversations, different asks.</p>
+
+  <div class="card sky">
+    <h3>Area 1 · Pilot participants, past and present</h3>
+    <p class="tagline">Open with a question, not a pitch</p>
+    <div class="say">"Which pilot were you in?"<em>Then stop talking. Most people here have never met another participant.</em></div>
+    <p class="tagline">Cover</p>
+    <ul>
+      <li>It is free. No dues, ever.</li>
+      <li>You are never asked to tell your story as the price of belonging</li>
+      <li>What happens after joining: a welcome, a Buddy within a week, a monthly meeting</li>
+      <li>Self-attestation — nobody proves they were in a pilot</li>
+      <li><strong>Member benefits:</strong> LELI learning, the IM advocacy pilot, and access to emerging community programs</li>
+    </ul>
+    <p class="tagline">Close</p>
+    <p style="font-size:15px;margin:0">New Member Interest Form, filled in before they leave the table.</p>
+  </div>
+
+  <div class="card green">
+    <h3>Area 2 · Administrators and organizations</h3>
+    <p class="tagline">Open with their pilot</p>
+    <div class="say">"Which pilot do you run?" · "Where is it at now — running, or wrapped?"<em>Listen for whether it is ending. That is the opening.</em></div>
+    <p class="tagline">The problem you both have</p>
+    <div class="say">"What happens to your participants when the pilot ends?"</div>
+    <p class="tagline">What we are asking for</p>
+    <ul>
+      <li>Tell your alumni we exist — an introduction, <strong>not a contact list</strong></li>
+      <li>Bring an informational session to your participant community</li>
+      <li>Partner with us so people can join through your organization</li>
+    </ul>
+    <p class="tagline">Be ready for</p>
+    <p style="font-size:15px;margin:0">Privacy commitments made at enrollment. Take them seriously, do not push. The answer is almost always that <em>they</em> make the introduction.</p>
+    <p class="tagline">Close</p>
+    <p style="font-size:15px;margin:0">Community Partner Interest Form, and a named month for a follow-up call.</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Keep them apart, gently</h3>
+    <p style="font-size:15px;margin:0">The two conversations do not mix well. A participant deciding whether to join does not want to overhear a partnership pitch, and an administrator does not need to sit through onboarding detail. Signs on each area, and steer people as they arrive.</p>
+  </div>
+</div>
+
+<!-- ============ LOUNGE MATERIALS ============ -->
+<div class="view" id="v-lo-kit">
+  <h2>Literature and materials</h2>
+  <p class="sub">Print and pack the week before. One owner. Ticks save on this device.</p>
+
+  <div class="card">
+    <label class="chk"><input type="checkbox" data-kit="l1"><span>BISC overview materials — mission, vision, values</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l2"><span><strong>Who We Are</strong> — the union in one page</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l3"><span><strong>Organizer spotlights</strong> — name, photo, pilot, project, and one line on why now</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l4"><span>How to join — as an individual, and through a partner organization</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l5"><span>New Member Interest Form — printed and on a device</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l6"><span>Community Partner Interest Form</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l7"><span>Frequently Asked Questions</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l8"><span>Member benefits — LELI learning, IM advocacy pilot, community programs</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l9"><span>"Bring an informational session to your community" — the partner ask</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l10"><span>Donation pages — GiveButter and Every.org, as QR codes</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l11"><span>QR codes to bisc.work, on every surface</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l12"><span><strong>Laptop open on the website</strong>, showing the app</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l13"><span>A board showing how onboarding works — the flow chart from the app</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l14"><span>Two area signs — participants / administrators</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l15"><span>Paper sign-in sheets, one per area</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l16"><span>Pens. More than you think.</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l17"><span>Content consent slips — see the Content consent tab</span></label>
+  </div>
+
+  <div class="card sky">
+    <h3>The laptop earns its place</h3>
+    <p style="font-size:15px;margin:0">Showing someone the app — the learning tracks, the calendar, twenty-seven modules that already exist — does more than any leaflet. It proves the union is real and running, not an idea being pitched.</p>
+  </div>
+</div>
+
+<!-- ============ GRATITUDE & ART ============ -->
+<div class="view" id="v-lo-art">
+  <h2>Storytelling and narrative change</h2>
+  <p class="lede">Gratitude for the community that has sustained us, past, present and future. An Indigenous approach to giving back to our ancestors and the land.</p>
+
+  <div class="card green">
+    <h3>Gratitude Tree</h3>
+    <p style="font-size:15px;margin:0 0 8px"><em>"This is our gratitude tree. Take a leaf, write what you are grateful for, and loop it onto the tree."</em></p>
+    <p style="font-size:15px;margin:0">Buy a real tree, then donate it to a park after the conference as a community give-back.</p>
+  </div>
+
+  <div class="card">
+    <h3>Postcard to Future Self</h3>
+    <p style="font-size:15px;margin:0"><em>"What do you want to remember beyond the conference? What are your dreams for the movement?"</em> Collect addresses and post them later — that second touch months from now is worth more than the card itself.</p>
+  </div>
+
+  <div class="card">
+    <h3>Weave a Wish</h3>
+    <p style="font-size:15px;margin:0"><em>"Write a wish or two onto a fabric strip and weave it into our tapestry."</em> The tapestry is a thing the union then owns and can bring to the next gathering.</p>
+  </div>
+
+  <div class="card">
+    <h3>Button station</h3>
+    <p style="font-size:15px;margin:0">Run by Daniela. People wear what they make for the rest of the conference, which does more outreach than a stack of flyers.</p>
+  </div>
+
+  <div class="card">
+    <h3>Collages, junk journals and zines</h3>
+    <p style="font-size:15px;margin:0">Analogue, approachable at any age, and no skill barrier. Zines double as a call to submit content — a space for connection and for writing toward basic income for everyone in America.</p>
+  </div>
+
+  <div class="card">
+    <h3>Stickers and bookmarks</h3>
+    <p style="font-size:15px;margin:0">BISC logo plus a box-breathing design. Simple touchpoints that carry the union out of the room.</p>
+  </div>
+
+  <div class="card sky">
+    <p style="font-size:15px;margin:0"><strong>Let Hope Bloom walk and hike</strong> is already in the Income Movement program — worth pointing people toward rather than competing with.</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Why this is not decoration</h3>
+    <p style="font-size:15px;margin:0">A room where people make something together produces different conversations than a room with a table of leaflets. Someone weaving a wish next to a stranger from another pilot is doing exactly what the union is for. The materials are the excuse.</p>
+  </div>
+</div>
+
+<!-- ============ WHO IS WHERE ============ -->
+<div class="view" id="v-who">
+  <h2>Who is where</h2>
+  <p class="lede">Thirteen organizers at BIG Portland. Nobody in two places.</p>
+
+  <div class="card sky">
+    <h3>Plenary · Participant Power Building</h3>
+    <p style="font-size:15px;margin:0 0 6px"><strong>Facilitating:</strong> Zyera, Daniela</p>
+    <p style="font-size:15px;margin:0"><strong>Supporting:</strong> Paris, Tracy, Champagne</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Design Sprint · Room 1</h3>
+    <p style="font-size:15px;margin:0">Columbine, Chemareéa, Faye, Florence</p>
+  </div>
+
+  <div class="card green">
+    <h3>Discovery Lounge · Room 2</h3>
+    <p style="font-size:15px;margin:0">Leslie, Champagne, Loren, Mark, Xen</p>
+  </div>
+
+  <div class="fill"><strong>Champagne appears twice</strong> — plenary and lounge. If those overlap, that needs resolving before the day.</div>
+
+  <h2>Where to send people</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Was in a pilot, wants to build something</strong> → Design Sprint</li>
+      <li><strong>Was in a pilot, still working out what BISC is</strong> → Lounge, participant area</li>
+      <li><strong>Runs a pilot</strong> → Lounge, administrator area</li>
+      <li><strong>Already a member</strong> → Design Sprint</li>
+      <li><strong>Just curious</strong> → Lounge</li>
+    </ul>
+  </div>
+
+  <h2>If someone is in the wrong room</h2>
+  <div class="card green">
+    <p style="font-size:15px">It will happen. Say it warmly and specifically — nobody should feel they turned up somewhere they were not wanted.</p>
+    <p class="quote">"You are in the right building. If you want to get stuck into building something, the sprint is in [room]. If you would rather talk to someone about what the union is, the lounge is in [room]."</p>
+    <p style="font-size:15px;margin:0">Then point, or walk them. Do not describe a route.</p>
+  </div>
+
+  <div class="fill">Write both room numbers in here once you have them — before you travel, not on the day.</div>
+</div>
+
+<!-- ============ COORDINATION ============ -->
+<div class="view" id="v-coord">
+  <h2>Before the conference</h2>
+  <div class="card sky">
+    <p style="font-size:15px"><strong>1. Session description and takeaways.</strong> Both are blank in the design doc for the plenary. The conference programming doc needs them.</p>
+    <p style="font-size:15px"><strong>2. Confirm Community Change.</strong> Listed as unconfirmed on the panel.</p>
+    <p style="font-size:15px"><strong>3. Resolve Champagne's double booking.</strong> Plenary and lounge.</p>
+    <p style="font-size:15px"><strong>4. Room numbers</strong> for both breakouts, written into the Who is where tab.</p>
+    <p style="font-size:15px;margin:0"><strong>5. Move final details to the BIG 2026 Community Programming Doc</strong> — that is where every session lead is housing their run of show.</p>
+  </div>
+
+  <h2>On the day</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Before the plenary</strong> — facilitators and panellists meet briefly. Set the tone: participants lead, administrators answer.</li>
+      <li><strong>Plenary ends</strong> — say clearly where both breakouts are, and who each is for. This is the single best moment to route people correctly.</li>
+      <li><strong>Breakouts</strong> — someone watching each door.</li>
+      <li><strong>Both wrap</strong> — sign-in sheets and sprint photos to one named person.</li>
+      <li><strong>Conference Reflections</strong> — as many of us there as possible.</li>
+    </ul>
+  </div>
+
+  <h2>Capture</h2>
+  <div class="card orange">
+    <p style="font-size:16px"><strong>Nobody leaves uncaptured.</strong> Conference contacts you did not write down are gone.</p>
+    <ul>
+      <li>Each area owns its sign-in sheet</li>
+      <li>Every sprint sheet photographed before the room empties</li>
+      <li>All of it to one named person before anyone goes to dinner</li>
+      <li><strong>Same evening:</strong> typed up. <strong>Within 48 hours:</strong> follow-up out.</li>
+    </ul>
+    <p style="font-size:15px;margin:0">Use the Notes tab as you go — it saves on your phone without signal and syncs when you have some.</p>
+  </div>
+
+  <h2>Afterward</h2>
+  <div class="card">
+    <p style="font-size:15px">All three teams together, that evening or the next morning:</p>
+    <ul>
+      <li>What landed in each room</li>
+      <li>How many people, and did they end up in the right one</li>
+      <li>Who to follow up with, by name</li>
+      <li>The top three pitches, and who owns each now</li>
+      <li>What we would change</li>
+    </ul>
+    <p style="font-size:15px;margin:0">Write it down. It is the only reason the next one is better.</p>
+  </div>
+</div>
+
+<!-- ============ CONTENT CONSENT ============ -->
+<div class="view" id="v-disclosure">
+  <h2>Content consent</h2>
+  <p class="lede">We will be collecting photos, quotes, gratitude leaves, wishes and postcards. Every one of those is something a person made, and they should know what happens to it before they make it.</p>
+
+  <div class="panel">
+    <p style="margin:0"><strong>This is the union practicing what its own curriculum teaches.</strong> Track 1 tells members to decide what they share before anyone asks. We should not run a room that makes that hard.</p>
+  </div>
+
+  <h2>Five questions to answer before the day</h2>
+  <div class="card orange">
+    <ul style="margin:0">
+      <li><strong>Who owns the content?</strong> The person who made it, or the union?</li>
+      <li><strong>How will it be used?</strong> Website and app, social media, campaigns, recruitment, education — name them.</li>
+      <li><strong>What rights does the creator keep?</strong></li>
+      <li><strong>How does someone ask for it to be removed later?</strong> And who honors that?</li>
+      <li><strong>Can they take part anonymously?</strong> First name only, no face, no attribution.</li>
+    </ul>
+  </div>
+
+  <h2>What to have in the room</h2>
+  <div class="card">
+    <ul>
+      <li>A short slip at each activity: yes to photos, yes to quotes, name or anonymous, and how to reach them</li>
+      <li>Someone able to explain it in one sentence without reading from a card</li>
+      <li>A clear way to say no that does not stop them joining in</li>
+    </ul>
+    <p style="font-size:15px;margin:0"><strong>Anonymity should be a normal option, not a special request.</strong> If someone has to ask for it, most people will not.</p>
+  </div>
+
+  <div class="card sky">
+    <h3>Say it plainly</h3>
+    <p class="quote" style="margin:0">"We would love to share some of this — on our site, or social. Only if you are happy. Tick the box, or tell one of us, and it stays in the room."</p>
   </div>
 </div>
 
@@ -765,103 +796,6 @@ details.q .qb p{font-size:15px}
 </div>
 
 <!-- ================= BOTH ROOMS ================= -->
-<div class="view" id="v-rooms">
-  <h2>Two rooms, same time</h2>
-  <table class="tbl">
-    <tr><th></th><th>Info session</th><th>Design sprint</th></tr>
-    <tr><td>Who it's for</td><td>People who don't know BISC yet — non-members, pilot administrators, funders</td><td>Pilot participants and members who want to do the work</td></tr>
-    <tr><td>What happens</td><td>Members speak, then three tables by audience</td><td>Small-group design work toward one output</td></tr>
-    <tr><td>Room</td><td><em>To be confirmed</em></td><td><em>To be confirmed</em></td></tr>
-  </table>
-  <div class="fill"><strong>Write both room numbers in here once you have them</strong> — before you travel, not on the day.</div>
-
-  <h2>If someone's in the wrong room</h2>
-  <div class="card green">
-    <p style="font-size:15px">This will happen. Both sessions say BISC Union in the program, and people choose fast.</p>
-    <p style="font-size:15px"><strong>Say it warmly and specifically.</strong> Nobody should feel they turned up somewhere they weren't wanted:</p>
-    <p class="quote">"You're in the right building. If you were in a pilot and want to get stuck into the work, the sprint's in [room]. If you're still working out what BISC is, stay here — that's exactly what this is for."</p>
-    <p style="font-size:15px;margin:0">Then point, or walk them. Do not describe a route.</p>
-  </div>
-
-  <h2>Who goes where</h2>
-  <div class="card">
-    <ul>
-      <li><strong>Was in a pilot, not a member</strong> → either works. Info session if they want to understand it first, sprint if they want to get to work.</li>
-      <li><strong>Already a member</strong> → sprint.</li>
-      <li><strong>Runs a pilot</strong> → info session, Table 2.</li>
-      <li><strong>Funds this work</strong> → info session, Table 3.</li>
-      <li><strong>Just curious</strong> → info session.</li>
-    </ul>
-  </div>
-</div>
-
-<!-- ================= COORDINATION ================= -->
-<div class="view" id="v-coord">
-  <h2>Before the conference</h2>
-  <div class="card sky">
-    <p style="font-size:15px"><strong>1. Program language.</strong> Get the two sessions described <em>differently</em> in the conference program and on the door signs. Both currently say BISC Union, which splits your own audience.</p>
-    <p style="font-size:15px"><strong>2. Confirm who's in which room.</strong> Eleven people are going. Four in the sprint, seven in the info session. Nobody in both.</p>
-    <p style="font-size:15px;margin:0"><strong>3. Room numbers.</strong> Put them on the Both rooms tab so everyone has them.</p>
-  </div>
-
-  <h2>On the day</h2>
-  <div class="card">
-    <ul>
-      <li><strong>1:40</strong> — Both teams in their rooms. Quick check between leads that both are set.</li>
-      <li><strong>2:10</strong> — Doors. Someone in each room watching for people who look lost.</li>
-      <li><strong>3:35</strong> — Both wrap. Sign-in sheets to one named person.</li>
-      <li><strong>3:45</strong> — Conference Reflections. Both teams there if you can.</li>
-    </ul>
-  </div>
-
-  <h2>The look-in question</h2>
-  <div class="card orange">
-    <p style="font-size:15px">It is tempting to walk administrators or funders past the sprint. Seeing members lead work is more convincing than being told about it.</p>
-    <p style="font-size:15px"><strong>Ask the sprint participants first.</strong> Frame it as observing the work, not observing people.</p>
-    <p style="font-size:15px;margin:0">Our own curriculum tells members they are not the exhibit. An unannounced funder tour contradicts that in front of the people we taught it to.</p>
-  </div>
-
-  <h2>Afterward</h2>
-  <div class="card">
-    <p style="font-size:15px">Both teams together, that evening or the next morning, ten minutes:</p>
-    <ul>
-      <li>What landed in each room</li>
-      <li>How many people, and did they end up in the right one</li>
-      <li>Who to follow up with, by name</li>
-      <li>What the sprint produced and who owns it now</li>
-      <li>What we'd change</li>
-    </ul>
-    <p style="font-size:15px;margin:0">Write it down. It's the only reason the next one is better.</p>
-  </div>
-</div>
-
-<!-- ================= WRONG ================= -->
-<div class="view" id="v-wrong">
-  <h2>If it goes wrong</h2>
-  <table class="tbl">
-    <tr><th>Problem</th><th>What to do</th></tr>
-    <tr><td>Only 8 people show</td><td>Drop the tables. One circle, one conversation. Small and real beats large and vague.</td></tr>
-    <tr><td>60 people show</td><td>Host takes an overflow group at the back. Don't let one table hold twenty.</td></tr>
-    <tr><td>Everyone goes to one table</td><td>Host rebalances out loud at 2:40. "Table 2 has room and it's worth your time."</td></tr>
-    <tr><td>A speaker doesn't turn up</td><td>Host covers the beat in ninety seconds. Don't leave a gap.</td></tr>
-    <tr><td>Running long at 3:20</td><td>Cut the table reports, not the commitments. The asks are the point.</td></tr>
-    <tr><td>Benefits eligibility question</td><td>Give the union's current answer, or say honestly we're getting it answered properly. Don't guess in front of funders.</td></tr>
-  </table>
-
-  <h2>Before the conference</h2>
-  <div class="card sky">
-    <p style="font-size:15px"><strong>1. Program language.</strong> Get the two BISC sessions described differently in the program and on door signs, or you'll split your own audience.</p>
-    <p style="font-size:15px"><strong>2. The look-in.</strong> If you want to bring administrators or funders past the Design Sprint, ask the sprint participants first. Frame it as observing the work, not the people. Our own curriculum tells members they are not the exhibit — don't contradict that in front of the people we taught it to.</p>
-    <p style="font-size:15px;margin:0"><strong>3. The yellow boxes.</strong> Every yellow box in the table guides is something to settle before you travel — the benefits answer, budget figures, legal structure, and which funders can be named.</p>
-  </div>
-
-  <h2>Afterward</h2>
-  <div class="card">
-    <p style="font-size:15px">Ten minutes with the seven of you, that evening or the next morning, while you still remember:</p>
-    <ul><li>What landed</li><li>What didn't</li><li>Who to follow up with, by name</li><li>What we'd change</li></ul>
-    <p style="font-size:15px;margin:0">Write it down. It's the only reason the next one is better.</p>
-  </div>
-</div>
 
 </div>
 
@@ -897,7 +831,7 @@ const store={
 };
 
 /* top-level views */
-let SESSION = store.get('session') || 'sprint';
+let SESSION = store.get('session') || 'plenary';
 
 function showView(v){
   $$('.nav button').forEach(b=>b.classList.toggle('on', b.dataset.view===v && b.dataset.session===SESSION));
@@ -1095,18 +1029,17 @@ const APP_NAME = 'BIG 2026 toolkit';
   const btn=$('#fbBtn'), wrap=$('#fbWrap');
   if(!FEEDBACK_ON){ if(btn) btn.remove(); if(wrap) wrap.remove(); return; }
   if(!btn || !wrap) return;
-  const NAMES={brief:'Brief',timing:'Timing',tables:'Table guides',kit:'Kit & capture',notes:'Notes',wrong:'If it goes wrong'};
-  const SUB={how:'How a table works',t1:'Table 1 Members',t2:'Table 2 Administrators',t3:'Table 3 Funders'};
+  const NAMES={'pl-brief':'Plenary brief','pl-questions':'Panel questions',
+    'ds-brief':'Sprint brief','ds-flow':'The sprint','ds-kit':'Sprint materials',
+    'lo-brief':'Lounge brief','lo-areas':'The two areas','lo-kit':'Lounge materials',
+    'lo-art':'Gratitude & art','who':'Who is where','coord':'Coordination',
+    'disclosure':'Content consent',notes:'Notes'};
   let kind='', selected='';
   function whereAmI(){
     const v=$$('.view').find(x=>x.classList.contains('on'));
     const id=v?v.id.replace('v-',''):'brief';
     let label=NAMES[id]||id;
-    if(id==='tables'){
-      const p=$$('.tpane').find(x=>x.classList.contains('on'));
-      if(p) label+=' / '+(SUB[p.id.replace('t-','')]||'');
-    }
-    return label;
+    return SESSION + ' \u00b7 ' + label;
   }
   btn.addEventListener('click',()=>{
     selected=String(window.getSelection?window.getSelection():'').trim().slice(0,600);

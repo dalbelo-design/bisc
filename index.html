@@ -677,7 +677,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
     <h3>Adding to the calendar</h3>
     <p style="font-size:15px;margin:0 0 9px">Two sheets, each doing one job. Set Published to <strong>yes</strong> and it appears here.</p>
     <p style="font-size:15px;margin:0 0 9px"><strong>Events</strong> — conferences, local actions, anything outside the union's own cycle. Start date, end date, title, where, and a toolkit link if there is one.</p>
-    <p style="font-size:15px;margin:0"><strong>Meeting changes</strong> — cancelling or moving one of our own meetings. The regular pattern stays in the app; you only record the exception, and members see why.</p>
+    <p style="font-size:15px;margin:0"><strong>Meeting changes</strong> — canceling or moving one of our own meetings. The regular pattern stays in the app; you only record the exception, and members see why.</p>
   </div>
 
   <h2 data-i18n="mtg.access.h">Access</h2>
@@ -1334,14 +1334,14 @@ function monthEvents(y, mo){
     map[d] = map[d].flatMap(e=>{
       const c = changeFor(y, mo, d, e.title);
       if(!c) return [e];
-      if(c.change === 'cancelled') return [{...e, cancelled:true, reason:c.reason}];
+      if(c.change === 'canceled') return [{...e, canceled:true, reason:c.reason}];
       if(c.change === 'moved' && c.newDate){
         const [ny,nm,nd] = c.newDate.split('-').map(Number);
         if(ny===y && nm-1===mo){
           const moved = {...e, day:nd, dt: zoned(y, mo, nd, e.hh, e.mm, e.tz), movedFrom:d, reason:c.reason};
           (map[nd] = map[nd] || []).push(moved);
         }
-        return [{...e, cancelled:true, movedTo:c.newDate, reason:c.reason}];
+        return [{...e, canceled:true, movedTo:c.newDate, reason:c.reason}];
       }
       return [e];
     });
@@ -3005,7 +3005,7 @@ function renderDayPanel(){
     return `<a class="ev-link" href="${e.link.url}" target="_blank" rel="noopener">${e.link.label} \u2192</a>`;
   };
   const flag = e => {
-    if(e.cancelled) return `<p class="ev-flag off">${e.movedTo ? 'Moved to ' + e.movedTo : 'Cancelled'}${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
+    if(e.canceled) return `<p class="ev-flag off">${e.movedTo ? 'Moved to ' + e.movedTo : 'Canceled'}${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
     if(e.movedFrom) return `<p class="ev-flag moved">Moved to this date${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
     return '';
   };
@@ -3016,7 +3016,7 @@ function renderDayPanel(){
       <p class="t2">${e.where}</p>
       ${linkFor(e)}
     </div>` : `
-    <div class="ev ${e.kind}${e.cancelled ? ' is-off' : ''}">
+    <div class="ev ${e.kind}${e.canceled ? ' is-off' : ''}">
       <h4>${e.title}</h4>
       ${flag(e)}
       <p class="t1">${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</p>

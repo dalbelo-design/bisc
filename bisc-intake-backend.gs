@@ -25,7 +25,7 @@
  * URL will keep running the old code.
  */
 
-const VERSION      = '2026-08-22-d · adds ?show diagnostics';
+const VERSION      = '2026-08-22-e · adds ?seed sample data';
 const SHEET_ID     = '1LmKjohQDfLLKVfEyjI1O4Yg0pccZvSef0-_91LoNH7I';
 const NOTIFY_EMAIL = 'loren@dalbert.design';
 
@@ -320,7 +320,7 @@ function agendaFetch(data) {
    overrides a single date.
      A  Date        the date as it would normally fall
      B  Meeting     New member meeting / Full union meeting / Saturday mixer
-     C  Change      cancelled  /  moved
+     C  Change      canceled  /  moved
      D  New date    only for a move
      E  Reason      shown to members, e.g. "Thanksgiving week"
      F  Published   yes / no
@@ -383,7 +383,7 @@ function calendarFetch(data) {
       changes.push({
         date: on,
         meeting: String(r[1] || '').trim(),
-        change: String(r[2] || 'cancelled').trim().toLowerCase(),
+        change: String(r[2] || 'canceled').trim().toLowerCase(),
         newDate: ymd(r[3]),
         reason: String(r[4] || '').trim()
       });
@@ -487,6 +487,84 @@ function doGet(e) {
   //   ?show=agendas    what the Agendas tab parses to (members only in the app,
   //                    shown here so you can debug without a token)
   //   ?show=notes      what the Meeting Notes tab parses to
+  // Sample data for practice: open  <your /exec URL>?seed=1
+  // Fills Events, Meeting changes, Agendas and Meeting Notes with
+  // fictional rows so you can see everything render. Run ?seed=clear
+  // to remove them again — it only deletes rows it added, which are
+  // marked SAMPLE in the last column.
+  const seed = e && e.parameter && e.parameter.seed;
+  if (seed) {
+    try {
+      const ss = SpreadsheetApp.openById(SHEET_ID);
+      const wipe = function (tabName) {
+        const sh = ss.getSheetByName(tabName);
+        if (!sh || sh.getLastRow() < 2) return 0;
+        const w = sh.getLastColumn();
+        const vals = sh.getRange(2, 1, sh.getLastRow() - 1, w).getValues();
+        var removed = 0;
+        for (var i = vals.length - 1; i >= 0; i--) {
+          if (String(vals[i][w - 1]).indexOf('SAMPLE') > -1) { sh.deleteRow(i + 2); removed++; }
+        }
+        return removed;
+      };
+
+      if (String(seed).toLowerCase() === 'clear') {
+        const gone = [EVENTS_TAB, CHANGES_TAB, AGENDA_TAB, NOTES_TAB].map(function (t) {
+          return t + ': ' + wipe(t);
+        });
+        return reply({ ok: true, cleared: gone });
+      }
+
+      // Events
+      const ev = getSheet(EVENTS_TAB, EVENTS_COLUMNS);
+      [['2026-10-08', '', 'Contra Costa County budget hearing', 'Martinez, California', '', '', 'no', 'yes SAMPLE'],
+       ['2026-10-22', '', 'Guaranteed income storytelling workshop', 'Online', '', '', 'no', 'yes SAMPLE'],
+       ['2026-11-05', '2026-11-06', 'Western states pilot alumni gathering', 'Sacramento, California', '', '', 'no', 'yes SAMPLE'],
+       ['2026-12-03', '', 'State legislative preview briefing', 'Online', '', '', 'no', 'yes SAMPLE']
+      ].forEach(function (r) { ev.appendRow(r); });
+
+      // Meeting changes
+      const ch = getSheet(CHANGES_TAB, CHANGES_COLUMNS);
+      [['2026-11-25', 'Full union meeting', 'canceled', '', 'Thanksgiving week', 'yes SAMPLE'],
+       ['2026-12-30', 'Full union meeting', 'moved', '2026-12-16', 'Between the holidays, moved earlier', 'yes SAMPLE']
+      ].forEach(function (r) { ch.appendRow(r); });
+
+      // Agendas
+      const ag = getSheet(AGENDA_TAB, AGENDA_COLUMNS);
+      [['2026-09-30', 'Full union meeting', 1, 5,  'Welcome and attendance', 'Who is here. Attendance is how Active Membership is tracked.', 'yes', 'Daniela SAMPLE'],
+       ['2026-09-30', 'Full union meeting', 2, 10, 'Community building', 'Two minutes each on one thing that went well this month.', 'yes', 'Daniela SAMPLE'],
+       ['2026-09-30', 'Full union meeting', 3, 20, 'Report back from Portland', 'Both rooms at BIG. What we heard, who we met, what we promised.', 'yes', 'Daniela SAMPLE'],
+       ['2026-09-30', 'Full union meeting', 4, 15, 'Buddy pairings for the new cohort', 'Fourteen people joined in September. Deciding who pairs with whom.', 'yes', 'Daniela SAMPLE'],
+       ['2026-09-30', 'Full union meeting', 5, 5,  'Open floor', 'Anything not on the agenda.', 'yes', 'Daniela SAMPLE'],
+       ['2026-09-30', 'Full union meeting', 6, 5,  'Feedback and goodbyes', 'What felt good about the meeting. Parting in solidarity.', 'yes', 'Daniela SAMPLE']
+      ].forEach(function (r) { ag.appendRow(r); });
+
+      // Meeting notes
+      const nt = getSheet(NOTES_TAB, NOTES_COLUMNS);
+      [['2026-08-26', 'Full union meeting', '16 across both sessions',
+        'Loren confirmed as onboarding lead\nAgreed to run two sessions of every meeting\nApproved BISC Buddy as the name for the peer support role',
+        'Loren to bring the benefits question to structures by Sept 4\nMark to draft the welcome email by Sept 5\nChemareea to confirm where the sign-up form lives',
+        'Do we say union or community in Spanish materials?\nWho owns the member list once the role rotates?',
+        'Report from Portland\nBuddy pairings for the September cohort', 'yes', 'Daniela SAMPLE'],
+       ['2026-08-12', 'New member meeting', '19 across both sessions',
+        'None. This was an introductions meeting.',
+        'Buddy pairings within a week for everyone who asked\nSpanish materials request passed to communications',
+        'Several members asked whether joining affects their benefits. Still unanswered.\nTwo members asked whether family who were not in a pilot can take part.',
+        'Answer on the benefits question\nWalk through the learning tracks', 'yes', 'Zyera SAMPLE'],
+       ['2026-07-29', 'Full union meeting', '14 across both sessions',
+        'Adopted the last Wednesday for full union meetings\nAgreed members are compensated for storytelling work',
+        'Leslie to prepare the funders one-pager by Sept 10\nXen to map who is going to Portland',
+        'What is our fiscal sponsorship position when a funder asks?',
+        'Portland staffing\nConfirm the design sprint team', 'yes', 'Mark SAMPLE']
+      ].forEach(function (r) { nt.appendRow(r); });
+
+      return reply({ ok: true, seeded: { events: 4, changes: 2, agendaRows: 6, notes: 3 },
+                     undo: 'Add ?seed=clear to the same URL to remove them' });
+    } catch (err) {
+      return reply({ ok: false, error: String(err) });
+    }
+  }
+
   const show = e && e.parameter && e.parameter.show;
   if (show === 'calendar') return calendarFetch({});
   if (show === 'agendas') {
@@ -526,7 +604,7 @@ function doGet(e) {
     status: 'BISC Union intake is running',
     version: VERSION,
     setupRoute: true,
-    diagnostics: ['?setup=1', '?show=calendar', '?show=agendas', '?show=notes', '?probe=feedback'],
+    diagnostics: ['?setup=1', '?seed=1', '?seed=clear', '?show=calendar', '?show=agendas', '?show=notes', '?probe=feedback'],
     scriptId: ScriptApp.getScriptId(),
     sheetId: SHEET_ID,
     tabs: TAB,

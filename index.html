@@ -211,6 +211,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .dot{width:6px;height:6px;border-radius:50%}
 .dot.nm{background:var(--sky)}.dot.fu{background:var(--green-md)}.dot.sx{background:var(--orange)}
 .dot.ac{background:var(--yellow);box-shadow:inset 0 0 0 1.5px #B07C14}
+.dot.oc{background:var(--green-dk)}
 
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .legend span{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft)}
@@ -221,6 +222,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .ev{background:var(--raised);border:1px solid var(--line);border-left-width:5px;border-radius:11px;padding:13px 15px;margin-bottom:8px}
 .ev.nm{border-left-color:var(--sky)}.ev.fu{border-left-color:var(--green-md)}.ev.sx{border-left-color:var(--orange)}
 .ev.ac{border-left-color:var(--yellow)}
+.ev.oc{border-left-color:var(--green-dk)}
 .ev h4{font-family:var(--display);font-weight:700;font-size:16.5px;margin:0 0 2px}
 .ev .t1{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green-dk);margin:0 0 2px}
 .ev .t2{font-size:13px;color:var(--stone);margin:0 0 5px}
@@ -239,6 +241,15 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .mnote-b li{margin-bottom:5px}
 .mnote-b .att{font-size:15px;color:var(--ink);margin:0}
 .mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
+
+.apick-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.apick{flex:0 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:11px;
+  padding:9px 14px;cursor:pointer;min-height:52px;display:flex;flex-direction:column;align-items:flex-start;gap:1px}
+.apick .ap-d{font-family:var(--display);font-weight:700;font-size:14px}
+.apick .ap-k{font-size:12px;color:var(--stone)}
+.apick.on{background:var(--green-dk);border-color:var(--green-dk)}
+.apick.on .ap-d{color:#fff}
+.apick.on .ap-k{color:#B6DCB8}
 
 .lockcard{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);
   border-radius:var(--r);padding:18px;margin-bottom:12px}
@@ -629,7 +640,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <div class="card sky">
     <h3 data-i18n="mtg.two.h">Two sessions, same meeting</h3>
     <p style="font-size:15px;margin:0 0 8px">All meetings run <strong>once a month, in two sessions on the same day</strong>. Same content — come to whichever works.</p>
-    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The Second Saturday mixer is one session for everyone.</p>
+    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The Saturday mixer and the Organizing Committee meeting each run once, not twice.</p>
   </div>
 
   <div class="cal">
@@ -643,6 +654,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
       <span><i style="background:#64D5FF"></i>New member</span>
       <span><i style="background:#519A66"></i>Full union</span>
       <span><i style="background:#FAAA04"></i>Social mixer</span>
+      <span><i style="background:#247227"></i>Organizing Committee</span>
       <span><i style="background:#FED786;box-shadow:inset 0 0 0 1.5px #B07C14"></i>Events</span>
     </div>
   </div>
@@ -668,8 +680,9 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 
   <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
   <div class="card">
-    <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
-    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Most Wednesdays</strong> — Organizing Committee · 4:00–6:00 PM PT / 7:00–9:00 PM ET · two hours. No meeting on full union week.</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT · one hour</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
     <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — Saturday mixer, one session · 1:00 PM PT / 4:00 PM ET</p>
   </div>
 
@@ -690,6 +703,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 <section class="screen" id="s-agenda">
   <h1 data-i18n="ag.h1">Agenda</h1>
 
+  <div class="apick-row" id="agendaPick"></div>
   <div id="nextUp"></div>
 
   <div class="panel-green">
@@ -1273,6 +1287,9 @@ const RULES = [
   {id:'fu-p', kind:'fu', title:'Full union meeting', session:'Pacific session',
    dow:3, week:'last', hh:18, mm:0, tz:PT,
    desc:'The whole membership. Priorities, decisions, and project updates.'},
+  {id:'oc', kind:'oc', title:'Organizing Committee', session:'One session',
+   dow:3, week:null, except:'last', hh:16, mm:0, tz:PT,
+   desc:'The committee that runs the union. Two hours. No meeting on full union week.'},
   {id:'sx-s', kind:'sx', title:'Saturday mixer', session:'One session, everyone together',
    dow:6, week:2, hh:13, mm:0, tz:PT,
    desc:'The whole union in one room. Bring your kids, your dog, your lunch.'}
@@ -1320,6 +1337,9 @@ function monthEvents(y, mo){
     for(let d=1; d<=dim; d++){
       if(new Date(y,mo,d).getDay() !== r.dow) continue;
       seen++;
+      // a rule can skip the last occurrence of the month — OC steps aside
+      // on full union week so nobody sits through four hours
+      if(r.except === 'last' && d + 7 > dim) continue;
       if(r.week !== null){
         const hit = r.week === 'last' ? (d + 7 > dim)
                   : Array.isArray(r.week) ? r.week.includes(seen)
@@ -2827,12 +2847,25 @@ const AGENDAS = {
   fu: {
     label: 'Full union meeting',
     items: [
-      [0, 5,  'Welcome and attendance', 'Who is here. Attendance is recorded, which is how Active Membership is tracked.'],
-      [5, 15, 'Community building', 'Time to actually know each other. Not a warm-up for the real work — part of it.'],
-      [15,30, 'Working group updates', 'What each group has moved since last month, in a few minutes each.'],
-      [30,50, 'Priorities and decisions', 'What the union takes on next, and anything being put to the membership.'],
-      [50,55, 'Open floor', 'Raise something that is not on the agenda.'],
-      [55,60, 'Feedback and goodbyes', 'What felt good about the meeting, and parting in solidarity.']
+      [0,  10, 'Welcome and attendance', 'Who is here. Attendance is recorded, which is how Active Membership is tracked.'],
+      [10, 25, 'Community building', 'Time to actually know each other. Not a warm-up for the real work — part of it.'],
+      [25, 50, 'Working group updates', 'What each group has moved since last month.'],
+      [50, 60, 'Break', 'Ten minutes. Two hours without one is too long.'],
+      [60, 95, 'Priorities and decisions', 'What the union takes on next, and anything being put to the membership.'],
+      [95, 110,'Open floor', 'Raise something that is not on the agenda.'],
+      [110,120,'Feedback and goodbyes', 'What felt good about the meeting, and parting in solidarity.']
+    ]
+  },
+  oc: {
+    label: 'Organizing Committee',
+    items: [
+      [0,  10, 'Welcome and check-in', 'Who is here, and how everyone is arriving.'],
+      [10, 25, 'Decisions carried over', 'Anything left open from last week, closed before new business.'],
+      [25, 60, 'Working group reports', 'Onboarding, structures, communications, partnerships.'],
+      [60, 70, 'Break', 'Ten minutes.'],
+      [70, 105,'This week\u2019s business', 'The substantive item, whatever it is this week.'],
+      [105,115,'Actions and owners', 'Who is doing what, by when. Said out loud and written down.'],
+      [115,120,'Close', 'What is on next week, and anything anyone needs.']
     ]
   }
 };
@@ -2894,26 +2927,60 @@ function postedAgendaFor(ev){
   return {items, by: (rows.find(r=>r.by)||{}).by || ''};
 }
 
-function renderAgenda(){
-  const hits = nextMeeting();
-  if(!hits.length){ $('#nextUp').innerHTML=''; return; }
 
-  const first = hits[0];
-  const sameDay = hits.filter(e =>
-    e.kind===first.kind && e.y===first.y && e.mo===first.mo && e.day===first.day);
+function upcomingWithAgendas(limit){
+  const now = new Date(), n = new Date(), out = [], seen = new Set();
+  for(let i=0;i<4 && out.length<limit;i++){
+    const p = new Date(n.getFullYear(), n.getMonth()+i, 1);
+    const ev = monthEvents(p.getFullYear(), p.getMonth());
+    Object.keys(ev).map(Number).sort((a,b)=>a-b)
+      .flatMap(d => ev[d])
+      .filter(e => AGENDAS[e.kind] && e.dt > now && !e.cancelled)
+      .sort((a,b)=>a.dt-b.dt)
+      .forEach(e=>{
+        const k = e.y+'-'+e.mo+'-'+e.day+'-'+e.kind;
+        if(seen.has(k) || out.length>=limit) return;
+        seen.add(k); out.push(e);
+      });
+  }
+  return out.sort((a,b)=>a.dt-b.dt);
+}
+
+let agendaPick = 0;
+
+function renderAgenda(){
+  const list = upcomingWithAgendas(5);
+  if(!list.length){ $('#nextUp').innerHTML=''; return; }
+  if(agendaPick >= list.length) agendaPick = 0;
+  const first = list[agendaPick];
+
+  const pick = $('#agendaPick');
+  if(pick){
+    pick.innerHTML = list.map((e,i)=>{
+      const d = new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'})
+        .format(new Date(e.y,e.mo,e.day));
+      return `<button class="apick${i===agendaPick?' on':''}" data-pick="${i}">
+        <span class="ap-d">${d}</span><span class="ap-k">${AGENDAS[e.kind].label}</span></button>`;
+    }).join('');
+  }
+
+  const hits = list.filter(e => e.kind===first.kind && e.y===first.y && e.mo===first.mo && e.day===first.day);
+  const dayEv = monthEvents(first.y, first.mo)[first.day] || [];
+  const sameDay = dayEv.filter(e =>
+    e.kind===first.kind && !e.allDay).sort((a,b)=>a.dt-b.dt);
 
   const dateStr = new Intl.DateTimeFormat('en-US',
     {weekday:'long', month:'long', day:'numeric'}).format(first.dt);
 
   $('#nextUp').innerHTML = `
     <div class="card orange">
-      <p class="eyebrow" style="margin-bottom:4px">Next up</p>
+      <p class="eyebrow" style="margin-bottom:4px">${agendaPick===0 ? 'Next up' : 'Coming up'}</p>
       <h3 style="font-size:21px">${AGENDAS[first.kind].label}</h3>
       <p style="font-size:16px;font-weight:600;margin:2px 0 10px">${dateStr}</p>
       ${sameDay.map(e=>`<p style="font-size:15px;margin:0 0 5px">
         <strong>${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</strong>
         <span style="color:var(--stone)"> — ${e.session} · ${fmtT(e.dt, ET)} ET / ${fmtT(e.dt, PT)} PT</span></p>`).join('')}
-      <p style="font-size:14px;color:var(--stone);margin:10px 0 0">Both sessions cover the same ground. Come to whichever suits you.</p>
+      ${sameDay.length>1 ? '<p style="font-size:14px;color:var(--stone);margin:10px 0 0">Both sessions cover the same ground. Come to whichever suits you.</p>' : ''}
     </div>`;
 
   const clock = off => {
@@ -3035,6 +3102,11 @@ let calY, calM, selDay = null;
 
 $('#calPrev').addEventListener('click', ()=>{ calM--; if(calM<0){calM=11;calY--;} renderMeetings(); });
 $('#calNext').addEventListener('click', ()=>{ calM++; if(calM>11){calM=0;calY++;} renderMeetings(); });
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-pick]');
+  if(b){ agendaPick = +b.dataset.pick; renderAgenda(); }
+});
+
 $('#calGrid').addEventListener('click', e=>{
   const b = e.target.closest('[data-day]'); if(!b) return;
   selDay = {y:calY, mo:calM, d:+b.dataset.day};

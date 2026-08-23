@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BISC Union — BIG 2026 Toolkit</title>
+<meta name="theme-color" content="#247227">
+<meta name="color-scheme" content="light only">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+:root{--paper:#FFFFF8;--ink:#49420C;--ink-soft:#6B6222;--stone:#736C42;
+ --sky:#64D5FF;--green-dk:#247227;--green-md:#519A66;--orange:#FAAA04;--yellow:#FED786;
+ --line:#E4E1CC;--raised:#FFFFFF;--r:14px;
+ --display:'League Spartan','Helvetica Neue',sans-serif;--body:'Inter','Helvetica Neue',Arial,sans-serif;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--green-dk);outline-offset:2px;border-radius:4px}
+.wrap{max-width:760px;margin:0 auto;padding-bottom:70px}
+
+.top{background:var(--green-dk);color:#fff;padding:14px 20px 13px}
+.top .kicker{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--yellow);margin:0 0 4px}
+.top h1{font-family:var(--display);font-weight:800;font-size:clamp(25px,6.6vw,34px);line-height:1;letter-spacing:-.02em;margin:0 0 5px}
+.top .when{font-size:14px;line-height:1.35;color:#DCEFDE;margin:0}
+.status{background:var(--yellow);color:#5C4A0C;font-size:14px;font-weight:600;padding:9px 20px;margin:0}
+.status strong{font-family:var(--display)}
+
+.sessionbar{display:flex;gap:0;background:var(--raised);padding:0;border-bottom:1px solid var(--line)}
+.sessionbar button{flex:1;background:var(--raised);border:none;border-bottom:5px solid transparent;
+  color:var(--ink);font-family:var(--display);font-weight:700;font-size:14px;cursor:pointer;
+  padding:13px 8px;min-height:52px;letter-spacing:.01em;transition:background .15s}
+/* each session keeps its own color whether it is selected or not */
+.sessionbar button[data-session="plenary"]{border-bottom-color:#BEEBFF}
+.sessionbar button[data-session="sprint"]{border-bottom-color:#FDDFA1}
+.sessionbar button[data-session="lounge"]{border-bottom-color:#C7E3CB}
+.sessionbar button[data-session="all"]{border-bottom-color:#FFF0CC}
+.sessionbar button:hover{background:#F6F5E6}
+.sessionbar button.on[data-session="plenary"]{background:var(--sky);border-bottom-color:#1FA5D8}
+.sessionbar button.on[data-session="sprint"]{background:var(--orange);border-bottom-color:#B87C08}
+.sessionbar button.on[data-session="lounge"]{background:var(--green-md);border-bottom-color:#2F6B44;color:#fff}
+.sessionbar button.on[data-session="all"]{background:var(--yellow);border-bottom-color:#C79A2A}
+@media (max-width:400px){.sessionbar button{font-size:12.5px;padding:12px 4px}}
+
+/* the section nav picks up the color of the session you are in */
+body[data-session="plenary"] .nav button.on{background:var(--sky);border-color:var(--sky);color:var(--ink)}
+body[data-session="sprint"] .nav button.on{background:var(--orange);border-color:var(--orange);color:var(--ink)}
+body[data-session="lounge"] .nav button.on{background:var(--green-md);border-color:var(--green-md);color:#fff}
+body[data-session="all"] .nav button.on{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+
+.nav{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line);
+ display:flex;gap:6px;overflow-x:auto;padding:9px 14px;-webkit-overflow-scrolling:touch}
+.nav button{flex:0 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:99px;padding:8px 15px;
+ font-family:var(--display);font-weight:600;font-size:13.5px;cursor:pointer;white-space:nowrap;min-height:42px}
+.nav button.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+
+.view{display:none;padding:20px 20px 4px}
+.view.on{display:block}
+h2{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.02em;margin:26px 0 11px;color:var(--ink)}
+h2:first-child{margin-top:4px}
+h3{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 4px}
+p{margin:0 0 13px;max-width:62ch}
+.lede{font-size:18px;color:var(--ink-soft)}
+.sub{font-size:15px;color:var(--ink-soft)}
+
+.card{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:17px;margin-bottom:11px}
+.card.orange{border-left:5px solid var(--orange)}
+.card.green{border-left:5px solid var(--green-md)}
+.card.sky{border-left:5px solid var(--sky)}
+.card p:last-child{margin-bottom:0}
+.panel{background:var(--green-dk);color:#fff;border-radius:var(--r);padding:18px;margin-bottom:13px}
+.panel p{color:#DCEFDE}.panel h3{color:#fff}.panel strong{color:var(--yellow)}
+ul{margin:0 0 12px;padding-left:20px;font-size:15.5px;color:var(--ink-soft)}
+li{margin-bottom:6px}
+.note{background:#EFF3EC;border-radius:11px;padding:14px 16px;font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+.note strong{color:var(--green-dk)}
+.fill{background:var(--yellow);color:#5C4A0C;border-radius:9px;padding:11px 13px;font-size:14.5px;margin:0 0 11px}
+.fill strong{font-family:var(--display)}
+
+/* timeline */
+.seg{display:flex;background:var(--raised);border:1px solid var(--line);border-radius:var(--r);margin-bottom:9px;overflow:hidden}
+.seg.now{border-color:var(--orange);box-shadow:0 0 0 3px rgba(250,170,4,.28)}
+.seg.past{opacity:.55}
+.seg-t{flex:0 0 80px;background:#F6F5E6;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px}
+.seg.now .seg-t{background:var(--orange)}
+.seg-t .hh{font-family:var(--display);font-weight:800;font-size:19px;line-height:1}
+.seg-t .mm{font-size:11.5px;color:var(--stone);font-weight:600;margin-top:2px}
+.seg.now .seg-t .mm{color:#5C4A0C}
+.seg-b{flex:1;padding:13px 15px;min-width:0}
+.seg-b h3{margin-bottom:2px}
+.seg-b .who{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green-md);margin:0 0 5px}
+.seg-b p{font-size:14.5px;color:var(--ink-soft);margin:0}
+.seg-b ol{margin:7px 0 0;padding-left:20px;font-size:14.5px;color:var(--ink-soft)}
+.seg-b ol li{margin-bottom:4px}
+.jumpto{display:inline-block;margin-top:9px;background:var(--green-dk);color:#fff;border:none;border-radius:9px;
+ padding:8px 14px;font-family:var(--display);font-weight:600;font-size:13.5px;cursor:pointer;min-height:40px}
+.quote{border-left:4px solid var(--yellow);padding:8px 0 8px 13px;margin:9px 0 0;font-size:14.5px;color:var(--ink-soft);font-style:italic}
+
+/* roles */
+.role{display:flex;gap:11px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.role:last-child{border-bottom:none}
+.role-l{flex:0 0 118px}
+.role-l strong{font-family:var(--display);font-size:15.5px;display:block}
+.role-l span{font-size:12.5px;color:var(--stone)}
+.role input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--paper);min-height:44px}
+.role input:focus{border-color:var(--green-md);outline:none}
+
+/* checklist */
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.chk:last-child{border-bottom:none}
+.chk input{flex:0 0 auto;width:22px;height:22px;margin:0;accent-color:var(--green-dk);cursor:pointer}
+.chk span{font-size:15.5px;line-height:1.4}
+.chk input:checked + span{color:var(--stone);text-decoration:line-through}
+
+/* tables */
+.sub-nav{display:flex;gap:6px;overflow-x:auto;padding:0 0 14px;-webkit-overflow-scrolling:touch}
+.sub-nav button{flex:0 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:99px;padding:8px 14px;
+ font-family:var(--display);font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;min-height:40px}
+.sub-nav button.on{background:var(--orange);border-color:var(--orange);color:var(--ink)}
+.tpane{display:none}.tpane.on{display:block}
+.staffed{font-family:var(--display);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--green-md);margin:0 0 10px}
+
+.beat{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid var(--line)}
+.beat:last-child{border-bottom:none}
+.beat-n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--green-dk);color:#fff;
+ font-family:var(--display);font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.beat-b{flex:1;min-width:0}
+.beat-b h3{margin-bottom:3px}
+.beat-b .t{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green-md);margin:0 0 4px}
+.beat-b p{font-size:15px;margin:0 0 8px;color:var(--ink-soft)}
+.beat-b p:last-child{margin-bottom:0}
+.beat-b ul{margin:6px 0 0}
+.say{border-left:4px solid var(--yellow);padding:9px 0 9px 13px;margin:8px 0;font-size:15.5px;color:var(--ink)}
+.say em{color:var(--stone);font-style:normal;font-size:13px;display:block;margin-top:3px}
+
+details.q{border:1px solid var(--line);border-radius:11px;background:var(--raised);margin-bottom:8px;overflow:hidden}
+details.q summary{font-family:var(--display);font-weight:700;font-size:15.5px;cursor:pointer;list-style:none;padding:13px 15px;display:flex;gap:10px;align-items:flex-start}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:'+';margin-left:auto;color:var(--orange);font-size:22px;line-height:.8;font-weight:700}
+details.q[open] summary::after{content:'–'}
+details.q .qb{padding:0 15px 13px;font-size:15px;color:var(--ink-soft)}
+details.q .qb p{font-size:15px}
+.clock{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.07em;text-transform:uppercase;
+ color:var(--stone);border-top:1px solid var(--line);padding-top:12px;margin-top:4px}
+
+/* co-design feedback — set FEEDBACK_ON = false to remove */
+#fbBtn{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:60;
+  background:#8C3A5C;color:#fff;border:none;border-radius:99px;padding:12px 17px;
+  font-family:var(--display);font-weight:700;font-size:14.5px;cursor:pointer;
+  box-shadow:0 3px 14px rgba(0,0,0,.24);min-height:46px}
+#fbWrap{position:fixed;inset:0;z-index:70;background:rgba(20,38,31,.45);display:none;align-items:flex-end;justify-content:center}
+#fbWrap.on{display:flex}
+#fbPanel{background:var(--paper);width:100%;max-width:560px;border-radius:18px 18px 0 0;
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto}
+#fbPanel h3{font-family:var(--display);font-weight:800;font-size:20px;margin:0 0 3px;color:var(--green-dk)}
+#fbWhere{font-size:13.5px;color:var(--stone);margin:0 0 13px}
+#fbSel{background:#F6F5E6;border-left:4px solid var(--orange);border-radius:8px;padding:10px 12px;
+  font-size:14.5px;color:var(--ink-soft);margin:0 0 13px;max-height:110px;overflow-y:auto}
+.fb-kinds{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.fb-kinds button{flex:1 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:99px;
+  padding:9px 13px;font-family:var(--display);font-weight:600;font-size:13.5px;cursor:pointer;min-height:44px}
+.fb-kinds button.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+#fbPanel textarea,#fbPanel input{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);font-size:16px;margin-bottom:11px}
+#fbPanel textarea{min-height:110px;resize:vertical}
+.fb-row{display:flex;gap:9px}
+.fb-row button{flex:1;min-height:50px;border:none;border-radius:11px;font-family:var(--display);font-weight:700;font-size:16px;cursor:pointer}
+#fbSend{background:var(--green-dk);color:#fff}
+#fbCancel{background:transparent;border:1.5px solid var(--line);color:var(--ink);font-weight:600}
+#fbMsg{font-size:14px;margin:10px 0 0;min-height:20px}
+@media print{#fbBtn,#fbWrap{display:none !important}}
+
+/* notes */
+.who-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.who-row button{flex:1 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:99px;
+ padding:9px 15px;font-family:var(--display);font-weight:600;font-size:13.5px;cursor:pointer;min-height:44px}
+.who-row button.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+.nfield{margin-bottom:11px}
+.nfield label{display:block;font-family:var(--display);font-weight:700;font-size:14.5px;margin-bottom:4px}
+.nfield input,.nfield textarea,.nfield select{width:100%;padding:12px;border:1.5px solid var(--line);
+ border-radius:10px;background:var(--paper);min-height:48px;font-size:16px}
+.nfield textarea{min-height:96px;resize:vertical}
+.nfield input:focus,.nfield textarea:focus,.nfield select:focus{border-color:var(--green-md);outline:none}
+.nbtn{width:100%;min-height:52px;border:none;border-radius:11px;background:var(--green-dk);color:#fff;
+ font-family:var(--display);font-weight:700;font-size:17px;cursor:pointer;padding:13px}
+.nbtn.gold{background:var(--orange);color:var(--ink)}
+.nbtn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:600;font-size:15px;min-height:46px}
+.nbtn[disabled]{opacity:.45;cursor:not-allowed}
+.syncbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#F6F5E6;border-radius:11px;
+ padding:12px 14px;margin-bottom:13px;font-size:14.5px}
+.syncbar .cnt{font-family:var(--display);font-weight:700}
+.syncbar .grow{flex:1 1 auto}
+.note-item{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--green-md);
+ border-radius:11px;padding:13px 15px;margin-bottom:9px}
+.note-item.obs{border-left-color:var(--sky)}
+.note-item .meta{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.07em;
+ text-transform:uppercase;color:var(--stone);margin:0 0 5px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.note-item .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block}
+.note-item.sent .dot{background:var(--green-md)}
+.note-item p{font-size:15px;margin:0 0 3px;color:var(--ink)}
+.note-item .sm{font-size:14px;color:var(--ink-soft);margin:0}
+.empty{color:var(--stone);font-size:15px;padding:14px 2px}
+
+/* text fills its card instead of stopping short on wide screens */
+.card p,.panel p,.beat-b p,.note,.note p,.qb p,.ev p,.seg-b p,.day-panel p,
+.tpane > p,.view > p,.lede,.sub{max-width:none}
+
+.tbl{width:100%;border-collapse:collapse;font-size:15px;margin-bottom:12px}
+.tbl th{text-align:left;font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--stone);padding:0 10px 7px 0;border-bottom:1.5px solid var(--line)}
+.tbl td{padding:11px 10px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft)}
+.tbl td:first-child{color:var(--ink);font-weight:600;width:38%}
+
+@media (min-width:700px){.view{padding:26px 30px 4px}.top{padding:26px 30px 22px}.nav{padding:10px 26px}.role-l{flex:0 0 150px}}
+@media print{
+  .nav,.sub-nav,.status,.jumpto{display:none}
+  .view,.tpane{display:block !important;page-break-before:always}
+  details.q .qb{display:block !important}
+  .seg,.beat{page-break-inside:avoid}
+  body{font-size:11pt}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+  <p class="kicker">Event toolkit</p>
+  <h1>BIG 2026 Toolkit</h1>
+  <p class="when">BIG Conference · Portland, OR · Friday, September 18, 2026</p>
+</div>
+<p class="status" id="status"></p>
+
+<div class="sessionbar" id="sessionbar">
+  <button data-session="plenary" class="on">Plenary</button>
+  <button data-session="sprint">Design Sprint</button>
+  <button data-session="lounge">Lounge</button>
+  <button data-session="all">Everyone</button>
+</div>
+
+<nav class="nav" id="nav">
+  <button data-view="pl-brief" data-session="plenary" class="on">Brief</button>
+  <button data-view="pl-questions" data-session="plenary">Panel questions</button>
+  <button data-view="notes" data-session="plenary">Notes</button>
+  <button data-view="ds-brief" data-session="sprint">Brief</button>
+  <button data-view="ds-flow" data-session="sprint">The sprint</button>
+  <button data-view="ds-kit" data-session="sprint">Materials</button>
+  <button data-view="notes" data-session="sprint">Notes</button>
+  <button data-view="lo-brief" data-session="lounge">Brief</button>
+  <button data-view="lo-areas" data-session="lounge">The two areas</button>
+  <button data-view="lo-kit" data-session="lounge">Materials</button>
+  <button data-view="lo-art" data-session="lounge">Gratitude &amp; art</button>
+  <button data-view="notes" data-session="lounge">Notes</button>
+  <button data-view="who" data-session="all">Who is where</button>
+  <button data-view="coord" data-session="all">Coordination</button>
+  <button data-view="disclosure" data-session="all">Content consent</button>
+</nav>
+
+<!-- ============ PLENARY ============ -->
+<div class="view on" id="v-pl-brief">
+  <h2>Participant Power Building</h2>
+  <p class="lede">90 minutes, main stage. A panel of pilot administrators, facilitated by participants — which is the point.</p>
+
+  <div class="panel">
+    <h3>Why this session matters</h3>
+    <p>In almost every room like this, the pilot administrator leads and the participant answers. Here it is the other way round.</p>
+    <p><strong>Zyera and Daniela facilitate. The administrators answer.</strong> That inversion is not a staging choice — it is the argument the union is making, performed in front of the movement.</p>
+  </div>
+
+  <h2>The question we are trying to answer</h2>
+  <div class="card sky">
+    <p style="font-size:16px;margin:0"><strong>How will building participant power launch our mission of basic income for all?</strong></p>
+  </div>
+
+  <h2>Who is on stage</h2>
+  <div class="card">
+    <ul>
+      <li><strong>GroFund — In Her Hands.</strong> Participants engaged in design and research.</li>
+      <li><strong>Bread for the City.</strong> Participants determine their own payment amounts and schedule.</li>
+      <li><strong>Path Home.</strong> Space for participants to connect and build social capital with each other.</li>
+      <li><strong>MyPath — Bill of RYTS.</strong> A participant-created set of policy recommendations centring young BIPOC community members.</li>
+      <li><strong>Community Change.</strong> Not confirmed. Would speak to the artist organizing work Columbine is part of.</li>
+    </ul>
+    <div class="fill" style="margin:0">Confirm Community Change before printing anything with the line-up on it.</div>
+  </div>
+
+  <h2>Who is running it</h2>
+  <div class="card green">
+    <p style="font-size:15px;margin:0 0 8px"><strong>Facilitating:</strong> Zyera (Thrive) and Daniela (The Bridge Project)</p>
+    <p style="font-size:15px;margin:0"><strong>Supporting:</strong> Paris, Tracy, Champagne</p>
+  </div>
+
+  <h2>Materials</h2>
+  <div class="card">
+    <ul>
+      <li><strong>BINGO card.</strong> The audience engagement tool. Squares carry key words and definitions so listening becomes active.</li>
+      <li>QR code to the BISC landing page</li>
+      <li>BISC logo</li>
+    </ul>
+    <div class="fill" style="margin:0"><strong>Still needed:</strong> the session description, and three session takeaways. Both are blank in the design doc.</div>
+  </div>
+
+  <h2>Two things worth watching</h2>
+  <div class="card orange">
+    <p style="font-size:15px"><strong>Mic and call-and-response, not intellectual marketing.</strong> The 8/20 notes name this explicitly. If the panel drifts into organizational messaging, the facilitators should pull it back to the room.</p>
+    <p style="font-size:15px;margin:0"><strong>10 to 30 pilot participants will be in that audience</strong> — some leading state coalition policy work, some in storytelling cohorts. They are not a passive audience and the session should not treat them as one.</p>
+  </div>
+</div>
+
+<!-- ============ PLENARY QUESTIONS ============ -->
+<div class="view" id="v-pl-questions">
+  <h2>Questions for the panel</h2>
+  <p class="lede">Drafted in the design doc. Grouped here by what each one is actually digging at.</p>
+
+  <h2>Barriers the field built</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"What are some traditional barriers to community that we should do away with?"</p>
+    <p style="font-size:15.5px;margin:0">"Are there misconceptions of basic income that have made it hard to socialize beyond your pilot community?"</p>
+    <p class="clock" style="margin-top:12px">Listening for: research norms that keep participants apart. The 8/20 notes name one directly — not wanting participants to speak to one another.</p>
+  </div>
+
+  <h2>What happens when a pilot ends</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"How does your organization stay in touch with people who participated, beyond the pilot?"</p>
+    <p style="font-size:15.5px;margin:0">"What feels unsettling about the way pilots typically sunset, and what are your hopes for a soft landing? How does the union energise you and your organization?"</p>
+    <p class="clock" style="margin-top:12px">This is the union's opening. Most administrators are uneasy about how pilots end and rarely get asked.</p>
+  </div>
+
+  <h2>What the data misses</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px">"What was the most unexpected outcome of your pilot that has stuck with you and reshaped how you think?"</p>
+    <p style="font-size:15.5px;margin:0">"Which findings are most persuasive to policymakers — and what are you noticing in the gap between what policymakers want and what participants actually need?"</p>
+    <p class="clock" style="margin-top:12px">That gap is the union's whole argument. If a panellist names it themselves, let it sit.</p>
+  </div>
+
+  <h2>Consulting the union</h2>
+  <div class="card sky">
+    <p style="font-size:15.5px;margin:0">"Community voice is always there — but how are the important stories actually being shared, and who decides?"</p>
+  </div>
+
+  <div class="card orange">
+    <h3>For the facilitators</h3>
+    <p style="font-size:15px;margin:0">You do not have to get through all of these. Four answered properly beats nine skimmed. Pick the three you most want on the record and let the room take the rest.</p>
+  </div>
+</div>
+
+<!-- ============ DESIGN SPRINT ============ -->
+<div class="view" id="v-ds-brief">
+  <h2>Design Sprint</h2>
+  <p class="lede">80 minutes. Room 1 of the breakouts.</p>
+
+  <div class="panel">
+    <p><strong>An opportunity to design a solution for lifting participant power across the movement</strong> — and to create things the union will actually try to implement.</p>
+    <p style="margin:0">BISC organizers are there to guide and support, not to run it. The people in the room do the work.</p>
+  </div>
+
+  <h2>Who is running it</h2>
+  <div class="card green">
+    <p style="font-size:15px;margin:0">Zyera · Columbine · Chemareéa · Faye · Florence</p>
+  </div>
+
+  <h2>What comes out of the room</h2>
+  <div class="card orange">
+    <p style="font-size:15px"><strong>Pitches.</strong> Individually or in small teams. Each one names a need, an audience, and a thing to build.</p>
+    <p style="font-size:15px;margin:0"><strong>The top three get a meeting with the union.</strong> Say that at the start — it changes how seriously people take the hour, and it is a promise the union then has to keep.</p>
+  </div>
+
+  <h2>Before anyone leaves</h2>
+  <div class="card">
+    <p style="font-size:15px"><strong>Photograph every sheet.</strong> Paper gets left in hotel conference rooms. A photo takes ten seconds and is the only copy that survives the flight home.</p>
+    <p style="font-size:15px;margin:0">Collect names and contact details for anyone who pitched. You cannot follow up on a good idea with no name attached.</p>
+  </div>
+</div>
+
+<!-- ============ SPRINT FLOW ============ -->
+<div class="view" id="v-ds-flow">
+  <h2>The sprint</h2>
+  <p class="lede">The structure from the 8/20 notes, laid out as a worksheet. Roughly 80 minutes.</p>
+
+  <div class="beat"><div class="beat-n">1</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Identify a need</h3>
+    <div class="say">"What is the challenge you would like to approach?"<em>On your own or with two or three others. Write it as a problem, not a solution.</em></div>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">2</div><div class="beat-b">
+    <p class="t">15 minutes</p><h3>Ideas for solutions</h3>
+    <p>Generate, do not evaluate. Quantity first. The judging comes later and someone else's bad idea is often the start of your good one.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">3</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Who is your audience?</h3>
+    <p>Be specific. "The community" is not an audience. Pilot participants in one state, or county supervisors, or people who have never heard of guaranteed income — those are audiences.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">4</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>What is the messaging?</h3>
+    <p>One sentence that would land with that audience. Not a mission statement.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">5</div><div class="beat-b">
+    <p class="t">15 minutes</p><h3>What would you build?</h3>
+    <div class="say">"What is a cool medium that will activate your audience and get folks excited?"<em>A zine, a video, a workshop, a tool, a campaign, a card game. Analogue counts.</em></div>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">6</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>How could the union help?</h3>
+    <p>The bridge from idea to something real. People, money, reach, credibility, or a room to test it in. Be honest about what would actually be needed.</p>
+  </div></div>
+
+  <div class="beat"><div class="beat-n">7</div><div class="beat-b">
+    <p class="t">10 minutes</p><h3>Pitch</h3>
+    <p><strong>Need, audience, blurb.</strong> Ninety seconds each. Three sentences is plenty.</p>
+    <p style="margin-top:6px">Then the room picks. Top three get a meeting with the union.</p>
+  </div></div>
+
+  <div class="card sky">
+    <h3>The one-page worksheet</h3>
+    <p style="font-size:15px;margin:0 0 8px">Print one per person. Six boxes, in this order:</p>
+    <ul style="margin:0">
+      <li>The need I want to work on</li>
+      <li>Ideas for solving it</li>
+      <li>Who this is for</li>
+      <li>What I would say to them, in one sentence</li>
+      <li>The thing I would build, and in what medium</li>
+      <li>What the union could do to help</li>
+    </ul>
+  </div>
+
+  <div class="card orange">
+    <h3>A case worth having ready</h3>
+    <p style="font-size:15px;margin:0">The Marie Equity Center came up in the 8/20 notes as a reference — basic income aimed at a specific community, with members doing the community work themselves. Useful if the room stalls on what "a thing we could build" means.</p>
+  </div>
+</div>
+
+<!-- ============ SPRINT MATERIALS ============ -->
+<div class="view" id="v-ds-kit">
+  <h2>Materials</h2>
+  <p class="sub">Print and pack the week before. One owner. Ticks save on this device.</p>
+  <div class="card">
+    <label class="chk"><input type="checkbox" data-kit="s1"><span>Worksheets — one per person, plus 15 spare</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s2"><span>Door sign — <strong>Design Sprint · participants and members</strong></span></label>
+    <label class="chk"><input type="checkbox" data-kit="s3"><span>Sign pointing to the Lounge, for anyone in the wrong room</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s4"><span>Flip chart paper — one sheet per small group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s5"><span>Thick markers, several colors, two per group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s6"><span>Sticky notes — two pads per group</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s7"><span>Dot stickers for picking the top three</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s8"><span>Masking tape for putting paper on walls</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s9"><span>Name tags and a marker that writes big</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s10"><span>Timer, out where everyone can see it</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s11"><span>Paper sign-in sheet</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s12"><span>Charged phone for photographing every sheet</span></label>
+    <label class="chk"><input type="checkbox" data-kit="s13"><span>Water and something to eat</span></label>
+  </div>
+
+  <h2>Access</h2>
+  <div class="card sky">
+    <p style="font-size:15px;margin:0">Small-group work assumes people can move, see, hear and write. Ask what people need as they arrive, not after they have struggled. Someone who cannot write on a flip chart can still shape what goes on it — pair them with a writer rather than leaving them out of that part.</p>
+  </div>
+</div>
+
+<!-- ============ LOUNGE ============ -->
+<div class="view" id="v-lo-brief">
+  <h2>Discovery Lounge</h2>
+  <p class="lede">80 minutes. Room 2 of the breakouts. Sponsored by Usio.</p>
+
+  <div class="panel">
+    <p><strong>An opportunity to connect with a BISC bestie in real life and explore what we are building with the union.</strong></p>
+    <p style="margin:0">Union literature and outreach materials, with BISC Buddies there in person to talk to.</p>
+  </div>
+
+  <h2>Who is running it</h2>
+  <div class="card green">
+    <p style="font-size:15px;margin:0">Leslie · Champagne · Loren · Mark · Xen</p>
+  </div>
+
+  <h2>What we want people to leave with</h2>
+  <div class="card orange">
+    <ul style="margin:0">
+      <li><strong>A relationship</strong> with the union, in real life — not a leaflet</li>
+      <li><strong>Knowing how to get involved</strong>, specifically, not in principle</li>
+      <li><strong>Having felt the values in practice</strong>. The room is the argument.</li>
+    </ul>
+  </div>
+
+  <h2>How it runs</h2>
+  <div class="card">
+    <p style="font-size:15px">This is not a session with a start time and an agenda. People drift in and out across 80 minutes. Nobody presents.</p>
+    <p style="font-size:15px;margin:0">Someone should be watching the door the whole time. The most valuable person in the room is usually the one hovering at the edge who has not spoken.</p>
+  </div>
+</div>
+
+<!-- ============ LOUNGE AREAS ============ -->
+<div class="view" id="v-lo-areas">
+  <h2>Two areas, one room</h2>
+  <p class="lede">Participants on one side, administrators and organizations on the other. Different conversations, different asks.</p>
+
+  <div class="card sky">
+    <h3>Area 1 · Pilot participants, past and present</h3>
+    <p class="tagline">Open with a question, not a pitch</p>
+    <div class="say">"Which pilot were you in?"<em>Then stop talking. Most people here have never met another participant.</em></div>
+    <p class="tagline">Cover</p>
+    <ul>
+      <li>It is free. No dues, ever.</li>
+      <li>You are never asked to tell your story as the price of belonging</li>
+      <li>What happens after joining: a welcome, a Buddy within a week, a monthly meeting</li>
+      <li>Self-attestation — nobody proves they were in a pilot</li>
+      <li><strong>Member benefits:</strong> LELI learning, the IM advocacy pilot, and access to emerging community programs</li>
+    </ul>
+    <p class="tagline">Close</p>
+    <p style="font-size:15px;margin:0">New Member Interest Form, filled in before they leave the table.</p>
+  </div>
+
+  <div class="card green">
+    <h3>Area 2 · Administrators and organizations</h3>
+    <p class="tagline">Open with their pilot</p>
+    <div class="say">"Which pilot do you run?" · "Where is it at now — running, or wrapped?"<em>Listen for whether it is ending. That is the opening.</em></div>
+    <p class="tagline">The problem you both have</p>
+    <div class="say">"What happens to your participants when the pilot ends?"</div>
+    <p class="tagline">What we are asking for</p>
+    <ul>
+      <li>Tell your alumni we exist — an introduction, <strong>not a contact list</strong></li>
+      <li>Bring an informational session to your participant community</li>
+      <li>Partner with us so people can join through your organization</li>
+    </ul>
+    <p class="tagline">Be ready for</p>
+    <p style="font-size:15px;margin:0">Privacy commitments made at enrollment. Take them seriously, do not push. The answer is almost always that <em>they</em> make the introduction.</p>
+    <p class="tagline">Close</p>
+    <p style="font-size:15px;margin:0">Community Partner Interest Form, and a named month for a follow-up call.</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Keep them apart, gently</h3>
+    <p style="font-size:15px;margin:0">The two conversations do not mix well. A participant deciding whether to join does not want to overhear a partnership pitch, and an administrator does not need to sit through onboarding detail. Signs on each area, and steer people as they arrive.</p>
+  </div>
+</div>
+
+<!-- ============ LOUNGE MATERIALS ============ -->
+<div class="view" id="v-lo-kit">
+  <h2>Literature and materials</h2>
+  <p class="sub">Print and pack the week before. One owner. Ticks save on this device.</p>
+
+  <div class="card">
+    <label class="chk"><input type="checkbox" data-kit="l1"><span>BISC overview materials — mission, vision, values</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l2"><span><strong>Who We Are</strong> — the union in one page</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l3"><span><strong>Organizer spotlights</strong> — name, photo, pilot, project, and one line on why now</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l4"><span>How to join — as an individual, and through a partner organization</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l5"><span>New Member Interest Form — printed and on a device</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l6"><span>Community Partner Interest Form</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l7"><span>Frequently Asked Questions</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l8"><span>Member benefits — LELI learning, IM advocacy pilot, community programs</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l9"><span>"Bring an informational session to your community" — the partner ask</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l10"><span>Donation pages — GiveButter and Every.org, as QR codes</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l11"><span>QR codes to bisc.work, on every surface</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l12"><span><strong>Laptop open on the website</strong>, showing the app</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l13"><span>A board showing how onboarding works — the flow chart from the app</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l14"><span>Two area signs — participants / administrators</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l15"><span>Paper sign-in sheets, one per area</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l16"><span>Pens. More than you think.</span></label>
+    <label class="chk"><input type="checkbox" data-kit="l17"><span>Content consent slips — see the Content consent tab</span></label>
+  </div>
+
+  <div class="card sky">
+    <h3>The laptop earns its place</h3>
+    <p style="font-size:15px;margin:0">Showing someone the app — the learning tracks, the calendar, twenty-seven modules that already exist — does more than any leaflet. It proves the union is real and running, not an idea being pitched.</p>
+  </div>
+</div>
+
+<!-- ============ GRATITUDE & ART ============ -->
+<div class="view" id="v-lo-art">
+  <h2>Storytelling and narrative change</h2>
+  <p class="lede">Gratitude for the community that has sustained us, past, present and future. An Indigenous approach to giving back to our ancestors and the land.</p>
+
+  <div class="card green">
+    <h3>Gratitude Tree</h3>
+    <p style="font-size:15px;margin:0 0 8px"><em>"This is our gratitude tree. Take a leaf, write what you are grateful for, and loop it onto the tree."</em></p>
+    <p style="font-size:15px;margin:0">Buy a real tree, then donate it to a park after the conference as a community give-back.</p>
+  </div>
+
+  <div class="card">
+    <h3>Postcard to Future Self</h3>
+    <p style="font-size:15px;margin:0"><em>"What do you want to remember beyond the conference? What are your dreams for the movement?"</em> Collect addresses and post them later — that second touch months from now is worth more than the card itself.</p>
+  </div>
+
+  <div class="card">
+    <h3>Weave a Wish</h3>
+    <p style="font-size:15px;margin:0"><em>"Write a wish or two onto a fabric strip and weave it into our tapestry."</em> The tapestry is a thing the union then owns and can bring to the next gathering.</p>
+  </div>
+
+  <div class="card">
+    <h3>Button station</h3>
+    <p style="font-size:15px;margin:0">Run by Daniela. People wear what they make for the rest of the conference, which does more outreach than a stack of flyers.</p>
+  </div>
+
+  <div class="card">
+    <h3>Collages, junk journals and zines</h3>
+    <p style="font-size:15px;margin:0">Analogue, approachable at any age, and no skill barrier. Zines double as a call to submit content — a space for connection and for writing toward basic income for everyone in America.</p>
+  </div>
+
+  <div class="card">
+    <h3>Stickers and bookmarks</h3>
+    <p style="font-size:15px;margin:0">BISC logo plus a box-breathing design. Simple touchpoints that carry the union out of the room.</p>
+  </div>
+
+  <div class="card sky">
+    <p style="font-size:15px;margin:0"><strong>Let Hope Bloom walk and hike</strong> is already in the Income Movement program — worth pointing people toward rather than competing with.</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Why this is not decoration</h3>
+    <p style="font-size:15px;margin:0">A room where people make something together produces different conversations than a room with a table of leaflets. Someone weaving a wish next to a stranger from another pilot is doing exactly what the union is for. The materials are the excuse.</p>
+  </div>
+</div>
+
+<!-- ============ WHO IS WHERE ============ -->
+<div class="view" id="v-who">
+  <h2>Who is where</h2>
+  <p class="lede">Thirteen organizers at BIG Portland. Nobody in two places.</p>
+
+  <div class="card sky">
+    <h3>Plenary · Participant Power Building</h3>
+    <p style="font-size:15px;margin:0 0 6px"><strong>Facilitating:</strong> Zyera, Daniela</p>
+    <p style="font-size:15px;margin:0"><strong>Supporting:</strong> Paris, Tracy, Champagne</p>
+  </div>
+
+  <div class="card orange">
+    <h3>Design Sprint · Room 1</h3>
+    <p style="font-size:15px;margin:0">Zyera, Columbine, Chemareéa, Faye, Florence</p>
+  </div>
+
+  <div class="card green">
+    <h3>Discovery Lounge · Room 2</h3>
+    <p style="font-size:15px;margin:0">Leslie, Champagne, Loren, Mark, Xen</p>
+  </div>
+
+  <div class="fill"><strong>Two people are down for more than one session.</strong> Champagne is on the plenary and the lounge; Zyera facilitates the plenary and is on the sprint. The plenary runs before the breakouts, so both may be fine — worth confirming the timings rather than assuming.</div>
+
+  <h2>Where to send people</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Was in a pilot, wants to build something</strong> → Design Sprint</li>
+      <li><strong>Was in a pilot, still working out what BISC is</strong> → Lounge, participant area</li>
+      <li><strong>Runs a pilot</strong> → Lounge, administrator area</li>
+      <li><strong>Already a member</strong> → Design Sprint</li>
+      <li><strong>Just curious</strong> → Lounge</li>
+    </ul>
+  </div>
+
+  <h2>If someone is in the wrong room</h2>
+  <div class="card green">
+    <p style="font-size:15px">It will happen. Say it warmly and specifically — nobody should feel they turned up somewhere they were not wanted.</p>
+    <p class="quote">"You are in the right building. If you want to get stuck into building something, the sprint is in [room]. If you would rather talk to someone about what the union is, the lounge is in [room]."</p>
+    <p style="font-size:15px;margin:0">Then point, or walk them. Do not describe a route.</p>
+  </div>
+
+  <div class="fill">Write both room numbers in here once you have them — before you travel, not on the day.</div>
+</div>
+
+<!-- ============ COORDINATION ============ -->
+<div class="view" id="v-coord">
+  <h2>Before the conference</h2>
+  <div class="card sky">
+    <p style="font-size:15px"><strong>1. Session description and takeaways.</strong> Both are blank in the design doc for the plenary. The conference programming doc needs them.</p>
+    <p style="font-size:15px"><strong>2. Confirm Community Change.</strong> Listed as unconfirmed on the panel.</p>
+    <p style="font-size:15px"><strong>3. Check the double bookings.</strong> Champagne on plenary and lounge, Zyera on plenary and sprint. Fine if the plenary finishes before the breakouts start — confirm the timings.</p>
+    <p style="font-size:15px"><strong>4. Room numbers</strong> for both breakouts, written into the Who is where tab.</p>
+    <p style="font-size:15px;margin:0"><strong>5. Move final details to the BIG 2026 Community Programming Doc</strong> — that is where every session lead is housing their run of show.</p>
+  </div>
+
+  <h2>On the day</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Before the plenary</strong> — facilitators and panellists meet briefly. Set the tone: participants lead, administrators answer.</li>
+      <li><strong>Plenary ends</strong> — say clearly where both breakouts are, and who each is for. This is the single best moment to route people correctly.</li>
+      <li><strong>Breakouts</strong> — someone watching each door.</li>
+      <li><strong>Both wrap</strong> — sign-in sheets and sprint photos to one named person.</li>
+      <li><strong>Conference Reflections</strong> — as many of us there as possible.</li>
+    </ul>
+  </div>
+
+  <h2>Capture</h2>
+  <div class="card orange">
+    <p style="font-size:16px"><strong>Nobody leaves uncaptured.</strong> Conference contacts you did not write down are gone.</p>
+    <ul>
+      <li>Each area owns its sign-in sheet</li>
+      <li>Every sprint sheet photographed before the room empties</li>
+      <li>All of it to one named person before anyone goes to dinner</li>
+      <li><strong>Same evening:</strong> typed up. <strong>Within 48 hours:</strong> follow-up out.</li>
+    </ul>
+    <p style="font-size:15px;margin:0">Use the Notes tab as you go — it saves on your phone without signal and syncs when you have some.</p>
+  </div>
+
+  <h2>Afterward</h2>
+  <div class="card">
+    <p style="font-size:15px">All three teams together, that evening or the next morning:</p>
+    <ul>
+      <li>What landed in each room</li>
+      <li>How many people, and did they end up in the right one</li>
+      <li>Who to follow up with, by name</li>
+      <li>The top three pitches, and who owns each now</li>
+      <li>What we would change</li>
+    </ul>
+    <p style="font-size:15px;margin:0">Write it down. It is the only reason the next one is better.</p>
+  </div>
+</div>
+
+<!-- ============ CONTENT CONSENT ============ -->
+<div class="view" id="v-disclosure">
+  <h2>Content consent</h2>
+  <p class="lede">We will be collecting photos, quotes, gratitude leaves, wishes and postcards. Every one of those is something a person made, and they should know what happens to it before they make it.</p>
+
+  <div class="panel">
+    <p style="margin:0"><strong>This is the union practicing what its own curriculum teaches.</strong> Track 1 tells members to decide what they share before anyone asks. We should not run a room that makes that hard.</p>
+  </div>
+
+  <h2>Five questions to answer before the day</h2>
+  <div class="card orange">
+    <ul style="margin:0">
+      <li><strong>Who owns the content?</strong> The person who made it, or the union?</li>
+      <li><strong>How will it be used?</strong> Website and app, social media, campaigns, recruitment, education — name them.</li>
+      <li><strong>What rights does the creator keep?</strong></li>
+      <li><strong>How does someone ask for it to be removed later?</strong> And who honors that?</li>
+      <li><strong>Can they take part anonymously?</strong> First name only, no face, no attribution.</li>
+    </ul>
+  </div>
+
+  <h2>What to have in the room</h2>
+  <div class="card">
+    <ul>
+      <li>A short slip at each activity: yes to photos, yes to quotes, name or anonymous, and how to reach them</li>
+      <li>Someone able to explain it in one sentence without reading from a card</li>
+      <li>A clear way to say no that does not stop them joining in</li>
+    </ul>
+    <p style="font-size:15px;margin:0"><strong>Anonymity should be a normal option, not a special request.</strong> If someone has to ask for it, most people will not.</p>
+  </div>
+
+  <div class="card sky">
+    <h3>Say it plainly</h3>
+    <p class="quote" style="margin:0">"We would love to share some of this — on our site, or social. Only if you are happy. Tick the box, or tell one of us, and it stays in the room."</p>
+  </div>
+</div>
+
+<!-- ================= NOTES ================= -->
+<div class="view" id="v-notes">
+  <h2>Notes</h2>
+  <p class="sub">Saves to this phone the moment you type it — no signal needed. Send to the sheet whenever you have a connection.</p>
+
+  <div class="nfield">
+    <label for="noteBy">Who's taking these notes?</label>
+    <input type="text" id="noteBy" placeholder="Your name">
+  </div>
+
+  <p style="font-family:var(--display);font-weight:700;font-size:14.5px;margin:0 0 7px">Where are you?</p>
+  <div class="who-row" id="tablePick">
+    <button data-tbl="Plenary">Plenary</button>
+    <button data-tbl="Design Sprint">Design Sprint</button>
+    <button data-tbl="Lounge · participants">Lounge · participants</button>
+    <button data-tbl="Lounge · administrators">Lounge · admins</button>
+    <button data-tbl="Door / floating">Door</button>
+  </div>
+
+  <div class="syncbar">
+    <span class="dot" style="width:9px;height:9px;border-radius:50%;background:var(--orange);display:inline-block"></span>
+    <span class="cnt" id="unsentCount">0 unsent</span>
+    <span class="grow"></span>
+    <button class="nbtn ghost" style="width:auto;padding:9px 16px" id="sendBtn">Send to sheet</button>
+  </div>
+
+  <h2>Someone I spoke to</h2>
+  <div class="card">
+    <div class="nfield"><label for="cName">Name</label><input type="text" id="cName" placeholder="First and last"></div>
+    <div class="nfield"><label for="cEmail">Email</label><input type="email" id="cEmail" placeholder="them@example.com" inputmode="email"></div>
+    <div class="nfield"><label for="cWho">Who they are</label><input type="text" id="cWho" placeholder="Pilot, organization, or role"></div>
+    <div class="nfield"><label for="cNext">One thing to do next</label><input type="text" id="cNext" placeholder="e.g. call in October about alumni"></div>
+    <button class="nbtn gold" id="addContact">Save contact</button>
+  </div>
+
+  <h2>A pitch, or something worth remembering</h2>
+  <div class="card">
+    <div class="nfield"><label for="oText">A sprint pitch, what landed, what didn't, or something we couldn't answer</label>
+      <textarea id="oText" placeholder="Three people asked about benefits again. We need a real answer."></textarea></div>
+    <button class="nbtn" id="addObs">Save note</button>
+  </div>
+
+  <h2>Saved <span id="noteTotal" style="color:var(--stone);font-weight:600"></span></h2>
+  <div id="noteList"></div>
+
+  <div class="card sky" style="margin-top:14px">
+    <h3>If sending won't work</h3>
+    <p style="font-size:15px;margin:0 0 11px">Copy everything and paste it into a text or email to yourself. Nothing is lost.</p>
+    <button class="nbtn ghost" id="copyAll">Copy all notes</button>
+  </div>
+
+  <div class="note" style="margin-top:13px"><strong>Two things worth knowing.</strong> Notes live on this device, tied to this web address — open the same link and they're still here. Sent notes stay visible, marked green. And paper sign-in sheets are still the real backstop; this doesn't replace them.</div>
+</div>
+
+<!-- ================= BOTH ROOMS ================= -->
+
+</div>
+
+<button id="fbBtn" type="button" aria-label="Give feedback">&#9998; Feedback</button>
+
+<div id="fbWrap" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div id="fbPanel">
+    <h3 id="fbTitle">Feedback</h3>
+    <p id="fbWhere"></p>
+    <div id="fbSel" hidden></div>
+    <div class="fb-kinds" id="fbKinds">
+      <button data-kind="Bug" type="button">Bug</button>
+      <button data-kind="Wording" type="button">Wording</button>
+      <button data-kind="Idea" type="button">Idea</button>
+      <button data-kind="Don't like" type="button">Don't like</button>
+    </div>
+    <textarea id="fbText" placeholder="What did you notice?"></textarea>
+    <input type="text" id="fbFrom" placeholder="Your name">
+    <div class="fb-row">
+      <button id="fbCancel" type="button">Cancel</button>
+      <button id="fbSend" type="button">Send</button>
+    </div>
+    <p id="fbMsg"></p>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const KEY='bisc-session-';
+const store={
+  get(k){ try{ return localStorage.getItem(KEY+k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(KEY+k,v); }catch(e){} }
+};
+
+/* top-level views */
+let SESSION = store.get('session') || 'plenary';
+
+function showView(v){
+  $$('.nav button').forEach(b=>b.classList.toggle('on', b.dataset.view===v && b.dataset.session===SESSION));
+  $$('.view').forEach(x=>x.classList.toggle('on', x.id==='v-'+v));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showSession(sn){
+  SESSION = sn;
+  store.set('session', sn);
+  document.body.setAttribute('data-session', sn);
+  $$('#sessionbar button').forEach(b=>b.classList.toggle('on', b.dataset.session===sn));
+  $$('.nav button').forEach(b=>{ b.hidden = b.dataset.session !== sn; });
+  const first = $$('.nav button').find(b=>!b.hidden);
+  if(first) showView(first.dataset.view);
+}
+$$('#sessionbar button').forEach(b=>b.addEventListener('click',()=>showSession(b.dataset.session)));
+$$('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+showSession(SESSION);
+$$('[data-goto]').forEach(b=>b.addEventListener('click',()=>{ showSession('info'); showView(b.dataset.goto); }));
+
+/* table sub-panes */
+$$('#subnav button').forEach(b=>b.addEventListener('click',()=>{
+  $$('#subnav button').forEach(x=>x.classList.toggle('on',x===b));
+  $$('.tpane').forEach(p=>p.classList.toggle('on', p.id==='t-'+b.dataset.t));
+  window.scrollTo({top:0,behavior:'instant'});
+}));
+
+/* names + ticks persist, and names appear on the table guides */
+function paintStaff(){
+  [['t1','staff-t1'],['t2','staff-t2'],['t3','staff-t3']].forEach(([t,el])=>{
+    const a=(store.get('role.'+t+'a')||'').trim(), b=(store.get('role.'+t+'b')||'').trim();
+    const node=$('#'+el);
+    if(!node) return;
+    node.textContent = (a||b) ? [a||'—', b||'—'].join('  ·  ') : '';
+  });
+}
+$$('[data-role]').forEach(el=>{
+  const v=store.get('role.'+el.dataset.role); if(v) el.value=v;
+  el.addEventListener('input',()=>{ store.set('role.'+el.dataset.role, el.value); paintStaff(); });
+});
+paintStaff();
+
+$$('[data-kit]').forEach(el=>{
+  el.checked = store.get('kit.'+el.dataset.kit)==='1';
+  el.addEventListener('change',()=>store.set('kit.'+el.dataset.kit, el.checked?'1':'0'));
+});
+
+
+/* ================= NOTES ================= */
+/* Paste your Apps Script /exec URL here. Notes still save on the
+   device without it — they just cannot be sent to the sheet.      */
+const NOTES_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzunUCz71MfakgvgNNLGx_sbXhUTMwdHdah8IS3FSMhgkIExQq_CONk_eem4Ql_iOaA/exec';
+
+let notes = [];
+try{ notes = JSON.parse(store.get('notes') || '[]'); }catch(e){ notes = []; }
+function saveNotes(){ store.set('notes', JSON.stringify(notes)); paintNotes(); }
+
+let noteTable = store.get('note.table') || '';
+$$('#tablePick button').forEach(b=>{
+  b.classList.toggle('on', b.dataset.tbl === noteTable);
+  b.addEventListener('click', ()=>{
+    noteTable = b.dataset.tbl;
+    store.set('note.table', noteTable);
+    $$('#tablePick button').forEach(x=>x.classList.toggle('on', x===b));
+  });
+});
+
+const byField = $('#noteBy');
+byField.value = store.get('note.by') || '';
+byField.addEventListener('input', ()=>store.set('note.by', byField.value));
+
+function addNote(n){
+  notes.unshift(Object.assign({
+    id: Date.now()+'-'+Math.random().toString(36).slice(2,7),
+    table: noteTable || 'Not set',
+    by: byField.value.trim() || 'Not set',
+    ts: new Date().toISOString(),
+    sent: false
+  }, n));
+  saveNotes();
+}
+
+$('#addContact').addEventListener('click', ()=>{
+  const g = id => $('#'+id).value.trim();
+  if(!g('cName') && !g('cEmail')){ $('#cName').focus(); return; }
+  addNote({kind:'contact', name:g('cName'), email:g('cEmail'), who:g('cWho'), next:g('cNext'), text:''});
+  ['cName','cEmail','cWho','cNext'].forEach(id=>$('#'+id).value='');
+  $('#cName').focus();
+});
+
+$('#addObs').addEventListener('click', ()=>{
+  const t = $('#oText').value.trim();
+  if(!t) return;
+  addNote({kind:'observation', name:'', email:'', who:'', next:'', text:t});
+  $('#oText').value='';
+});
+
+function paintNotes(){
+  const unsent = notes.filter(n=>!n.sent).length;
+  $('#unsentCount').textContent = unsent === 0
+    ? (notes.length ? 'All sent' : 'Nothing yet')
+    : unsent + (unsent===1 ? ' note not sent' : ' notes not sent');
+  $('#sendBtn').disabled = unsent === 0;
+  $('#noteTotal').textContent = notes.length ? '· ' + notes.length : '';
+
+  if(!notes.length){ $('#noteList').innerHTML = '<p class="empty">Nothing saved yet.</p>'; return; }
+  $('#noteList').innerHTML = notes.map(n=>{
+    const time = new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'}).format(new Date(n.ts));
+    const head = '<p class="meta"><span class="dot"></span>' + (n.sent?'Sent':'On this phone') +
+      ' · ' + time + ' · ' + n.table + '</p>';
+    const body = n.kind === 'contact'
+      ? '<p><strong>' + (n.name||'(no name)') + '</strong></p>' +
+        (n.email ? '<p class="sm">' + n.email + '</p>' : '') +
+        (n.who ? '<p class="sm">' + n.who + '</p>' : '') +
+        (n.next ? '<p class="sm">Next: ' + n.next + '</p>' : '')
+      : '<p>' + n.text.replace(/</g,'&lt;') + '</p>';
+    return '<div class="note-item ' + (n.kind==='observation'?'obs ':'') + (n.sent?'sent':'') + '">' + head + body + '</div>';
+  }).join('');
+}
+
+$('#sendBtn').addEventListener('click', async ()=>{
+  const btn = $('#sendBtn');
+  const pending = notes.filter(n=>!n.sent);
+  if(!pending.length) return;
+  btn.disabled = true; btn.textContent = 'Sending…';
+  let ok = 0;
+  for(const n of pending){
+    try{
+      const res = await fetch(NOTES_ENDPOINT, {
+        method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(Object.assign({type:'note'}, n))
+      });
+      const out = await res.json().catch(()=>null);
+      if(out && out.ok){ n.sent = true; ok++; }
+    }catch(e){ /* keep it unsent, try again later */ }
+  }
+  saveNotes();
+  btn.textContent = ok === pending.length ? 'All sent' : 'Send to sheet';
+  if(ok < pending.length){
+    btn.disabled = false;
+    $('#unsentCount').textContent = (pending.length-ok) + ' still unsent — try again when you have signal';
+  }
+  setTimeout(()=>{ btn.textContent='Send to sheet'; paintNotes(); }, 2500);
+});
+
+$('#copyAll').addEventListener('click', async ()=>{
+  const txt = notes.map(n=>{
+    const t = new Date(n.ts).toLocaleString();
+    return n.kind==='contact'
+      ? [t, n.table, n.by, 'CONTACT', n.name, n.email, n.who, 'Next: '+n.next].filter(Boolean).join(' | ')
+      : [t, n.table, n.by, 'NOTE', n.text].filter(Boolean).join(' | ');
+  }).join('\n');
+  const btn = $('#copyAll');
+  try{ await navigator.clipboard.writeText(txt); btn.textContent='Copied'; }
+  catch(e){ window.prompt('Copy everything below:', txt); }
+  setTimeout(()=>btn.textContent='Copy all notes', 2000);
+});
+
+paintNotes();
+
+/* where are we in the run of show */
+const EVENT={y:2026,mo:8,d:18,tz:'America/Los_Angeles'};
+function portlandNow(){
+  const p=new Intl.DateTimeFormat('en-US',{timeZone:EVENT.tz,year:'numeric',month:'2-digit',
+    day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+  const g=t=>parseInt(p.find(x=>x.type===t).value,10);
+  return {y:g('year'),mo:g('month')-1,d:g('day'),mins:(g('hour')%24)*60+g('minute')};
+}
+function tick(){
+  const n=portlandNow();
+  const sameDay = n.y===EVENT.y && n.mo===EVENT.mo && n.d===EVENT.d;
+  const segs=$$('.seg');
+  segs.forEach(s=>s.classList.remove('now','past'));
+  const st=$('#status');
+  if(!sameDay){
+    const target=new Date(Date.UTC(EVENT.y,EVENT.mo,EVENT.d,21,10));
+    const days=Math.round((target-new Date())/864e5);
+    st.textContent = days>0 ? days+' days until the session — Friday 18 September, 2:10 pm Portland time'
+                            : 'Session date has passed. Keep this for the debrief.';
+    return;
+  }
+  const m=n.mins;
+  if(m < 130){ st.textContent='Today. Doors at 2:10 pm — set up from 1:40.'; return; }
+  if(m >= 215){ st.textContent='Session complete. Collect the sheets, then debrief tonight.'; segs.forEach(s=>s.classList.add('past')); return; }
+  segs.forEach(s=>{
+    const a=+s.dataset.start, b=+s.dataset.end;
+    if(m>=a && m<b){ s.classList.add('now'); st.innerHTML='<strong>Now:</strong> '+s.querySelector('h3').textContent+' — '+(b-m)+' min left'; }
+    else if(m>=b){ s.classList.add('past'); }
+  });
+}
+/* ===== co-design feedback — set FEEDBACK_ON=false to remove ===== */
+const FEEDBACK_ON = true;
+const APP_NAME = 'BIG 2026 toolkit';
+(function(){
+  const btn=$('#fbBtn'), wrap=$('#fbWrap');
+  if(!FEEDBACK_ON){ if(btn) btn.remove(); if(wrap) wrap.remove(); return; }
+  if(!btn || !wrap) return;
+  const NAMES={'pl-brief':'Plenary brief','pl-questions':'Panel questions',
+    'ds-brief':'Sprint brief','ds-flow':'The sprint','ds-kit':'Sprint materials',
+    'lo-brief':'Lounge brief','lo-areas':'The two areas','lo-kit':'Lounge materials',
+    'lo-art':'Gratitude & art','who':'Who is where','coord':'Coordination',
+    'disclosure':'Content consent',notes:'Notes'};
+  let kind='', selected='';
+  function whereAmI(){
+    const v=$$('.view').find(x=>x.classList.contains('on'));
+    const id=v?v.id.replace('v-',''):'brief';
+    let label=NAMES[id]||id;
+    return SESSION + ' \u00b7 ' + label;
+  }
+  btn.addEventListener('click',()=>{
+    selected=String(window.getSelection?window.getSelection():'').trim().slice(0,600);
+    $('#fbWhere').textContent='On: '+whereAmI();
+    const sel=$('#fbSel'); sel.hidden=!selected;
+    sel.textContent=selected?'\u201C'+selected+'\u201D':'';
+    $('#fbFrom').value=store.get('fb.from')||'';
+    $('#fbMsg').textContent='';
+    wrap.classList.add('on'); $('#fbText').focus();
+  });
+  const close=()=>wrap.classList.remove('on');
+  $('#fbCancel').addEventListener('click',close);
+  wrap.addEventListener('click',e=>{ if(e.target===wrap) close(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&wrap.classList.contains('on')) close(); });
+  $$('#fbKinds button').forEach(b=>b.addEventListener('click',()=>{
+    kind=(kind===b.dataset.kind)?'':b.dataset.kind;
+    $$('#fbKinds button').forEach(x=>x.classList.toggle('on', x.dataset.kind===kind && kind));
+  }));
+  $('#fbSend').addEventListener('click', async ()=>{
+    const text=$('#fbText').value.trim(); if(!text){ $('#fbText').focus(); return; }
+    const from=$('#fbFrom').value.trim(); store.set('fb.from', from);
+    const send=$('#fbSend'); send.disabled=true; send.textContent='Sending\u2026';
+    let ok=false;
+    try{
+      const r=await fetch(NOTES_ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({type:'feedback',app:APP_NAME,page:whereAmI(),kind:kind||'General',
+          selected:selected,comment:text,from:from||'Anonymous',
+          screen:window.innerWidth+'\u00d7'+window.innerHeight,lang:'en'})});
+      const out=await r.json().catch(()=>null); ok=!!(out&&out.ok);
+    }catch(e){}
+    send.disabled=false; send.textContent='Send';
+    const msg=$('#fbMsg');
+    if(ok){ $('#fbText').value=''; kind=''; $$('#fbKinds button').forEach(x=>x.classList.remove('on'));
+      msg.style.color='var(--green-dk)'; msg.textContent='Thanks \u2014 that went straight to the sheet.';
+      setTimeout(close,1200);
+    } else { msg.style.color='#A8341C'; msg.textContent='Could not send. Check your connection and try again.'; }
+  });
+})();
+
+tick();
+setInterval(tick,30000);
+</script>
+</body>
+</html>

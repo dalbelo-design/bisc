@@ -672,10 +672,6 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <div id="notesGate" hidden>
     <p id="notesStatus" class="sub" style="font-size:15px;color:var(--ink-soft)">Loading…</p>
     <div id="notesList"></div>
-    <div class="card sky" id="notesHow" hidden>
-      <h3>Posting notes</h3>
-      <p style="font-size:15px;margin:0">Whoever is taking notes this month adds a row to the <strong>Meeting Notes</strong> sheet and sets Published to <strong>yes</strong>. Nothing else is needed — it shows up here. Decisions, actions, open questions, and next agenda each go in their own column, one item per line.</p>
-    </div>
   </div>
 
   <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
@@ -684,13 +680,6 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
     <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT · one hour</p>
     <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
     <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — Saturday mixer, one session · 1:00 PM PT / 4:00 PM ET</p>
-  </div>
-
-  <div class="card sky">
-    <h3>Adding to the calendar</h3>
-    <p style="font-size:15px;margin:0 0 9px">Two sheets, each doing one job. Set Published to <strong>yes</strong> and it appears here.</p>
-    <p style="font-size:15px;margin:0 0 9px"><strong>Events</strong> — conferences, local actions, anything outside the union's own cycle. Start date, end date, title, where, and a toolkit link if there is one.</p>
-    <p style="font-size:15px;margin:0"><strong>Meeting changes</strong> — canceling or moving one of our own meetings. The regular pattern stays in the app; you only record the exception, and members see why.</p>
   </div>
 
   <h2 data-i18n="mtg.access.h">Access</h2>
@@ -711,11 +700,6 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <p id="agendaNote" style="font-size:14px;color:#DCEFDE;margin:-4px 0 4px"></p>
   <p id="agendaSrc" style="font-size:13px;color:#B6DCB8;margin:0 0 14px"></p>
   <ol class="steps" id="agendaBody"></ol>
-  </div>
-
-  <div class="card sky">
-    <h3>Writing the next agenda</h3>
-    <p style="font-size:15px;margin:0">Posted agendas are members only — signed-out visitors see the standard running order. Whoever holds the agenda role adds rows to the <strong>Agendas</strong> sheet — a date, the meeting, an order number, how many minutes, the item, and a sentence of detail. Set Published to <strong>yes</strong> and it replaces the standard running order here. Times work themselves out from the minutes, so reordering rows or changing a length reflows everything.</p>
   </div>
 
   <h2 data-i18n="ag.later.h">Later this season</h2>
@@ -3464,7 +3448,7 @@ function noteBlock(label, arr){
 
 async function loadNotes(force){
   if(!signedIn()) return;
-  const status = $('#notesStatus'), list = $('#notesList'), how = $('#notesHow');
+  const status = $('#notesStatus'), list = $('#notesList');
   if(!status) return;
   if(notesCache && !force){ paintNotesList(notesCache); return; }
 
@@ -3477,7 +3461,6 @@ async function loadNotes(force){
   }
   notesCache = res.items || [];
   paintNotesList(notesCache);
-  if(how) how.hidden = false;
 }
 
 function paintNotesList(items){

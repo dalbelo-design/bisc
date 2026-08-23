@@ -1367,6 +1367,21 @@ function monthEvents(y, mo){
     });
   });
 
+  // "added" rows put a meeting on a date the pattern would skip
+  CAL.changes.filter(c => c.change === 'added').forEach(c=>{
+    const [cy,cm,cd] = c.date.split('-').map(Number);
+    if(cy!==y || cm-1!==mo) return;
+    RULES.filter(r => !c.meeting || r.title.toLowerCase() === c.meeting.toLowerCase())
+      .forEach(r=>{
+        const already = (map[cd]||[]).some(e => e.id === r.id);
+        if(already) return;
+        (map[cd] = map[cd] || []).push({
+          ...r, dt: zoned(y, mo, cd, r.hh, r.mm, r.tz),
+          y, mo, day:cd, added:true, reason:c.reason
+        });
+      });
+  });
+
   // one-off events: the built-in list plus anything posted to the sheet
   EVENTS.forEach(e=>{
     if(e.y!==y || e.mo!==mo) return;
@@ -3084,6 +3099,7 @@ function renderDayPanel(){
   const flag = e => {
     if(e.canceled) return `<p class="ev-flag off">${e.movedTo ? 'Moved to ' + e.movedTo : 'Canceled'}${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
     if(e.movedFrom) return `<p class="ev-flag moved">Moved to this date${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
+    if(e.added) return `<p class="ev-flag moved">Added${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
     return '';
   };
   p.innerHTML = `<h3>${dateStr}</h3>` + ev.map(e=> e.allDay ? `

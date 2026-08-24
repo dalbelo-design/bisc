@@ -242,6 +242,10 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .mnote-b .att{font-size:15px;color:var(--ink);margin:0}
 .mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
 
+#rqMeeting,#rqMins{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:52px;font-size:16px}
+#rqMeeting:focus,#rqMins:focus{border-color:var(--green-md);outline:none}
+
 .fac{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.04em;
   color:#FEE6B0;margin:2px 0 6px}
 
@@ -719,6 +723,54 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <div class="card">
     <h3>Saturday mixer</h3>
     <p style="font-size:15px;margin:0">No agenda, on purpose. Drop in, say hello, leave when you like.</p>
+  </div>
+
+  <h2>Ask for time on an agenda</h2>
+
+  <div id="reqLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Requesting time on an agenda is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="reqGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">It goes to whoever is preparing that agenda. They decide what goes on and in what order — you will hear back either way.</p>
+    <div class="card" id="reqCard">
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMeeting">Which meeting</label>
+        <select id="rqMeeting"></select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqItem">What do you want to talk about?</label>
+        <p class="help">A short title, the way it would read on the agenda.</p>
+        <input type="text" id="rqItem" placeholder="e.g. Buddy pairings for the new cohort">
+        <div class="err" id="e-rqItem" hidden>Please add a short title.</div>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqFac">Who will lead it?</label>
+        <p class="help">Usually you. Leave it as is if so.</p>
+        <input type="text" id="rqFac" placeholder="Name">
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMins">How long do you need?</label>
+        <select id="rqMins">
+          <option value="5">5 minutes</option>
+          <option value="10" selected>10 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="20">20 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+        </select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqDetail">What is it about?</label>
+        <p class="help">A sentence or two. Line breaks and lines starting with a dash both work.</p>
+        <textarea id="rqDetail" placeholder="What you want the meeting to hear, decide, or discuss."></textarea>
+      </div>
+      <button class="btn gold" id="rqSend">Send the request</button>
+      <div class="err" id="e-rqSend" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
+      <p class="note">Nothing appears on the agenda until the person preparing it says so.</p>
+    </div>
   </div>
 </section>
 
@@ -3002,7 +3054,67 @@ function richText(t){
   return out.join('');
 }
 
+
+/* ---- asking for time on an agenda ---- */
+function paintRequestForm(){
+  const gate = $('#reqGate'), lock = $('#reqLock');
+  if(!gate) return;
+  const inB = signedIn();
+  gate.hidden = !inB;
+  lock.hidden = inB;
+  if(!inB) return;
+
+  const fac = $('#rqFac');
+  if(fac && !fac.value && AUTH && AUTH.name) fac.value = AUTH.name;
+
+  const sel = $('#rqMeeting');
+  const list = upcomingWithAgendas(6);
+  const keep = sel.value;
+  sel.innerHTML = list.map(e=>{
+    const d = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
+      .format(new Date(e.y,e.mo,e.day));
+    const iso = e.y+'-'+String(e.mo+1).padStart(2,'0')+'-'+String(e.day).padStart(2,'0');
+    return `<option value="${iso}|${AGENDAS[e.kind].label}">${AGENDAS[e.kind].label} — ${d}</option>`;
+  }).join('');
+  if(keep) sel.value = keep;
+}
+
+if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
+  const item = $('#rqItem').value.trim();
+  $('#e-rqItem').hidden = !!item;
+  $('#e-rqSend').hidden = true;
+  if(!item){ $('#rqItem').focus(); return; }
+
+  const [date, meeting] = ($('#rqMeeting').value || '|').split('|');
+  const btn = $('#rqSend');
+  busy(btn, true, 'Sending…');
+  let ok = false;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'agenda_request', token: AUTH.token,
+        date, meeting, item,
+        facilitator: $('#rqFac').value.trim(),
+        minutes: $('#rqMins').value,
+        detail: $('#rqDetail').value.trim()})});
+    const out = await r.json().catch(()=>null);
+    ok = !!(out && out.ok);
+  }catch(e){}
+  busy(btn, false);
+
+  if(ok){
+    $('#reqCard').innerHTML = `
+      <h3 style="color:var(--green-dk)">Request sent</h3>
+      <p style="font-size:15px;margin:0 0 6px">It has gone to whoever is preparing that agenda. You will hear back either way.</p>
+      <p style="font-size:14px;color:var(--stone);margin:0 0 14px">Nothing appears on the agenda until they say so.</p>
+      <button class="btn ghost sm" id="rqAgain">Ask for something else</button>`;
+    $('#rqAgain').addEventListener('click', ()=>location.reload());
+  } else {
+    $('#e-rqSend').hidden = false;
+  }
+});
+
 function renderAgenda(){
+  paintRequestForm();
   const list = upcomingWithAgendas(5);
   if(!list.length){ $('#nextUp').innerHTML=''; return; }
   if(agendaPick >= list.length) agendaPick = 0;

@@ -242,6 +242,16 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .mnote-b .att{font-size:15px;color:var(--ink);margin:0}
 .mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
 
+.fac{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.04em;
+  color:#FEE6B0;margin:2px 0 6px}
+
+.panel-green .step-b p + p{margin-top:8px}
+.panel-green .step-b ul{margin:6px 0 0;padding-left:19px;font-size:15px;color:#DCEFDE}
+.panel-green .step-b li{margin-bottom:4px}
+.step-b p + p{margin-top:8px}
+.step-b ul{margin:6px 0 0;padding-left:19px;font-size:15px;color:var(--ink-soft)}
+.step-b li{margin-bottom:4px}
+
 .apick-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
 .apick{flex:0 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:11px;
   padding:9px 14px;cursor:pointer;min-height:52px;display:flex;flex-direction:column;align-items:flex-start;gap:1px}
@@ -2947,7 +2957,7 @@ function postedAgendaFor(ev){
   if(!rows.length) return null;
 
   let at = 0;
-  const items = rows.map(r => { const from = at; at += r.minutes; return [from, at, r.item, r.detail]; });
+  const items = rows.map(r => { const from = at; at += r.minutes; return [from, at, r.item, r.detail, r.who]; });
   return {items, by: (rows.find(r=>r.by)||{}).by || ''};
 }
 
@@ -2971,6 +2981,26 @@ function upcomingWithAgendas(limit){
 }
 
 let agendaPick = 0;
+
+
+/* Detail cells keep whatever line breaks were typed in the sheet.
+   A line starting with -, * or a bullet becomes a list item; everything
+   else becomes its own paragraph. No markup to learn. */
+function richText(t){
+  const lines = String(t || '').split(/\r?\n/).map(x=>x.trim()).filter(x=>x.length);
+  if(!lines.length) return '';
+  const esc = x => x.replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+  const out = [];
+  let bullets = [];
+  const flush = ()=>{ if(bullets.length){ out.push('<ul>'+bullets.join('')+'</ul>'); bullets=[]; } };
+  lines.forEach(l=>{
+    const m = l.match(/^[-*\u2022\u2013]\s+(.*)$/);
+    if(m){ bullets.push('<li>'+esc(m[1])+'</li>'); }
+    else { flush(); out.push('<p>'+esc(l)+'</p>'); }
+  });
+  flush();
+  return out.join('');
+}
 
 function renderAgenda(){
   const list = upcomingWithAgendas(5);
@@ -3030,8 +3060,10 @@ function renderAgenda(){
       ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.'
     : 'One session, starting ' + clock(0) + ' ' + ampm + ' ' +
       (first.tz === PT ? 'Pacific' : 'Eastern') + '.';
-  $('#agendaBody').innerHTML = items.map(([a,b,t,d])=>
-    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d||''}</p></div></li>`
+  $('#agendaBody').innerHTML = items.map(([a,b,t,d,w])=>
+    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b">
+       <h3>${t}</h3>${w ? `<p class="fac">Facilitator: ${w}</p>` : ''}${richText(d)}
+     </div></li>`
   ).join('');
   const src = $('#agendaSrc');
   if(src){

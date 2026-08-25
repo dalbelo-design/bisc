@@ -267,6 +267,11 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bottom))}
 @media (min-width:760px){#mtBar{bottom:0}body.mt-showing #fbBtn{bottom:86px}}
 
+.mt-elmo{background:#fff;color:#8A3216;font-family:var(--display);font-weight:800;font-size:13px;
+  letter-spacing:.1em;border-radius:5px;padding:2px 7px;margin-right:4px}
+.mt-demo{background:rgba(255,255,255,.3);font-family:var(--display);font-weight:700;font-size:10.5px;
+  letter-spacing:.1em;border-radius:99px;padding:2px 7px;margin-left:4px}
+
 .fac{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.04em;
   color:#FEE6B0;margin:2px 0 6px}
 
@@ -3095,22 +3100,44 @@ function richText(t){
    ========================================================= */
 let mtHidden = null;   // key of a meeting the person chose to hide
 
+/* ---- demo mode, for testing before a real meeting ----------------
+   Add ?timer=demo to the address and the timer pretends the next
+   meeting is running, at 60x — a two hour agenda plays out in two
+   minutes. &speed=120 for faster, &at=95 to jump to minute 95.
+   The bar shows a DEMO badge so nobody mistakes it for the real one. */
+let DEMO = null;
+(function(){
+  const p = new URLSearchParams(location.search);
+  if(p.get('timer') !== 'demo') return;
+  DEMO = { realStart: Date.now(), speed: Number(p.get('speed')) || 60,
+           at: Number(p.get('at')) || 0, base: null };
+})();
+
+function timerNow(){
+  if(!DEMO) return new Date();
+  if(!DEMO.base){
+    const list = (typeof upcomingWithAgendas === 'function') ? upcomingWithAgendas(1) : [];
+    if(!list.length) return new Date();
+    DEMO.base = new Date(list[0].dt.getTime());
+  }
+  const realSec = (Date.now() - DEMO.realStart) / 1000;
+  return new Date(DEMO.base.getTime() + (DEMO.at*60 + realSec*DEMO.speed) * 1000);
+}
+
 function agendaForEvent(ev){
   const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(ev) : null;
   return posted ? posted.items : (AGENDAS[ev.kind] ? AGENDAS[ev.kind].items : null);
 }
 
 function runningMeeting(){
-  const now = new Date();
+  const now = timerNow();
   const ev = monthEvents(now.getFullYear(), now.getMonth())[now.getDate()] || [];
   for(const e of ev){
     if(e.allDay || e.cancelled || !AGENDAS[e.kind]) continue;
     const items = agendaForEvent(e);
     if(!items || !items.length) continue;
     const total = items[items.length-1][1];
-    const start = e.dt.getTime();
-    const mins = (now - start) / 60000;
-    // show from the moment it starts until ten minutes past the end
+    const mins = (now - e.dt.getTime()) / 60000;
     if(mins >= 0 && mins <= total + 10) return {ev:e, items, total, mins};
   }
   return null;
@@ -3153,11 +3180,13 @@ function tickTimer(){
   const over = leftSec < 0;
   const pct = Math.max(0, Math.min(100, ((run.mins - a) / (b - a)) * 100));
 
-  $('#mtItem').textContent = title;
+  $('#mtItem').innerHTML = (over ? '<span class="mt-elmo">ELMO</span> ' : '')
+    + String(title).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))
+    + (DEMO ? ' <span class="mt-demo">DEMO</span>' : '');
   $('#mtLeft').textContent = fmtLeft(leftSec);
   $('#mtFill').style.width = pct + '%';
   $('#mtNext').textContent = over
-    ? 'Running over' + (next ? ' \u00b7 next: ' + next[2] : ' \u00b7 last item')
+    ? "Everybody, Let's Move On" + (next ? ' \u00b7 next: ' + next[2] : ' \u00b7 last item')
     : next ? 'Next: ' + next[2] : 'Last item';
 
   bar.classList.toggle('warn', !over && leftSec <= 120);

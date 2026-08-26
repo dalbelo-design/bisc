@@ -242,6 +242,36 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .mnote-b .att{font-size:15px;color:var(--ink);margin:0}
 .mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
 
+#rqMeeting,#rqMins{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:52px;font-size:16px}
+#rqMeeting:focus,#rqMins:focus{border-color:var(--green-md);outline:none}
+
+/* meeting timer — floats above the nav on every page */
+#mtBar{position:fixed;left:0;right:0;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));z-index:55;
+  background:var(--green-dk);color:#fff;display:none;padding:9px 14px 10px;
+  box-shadow:0 -3px 14px rgba(0,0,0,.18)}
+#mtBar.on{display:block}
+#mtBar.warn{background:#B87C08}
+#mtBar.over{background:#8A3216}
+.mt-row{display:flex;align-items:baseline;gap:10px;max-width:820px;margin:0 auto}
+.mt-item{font-family:var(--display);font-weight:700;font-size:15px;flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt-left{font-family:var(--display);font-weight:800;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mt-x{background:none;border:none;color:rgba(255,255,255,.75);font-size:19px;line-height:1;
+  cursor:pointer;padding:0 2px;min-height:26px}
+.mt-track{height:4px;background:rgba(255,255,255,.28);border-radius:99px;overflow:hidden;
+  max-width:820px;margin:7px auto 0}
+.mt-fill{height:100%;background:#fff;border-radius:99px;transition:width 1s linear}
+.mt-next{font-size:12.5px;color:rgba(255,255,255,.8);max-width:820px;margin:5px auto 0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bottom))}
+@media (min-width:760px){#mtBar{bottom:0}body.mt-showing #fbBtn{bottom:86px}}
+
+.mt-elmo{background:#fff;color:#8A3216;font-family:var(--display);font-weight:800;font-size:13px;
+  letter-spacing:.1em;border-radius:5px;padding:2px 7px;margin-right:4px}
+.mt-demo{background:rgba(255,255,255,.3);font-family:var(--display);font-weight:700;font-size:10.5px;
+  letter-spacing:.1em;border-radius:99px;padding:2px 7px;margin-left:4px}
+
 .fac{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.04em;
   color:#FEE6B0;margin:2px 0 6px}
 
@@ -720,6 +750,54 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
     <h3>Saturday mixer</h3>
     <p style="font-size:15px;margin:0">No agenda, on purpose. Drop in, say hello, leave when you like.</p>
   </div>
+
+  <h2>Ask for time on an agenda</h2>
+
+  <div id="reqLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Requesting time on an agenda is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="reqGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">It goes to whoever is preparing that agenda. They decide what goes on and in what order — you will hear back either way.</p>
+    <div class="card" id="reqCard">
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMeeting">Which meeting</label>
+        <select id="rqMeeting"></select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqItem">What do you want to talk about?</label>
+        <p class="help">A short title, the way it would read on the agenda.</p>
+        <input type="text" id="rqItem" placeholder="e.g. Buddy pairings for the new cohort">
+        <div class="err" id="e-rqItem" hidden>Please add a short title.</div>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqFac">Who will lead it?</label>
+        <p class="help">Usually you. Leave it as is if so.</p>
+        <input type="text" id="rqFac" placeholder="Name">
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMins">How long do you need?</label>
+        <select id="rqMins">
+          <option value="5">5 minutes</option>
+          <option value="10" selected>10 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="20">20 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+        </select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqDetail">What is it about?</label>
+        <p class="help">A sentence or two. Line breaks and lines starting with a dash both work.</p>
+        <textarea id="rqDetail" placeholder="What you want the meeting to hear, decide, or discuss."></textarea>
+      </div>
+      <button class="btn gold" id="rqSend">Send the request</button>
+      <div class="err" id="e-rqSend" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
+      <p class="note">Nothing appears on the agenda until the person preparing it says so.</p>
+    </div>
+  </div>
 </section>
 
 <!-- LEARNING -->
@@ -925,6 +1003,16 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 
 </section>
 
+</div>
+
+<div id="mtBar" role="status" aria-live="polite">
+  <div class="mt-row">
+    <span class="mt-item" id="mtItem"></span>
+    <span class="mt-left" id="mtLeft"></span>
+    <button class="mt-x" id="mtHide" type="button" aria-label="Hide the timer">&times;</button>
+  </div>
+  <div class="mt-track"><div class="mt-fill" id="mtFill"></div></div>
+  <div class="mt-next" id="mtNext"></div>
 </div>
 
 <button id="fbBtn" type="button" aria-label="Give feedback">&#9998; Feedback</button>
@@ -3002,7 +3090,186 @@ function richText(t){
   return out.join('');
 }
 
+
+/* =========================================================
+   MEETING TIMER
+   Driven by the clock, not a start button — so it reads the
+   same on everyone's phone with nobody running it. It finds
+   the meeting happening right now, works out which agenda
+   item that lands in, and counts down.
+   ========================================================= */
+let mtHidden = null;   // key of a meeting the person chose to hide
+
+/* ---- demo mode, for testing before a real meeting ----------------
+   Add ?timer=demo to the address and the timer pretends the next
+   meeting is running, at 60x — a two hour agenda plays out in two
+   minutes. &speed=120 for faster, &at=95 to jump to minute 95.
+   The bar shows a DEMO badge so nobody mistakes it for the real one. */
+let DEMO = null;
+(function(){
+  const p = new URLSearchParams(location.search);
+  if(p.get('timer') !== 'demo') return;
+  DEMO = { realStart: Date.now(), speed: Number(p.get('speed')) || 60,
+           at: Number(p.get('at')) || 0, base: null };
+})();
+
+function timerNow(){
+  if(!DEMO) return new Date();
+  if(!DEMO.base){
+    const list = (typeof upcomingWithAgendas === 'function') ? upcomingWithAgendas(1) : [];
+    if(!list.length) return new Date();
+    DEMO.base = new Date(list[0].dt.getTime());
+  }
+  const realSec = (Date.now() - DEMO.realStart) / 1000;
+  return new Date(DEMO.base.getTime() + (DEMO.at*60 + realSec*DEMO.speed) * 1000);
+}
+
+function agendaForEvent(ev){
+  const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(ev) : null;
+  return posted ? posted.items : (AGENDAS[ev.kind] ? AGENDAS[ev.kind].items : null);
+}
+
+function runningMeeting(){
+  const now = timerNow();
+  const ev = monthEvents(now.getFullYear(), now.getMonth())[now.getDate()] || [];
+  for(const e of ev){
+    if(e.allDay || e.cancelled || !AGENDAS[e.kind]) continue;
+    const items = agendaForEvent(e);
+    if(!items || !items.length) continue;
+    const total = items[items.length-1][1];
+    const mins = (now - e.dt.getTime()) / 60000;
+    if(mins >= 0 && mins <= total + 10) return {ev:e, items, total, mins};
+  }
+  return null;
+}
+
+function fmtLeft(sec){
+  const neg = sec < 0;
+  const t = Math.abs(Math.round(sec));
+  const m = Math.floor(t/60), ss = t%60;
+  return (neg ? '+' : '') + m + ':' + String(ss).padStart(2,'0');
+}
+
+function tickTimer(){
+  const bar = $('#mtBar');
+  if(!bar) return;
+  const run = runningMeeting();
+
+  if(!run){
+    bar.classList.remove('on');
+    document.body.classList.remove('mt-showing');
+    mtHidden = null;
+    return;
+  }
+
+  const key = run.ev.y+'-'+run.ev.mo+'-'+run.ev.day+'-'+run.ev.kind;
+  if(mtHidden === key){
+    bar.classList.remove('on');
+    document.body.classList.remove('mt-showing');
+    return;
+  }
+
+  // which item are we in
+  let idx = run.items.findIndex(([a,b]) => run.mins >= a && run.mins < b);
+  const past = idx === -1;
+  if(past) idx = run.items.length - 1;
+  const [a,b,title] = run.items[idx];
+  const next = run.items[idx+1];
+
+  const leftSec = (b - run.mins) * 60;
+  const over = leftSec < 0;
+  const pct = Math.max(0, Math.min(100, ((run.mins - a) / (b - a)) * 100));
+
+  $('#mtItem').innerHTML = (over ? '<span class="mt-elmo">ELMO</span> ' : '')
+    + String(title).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))
+    + (DEMO ? ' <span class="mt-demo">DEMO</span>' : '');
+  $('#mtLeft').textContent = fmtLeft(leftSec);
+  $('#mtFill').style.width = pct + '%';
+  $('#mtNext').textContent = over
+    ? "Everybody, Let's Move On" + (next ? ' \u00b7 next: ' + next[2] : ' \u00b7 last item')
+    : next ? 'Next: ' + next[2] : 'Last item';
+
+  bar.classList.toggle('warn', !over && leftSec <= 120);
+  bar.classList.toggle('over', over);
+  bar.classList.add('on');
+  document.body.classList.add('mt-showing');
+}
+
+if($('#mtHide')) $('#mtHide').addEventListener('click', ()=>{
+  const run = runningMeeting();
+  if(run) mtHidden = run.ev.y+'-'+run.ev.mo+'-'+run.ev.day+'-'+run.ev.kind;
+  $('#mtBar').classList.remove('on');
+  document.body.classList.remove('mt-showing');
+});
+
+// Started from loadAll(), not here — this block sits above the auth and
+// agenda declarations, and const/let are not hoisted, so calling tickTimer()
+// at parse time would throw and take the rest of the script with it.
+function startTimer(){
+  try{ tickTimer(); }catch(e){ console.error('timer:', e); }
+  setInterval(()=>{ try{ tickTimer(); }catch(e){} }, 1000);
+}
+
+/* ---- asking for time on an agenda ---- */
+function paintRequestForm(){
+  const gate = $('#reqGate'), lock = $('#reqLock');
+  if(!gate) return;
+  const inB = signedIn();
+  gate.hidden = !inB;
+  lock.hidden = inB;
+  if(!inB) return;
+
+  const fac = $('#rqFac');
+  if(fac && !fac.value && AUTH && AUTH.name) fac.value = AUTH.name;
+
+  const sel = $('#rqMeeting');
+  const list = upcomingWithAgendas(6);
+  const keep = sel.value;
+  sel.innerHTML = list.map(e=>{
+    const d = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
+      .format(new Date(e.y,e.mo,e.day));
+    const iso = e.y+'-'+String(e.mo+1).padStart(2,'0')+'-'+String(e.day).padStart(2,'0');
+    return `<option value="${iso}|${AGENDAS[e.kind].label}">${AGENDAS[e.kind].label} — ${d}</option>`;
+  }).join('');
+  if(keep) sel.value = keep;
+}
+
+if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
+  const item = $('#rqItem').value.trim();
+  $('#e-rqItem').hidden = !!item;
+  $('#e-rqSend').hidden = true;
+  if(!item){ $('#rqItem').focus(); return; }
+
+  const [date, meeting] = ($('#rqMeeting').value || '|').split('|');
+  const btn = $('#rqSend');
+  busy(btn, true, 'Sending…');
+  let ok = false;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'agenda_request', token: AUTH.token,
+        date, meeting, item,
+        facilitator: $('#rqFac').value.trim(),
+        minutes: $('#rqMins').value,
+        detail: $('#rqDetail').value.trim()})});
+    const out = await r.json().catch(()=>null);
+    ok = !!(out && out.ok);
+  }catch(e){}
+  busy(btn, false);
+
+  if(ok){
+    $('#reqCard').innerHTML = `
+      <h3 style="color:var(--green-dk)">Request sent</h3>
+      <p style="font-size:15px;margin:0 0 6px">It has gone to whoever is preparing that agenda. You will hear back either way.</p>
+      <p style="font-size:14px;color:var(--stone);margin:0 0 14px">Nothing appears on the agenda until they say so.</p>
+      <button class="btn ghost sm" id="rqAgain">Ask for something else</button>`;
+    $('#rqAgain').addEventListener('click', ()=>location.reload());
+  } else {
+    $('#e-rqSend').hidden = false;
+  }
+});
+
 function renderAgenda(){
+  paintRequestForm();
   const list = upcomingWithAgendas(5);
   if(!list.length){ $('#nextUp').innerHTML=''; return; }
   if(agendaPick >= list.length) agendaPick = 0;
@@ -3239,8 +3506,9 @@ async function loadAll(){
   applyLang();
   renderMeetings(); renderAgenda();
   restoreScreen();
+  startTimer();
   loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
-  loadAgendas().then(()=>renderAgenda());
+  loadAgendas().then(()=>{ renderAgenda(); tickTimer(); });
 }
 async function saveMe(){
   // The full record goes to the sheet. All that stays on this device is a

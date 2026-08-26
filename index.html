@@ -267,6 +267,21 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bottom))}
 @media (min-width:760px){#mtBar{bottom:0}body.mt-showing #fbBtn{bottom:86px}}
 
+.ln-sync{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#F6F5E6;border-radius:11px;
+  padding:12px 14px;margin-bottom:13px;font-size:14.5px}
+.ln-sync .ln-dot{width:9px;height:9px;border-radius:50%;background:var(--orange);display:inline-block}
+.ln-sync .cnt{font-family:var(--display);font-weight:700}
+#lnItem{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:52px;font-size:16px}
+#lnItem:focus{border-color:var(--green-md);outline:none}
+.ln-item{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--green-md);
+  border-radius:11px;padding:12px 14px;margin-bottom:8px}
+.ln-item.sent{border-left-color:var(--green-dk)}
+.ln-item .m{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--stone);margin:0 0 4px}
+.ln-item h4{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0 0 3px}
+.ln-item p{font-size:14px;color:var(--ink-soft);margin:0 0 2px}
+
 .mt-elmo{background:#fff;color:#8A3216;font-family:var(--display);font-weight:800;font-size:13px;
   letter-spacing:.1em;border-radius:5px;padding:2px 7px;margin-right:4px}
 .mt-demo{background:rgba(255,255,255,.3);font-family:var(--display);font-weight:700;font-size:10.5px;
@@ -797,6 +812,60 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
       <div class="err" id="e-rqSend" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
       <p class="note">Nothing appears on the agenda until the person preparing it says so.</p>
     </div>
+  </div>
+
+  <h2>Meeting notes</h2>
+
+  <div id="lnLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Taking notes is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="lnGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">The agenda item and who is leading it fill in on their own. Write only what matters — saves on this phone straight away, sends when you have signal.</p>
+
+    <div class="ln-sync">
+      <span class="ln-dot"></span>
+      <span class="cnt" id="lnCount">Nothing yet</span>
+      <span style="flex:1"></span>
+      <button class="nbtn ghost" style="width:auto;padding:9px 16px" id="lnSend">Send</button>
+    </div>
+
+    <div class="card" id="lnCard">
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnItem">Agenda item</label>
+        <select id="lnItem"></select>
+        <p class="help" id="lnAuto" style="margin:6px 0 0"></p>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnSpeaker">Who is speaking</label>
+        <input type="text" id="lnSpeaker" placeholder="Name">
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnSaid">What was said</label>
+        <textarea id="lnSaid" placeholder="The gist. Not a transcript."></textarea>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnDec">Decisions</label>
+        <p class="help">One per line. Only things actually settled.</p>
+        <textarea id="lnDec" style="min-height:72px" placeholder="Adopted the 2nd Wednesday for new member meetings"></textarea>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnAct">Actions</label>
+        <p class="help">One per line, each with a name and a date.</p>
+        <textarea id="lnAct" style="min-height:72px" placeholder="Mark to draft the welcome email by Sept 5"></textarea>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="lnQ">Questions and feedback</label>
+        <p class="help">One per line. Anything raised and not resolved.</p>
+        <textarea id="lnQ" style="min-height:72px" placeholder="Can family who were not in a pilot take part?"></textarea>
+      </div>
+      <button class="btn gold" id="lnSave">Save this item</button>
+      <p class="note" id="lnNote">Saved notes stay on this phone until you send them.</p>
+    </div>
+
+    <div id="lnList"></div>
   </div>
 </section>
 
@@ -3208,7 +3277,133 @@ if($('#mtHide')) $('#mtHide').addEventListener('click', ()=>{
 function startTimer(){
   try{ tickTimer(); }catch(e){ console.error('timer:', e); }
   setInterval(()=>{ try{ tickTimer(); }catch(e){} }, 1000);
+  setInterval(()=>{ try{ lnFill(); }catch(e){} }, 15000);
 }
+
+/* =========================================================
+   LIVE NOTES
+   The agenda item and speaker fill themselves in from
+   whichever meeting is running. Saves to the phone first,
+   sends when there is signal.
+   ========================================================= */
+let lnNotes = [];
+try{ lnNotes = JSON.parse(localStorage.getItem('bisc.live') || '[]'); }catch(e){ lnNotes = []; }
+function lnSave(){ try{ localStorage.setItem('bisc.live', JSON.stringify(lnNotes)); }catch(e){} lnPaint(); }
+
+let lnTouched = false;   // stop auto-select fighting a manual choice
+
+function lnContext(){
+  const run = (typeof runningMeeting === 'function') ? runningMeeting() : null;
+  if(run){
+    let idx = run.items.findIndex(([a,b]) => run.mins >= a && run.mins < b);
+    if(idx === -1) idx = run.items.length - 1;
+    return {ev: run.ev, items: run.items, idx};
+  }
+  const list = (typeof upcomingWithAgendas === 'function') ? upcomingWithAgendas(1) : [];
+  if(!list.length) return null;
+  const e = list[0];
+  const posted = postedAgendaFor(e);
+  const items = posted ? posted.items : (AGENDAS[e.kind] ? AGENDAS[e.kind].items : []);
+  return {ev: e, items, idx: 0};
+}
+
+function lnFill(){
+  const gate = $('#lnGate'), lock = $('#lnLock');
+  if(!gate) return;
+  const inB = signedIn();
+  gate.hidden = !inB; lock.hidden = inB;
+  if(!inB) return;
+
+  const ctx = lnContext();
+  const sel = $('#lnItem');
+  if(!ctx || !ctx.items.length){
+    sel.innerHTML = '<option value="">No agenda to take notes against</option>';
+    $('#lnAuto').textContent = '';
+    return;
+  }
+
+  const keep = sel.value;
+  sel.innerHTML = ctx.items.map((it,i)=>
+    `<option value="${i}">${String(it[2]).replace(/</g,'&lt;')}</option>`).join('');
+
+  const running = (typeof runningMeeting === 'function') && runningMeeting();
+  if(!lnTouched) sel.value = String(ctx.idx);
+  else if(keep) sel.value = keep;
+
+  $('#lnAuto').textContent = running
+    ? 'Following the meeting. Change it if you are noting something else.'
+    : 'Next meeting: ' + (AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '');
+
+  const sp = $('#lnSpeaker');
+  const who = ctx.items[Number(sel.value) || 0];
+  if(sp && !sp.dataset.edited) sp.value = (who && who[4]) ? who[4] : '';
+}
+
+if($('#lnItem')) $('#lnItem').addEventListener('change', ()=>{ lnTouched = true; 
+  const sp=$('#lnSpeaker'); if(sp) sp.dataset.edited=''; lnFill(); });
+if($('#lnSpeaker')) $('#lnSpeaker').addEventListener('input', e=>{ e.target.dataset.edited='1'; });
+
+if($('#lnSave')) $('#lnSave').addEventListener('click', ()=>{
+  const g = id => $('#'+id).value.trim();
+  if(!g('lnSaid') && !g('lnDec') && !g('lnAct') && !g('lnQ')){ $('#lnSaid').focus(); return; }
+  const ctx = lnContext();
+  if(!ctx) return;
+  const it = ctx.items[Number($('#lnItem').value) || 0] || [];
+  lnNotes.unshift({
+    id: Date.now()+'-'+Math.random().toString(36).slice(2,6),
+    ts: new Date().toISOString(),
+    date: ctx.ev.y+'-'+String(ctx.ev.mo+1).padStart(2,'0')+'-'+String(ctx.ev.day).padStart(2,'0'),
+    meeting: AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '',
+    item: it[2] || '', speaker: g('lnSpeaker'),
+    said: g('lnSaid'), decisions: g('lnDec'), actions: g('lnAct'), questions: g('lnQ'),
+    sent: false
+  });
+  ['lnSaid','lnDec','lnAct','lnQ'].forEach(id=>$('#'+id).value='');
+  lnSave();
+  $('#lnNote').textContent = 'Saved. Carry on.';
+  setTimeout(()=>{ $('#lnNote').textContent = 'Saved notes stay on this phone until you send them.'; }, 2500);
+});
+
+function lnPaint(){
+  const unsent = lnNotes.filter(n=>!n.sent).length;
+  const c = $('#lnCount');
+  if(c) c.textContent = unsent ? unsent + (unsent===1?' note not sent':' notes not sent')
+                               : (lnNotes.length ? 'All sent' : 'Nothing yet');
+  if($('#lnSend')) $('#lnSend').disabled = !unsent;
+  const list = $('#lnList');
+  if(!list) return;
+  list.innerHTML = lnNotes.slice(0,12).map(n=>{
+    const t = new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'}).format(new Date(n.ts));
+    const bits = [n.said && 'said', n.decisions && 'decision', n.actions && 'action', n.questions && 'question']
+      .filter(Boolean).join(' \u00b7 ');
+    return `<div class="ln-item${n.sent?' sent':''}">
+      <p class="m">${n.sent?'Sent':'On this phone'} \u00b7 ${t}</p>
+      <h4>${String(n.item).replace(/</g,'&lt;')}</h4>
+      ${n.speaker?'<p>'+String(n.speaker).replace(/</g,'&lt;')+'</p>':''}
+      <p>${bits||'note'}</p></div>`;
+  }).join('');
+}
+
+if($('#lnSend')) $('#lnSend').addEventListener('click', async ()=>{
+  const btn = $('#lnSend'), pending = lnNotes.filter(n=>!n.sent);
+  if(!pending.length) return;
+  btn.disabled = true; btn.textContent = 'Sending…';
+  let ok = 0;
+  for(const n of pending){
+    try{
+      const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(Object.assign({type:'live_note', token: AUTH.token}, n))});
+      const out = await r.json().catch(()=>null);
+      if(out && out.ok){ n.sent = true; ok++; }
+    }catch(e){}
+  }
+  lnSave();
+  btn.textContent = 'Send';
+  btn.disabled = ok === pending.length;
+  if(ok < pending.length) $('#lnCount').textContent = (pending.length-ok) + ' still unsent — try again with signal';
+});
+
+lnPaint();
 
 /* ---- asking for time on an agenda ---- */
 function paintRequestForm(){
@@ -3270,6 +3465,7 @@ if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
 
 function renderAgenda(){
   paintRequestForm();
+  lnFill();
   const list = upcomingWithAgendas(5);
   if(!list.length){ $('#nextUp').innerHTML=''; return; }
   if(agendaPick >= list.length) agendaPick = 0;

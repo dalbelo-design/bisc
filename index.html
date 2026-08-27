@@ -242,12 +242,45 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .mnote-b .att{font-size:15px;color:var(--ink);margin:0}
 .mnote-b .by{font-size:13px;color:var(--stone);border-top:1px solid var(--line);padding-top:10px;margin:14px 0 0}
 
+#rqMeeting,#rqMins{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:52px;font-size:16px}
+#rqMeeting:focus,#rqMins:focus{border-color:var(--green-md);outline:none}
+
+.ln-sync{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:#F6F5E6;border-radius:11px;
+  padding:12px 14px;margin-bottom:13px;font-size:14.5px}
+.ln-sync .ln-dot{width:9px;height:9px;border-radius:50%;background:var(--orange);display:inline-block}
+.ln-sync .cnt{font-family:var(--display);font-weight:700}
+#lnItem{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:52px;font-size:16px}
+#lnItem:focus{border-color:var(--green-md);outline:none}
+.ln-item{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--green-md);
+  border-radius:11px;padding:12px 14px;margin-bottom:8px}
+.ln-item.sent{border-left-color:var(--green-dk)}
+.ln-item .m{font-family:var(--display);font-size:11.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--stone);margin:0 0 4px}
+.ln-item h4{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0 0 3px}
+.ln-item p{font-size:14px;color:var(--ink-soft);margin:0 0 2px}
+
+.fac{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.04em;
+  color:#FEE6B0;margin:2px 0 6px}
+
+.panel-green .step-b p + p{margin-top:8px}
+.panel-green .step-b ul{margin:6px 0 0;padding-left:19px;font-size:15px;color:#DCEFDE}
+.panel-green .step-b li{margin-bottom:4px}
+.step-b p + p{margin-top:8px}
+.step-b ul{margin:6px 0 0;padding-left:19px;font-size:15px;color:var(--ink-soft)}
+.step-b li{margin-bottom:4px}
+
 .apick-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
 .apick{flex:0 0 auto;background:var(--raised);border:1.5px solid var(--line);border-radius:11px;
   padding:9px 14px;cursor:pointer;min-height:52px;display:flex;flex-direction:column;align-items:flex-start;gap:1px}
 .apick .ap-d{font-family:var(--display);font-weight:700;font-size:14px}
 .apick .ap-k{font-size:12px;color:var(--stone)}
 .apick.on{background:var(--green-dk);border-color:var(--green-dk)}
+.apick.live{border-color:var(--orange);box-shadow:0 0 0 2px rgba(250,170,4,.3)}
+.apick.live.on{background:var(--orange);border-color:var(--orange)}
+.apick.live.on .ap-d{color:var(--ink)}
+.apick.live.on .ap-k{color:#6B5A16}
 .apick.on .ap-d{color:#fff}
 .apick.on .ap-k{color:#B6DCB8}
 
@@ -709,6 +742,108 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
   <div class="card">
     <h3>Saturday mixer</h3>
     <p style="font-size:15px;margin:0">No agenda, on purpose. Drop in, say hello, leave when you like.</p>
+  </div>
+
+  <h2>Ask for time on an agenda</h2>
+
+  <div id="reqLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Requesting time on an agenda is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="reqGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">It goes to whoever is preparing that agenda. They decide what goes on and in what order — you will hear back either way.</p>
+    <div class="card" id="reqCard">
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMeeting">Which meeting</label>
+        <select id="rqMeeting"></select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqItem">What do you want to talk about?</label>
+        <p class="help">A short title, the way it would read on the agenda.</p>
+        <input type="text" id="rqItem" placeholder="e.g. Buddy pairings for the new cohort">
+        <div class="err" id="e-rqItem" hidden>Please add a short title.</div>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqFac">Who will lead it?</label>
+        <p class="help">Usually you. Leave it as is if so.</p>
+        <input type="text" id="rqFac" placeholder="Name">
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqMins">How long do you need?</label>
+        <select id="rqMins">
+          <option value="5">5 minutes</option>
+          <option value="10" selected>10 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="20">20 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+        </select>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="rqDetail">What is it about?</label>
+        <p class="help">A sentence or two. Line breaks and lines starting with a dash both work.</p>
+        <textarea id="rqDetail" placeholder="What you want the meeting to hear, decide, or discuss."></textarea>
+      </div>
+      <button class="btn gold" id="rqSend">Send the request</button>
+      <div class="err" id="e-rqSend" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
+      <p class="note">Nothing appears on the agenda until the person preparing it says so.</p>
+    </div>
+  </div>
+
+  <h2>Meeting notes</h2>
+
+  <div id="lnLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Taking notes is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="lnGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">The agenda item and who is leading it fill in on their own. Write only what matters — saves on this phone straight away, sends when you have signal.</p>
+
+    <div class="ln-sync">
+      <span class="ln-dot"></span>
+      <span class="cnt" id="lnCount">Nothing yet</span>
+      <span style="flex:1"></span>
+      <button class="nbtn ghost" style="width:auto;padding:9px 16px" id="lnSend">Send</button>
+    </div>
+
+    <div class="card" id="lnCard">
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnItem">Agenda item</label>
+        <select id="lnItem"></select>
+        <p class="help" id="lnAuto" style="margin:6px 0 0"></p>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnSpeaker">Who is speaking</label>
+        <input type="text" id="lnSpeaker" placeholder="Name">
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnSaid">What was said</label>
+        <textarea id="lnSaid" placeholder="The gist. Not a transcript."></textarea>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnDec">Decisions</label>
+        <p class="help">One per line. Only things actually settled.</p>
+        <textarea id="lnDec" style="min-height:72px" placeholder="Adopted the 2nd Wednesday for new member meetings"></textarea>
+      </div>
+      <div class="f" style="margin-bottom:14px">
+        <label class="q" for="lnAct">Actions</label>
+        <p class="help">One per line, each with a name and a date.</p>
+        <textarea id="lnAct" style="min-height:72px" placeholder="Mark to draft the welcome email by Sept 5"></textarea>
+      </div>
+      <div class="f" style="margin-bottom:16px">
+        <label class="q" for="lnQ">Questions and feedback</label>
+        <p class="help">One per line. Anything raised and not resolved.</p>
+        <textarea id="lnQ" style="min-height:72px" placeholder="Can family who were not in a pilot take part?"></textarea>
+      </div>
+      <button class="btn gold" id="lnSave">Save this item</button>
+      <p class="note" id="lnNote">Saved notes stay on this phone until you send them.</p>
+    </div>
+
+    <div id="lnList"></div>
   </div>
 </section>
 
@@ -2947,19 +3082,29 @@ function postedAgendaFor(ev){
   if(!rows.length) return null;
 
   let at = 0;
-  const items = rows.map(r => { const from = at; at += r.minutes; return [from, at, r.item, r.detail]; });
+  const items = rows.map(r => { const from = at; at += r.minutes; return [from, at, r.item, r.detail, r.who]; });
   return {items, by: (rows.find(r=>r.by)||{}).by || ''};
 }
 
 
+function agendaMinutes(e){
+  const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(e) : null;
+  const items = posted ? posted.items : (AGENDAS[e.kind] ? AGENDAS[e.kind].items : null);
+  return (items && items.length) ? items[items.length-1][1] : 60;
+}
+
+// A meeting stays on the list until its agenda has actually run out —
+// it used to drop off the moment it started, which is exactly when
+// people need it.
 function upcomingWithAgendas(limit){
-  const now = new Date(), n = new Date(), out = [], seen = new Set();
+  const now = Date.now(), n = new Date(), out = [], seen = new Set();
   for(let i=0;i<4 && out.length<limit;i++){
     const p = new Date(n.getFullYear(), n.getMonth()+i, 1);
     const ev = monthEvents(p.getFullYear(), p.getMonth());
     Object.keys(ev).map(Number).sort((a,b)=>a-b)
       .flatMap(d => ev[d])
-      .filter(e => AGENDAS[e.kind] && e.dt > now && !e.cancelled)
+      .filter(e => AGENDAS[e.kind] && !e.cancelled &&
+                   (e.dt.getTime() + (agendaMinutes(e) + 15) * 60000) > now)
       .sort((a,b)=>a.dt-b.dt)
       .forEach(e=>{
         const k = e.y+'-'+e.mo+'-'+e.day+'-'+e.kind;
@@ -2970,12 +3115,253 @@ function upcomingWithAgendas(limit){
   return out.sort((a,b)=>a.dt-b.dt);
 }
 
+function isRunning(e){
+  const now = Date.now();
+  return e.dt.getTime() <= now && now < e.dt.getTime() + (agendaMinutes(e) + 15) * 60000;
+}
+
 let agendaPick = 0;
+let agendaPickTouched = false;
+
+
+/* Detail cells keep whatever line breaks were typed in the sheet.
+   A line starting with -, * or a bullet becomes a list item; everything
+   else becomes its own paragraph. No markup to learn. */
+function richText(t){
+  const lines = String(t || '').split(/\r?\n/).map(x=>x.trim()).filter(x=>x.length);
+  if(!lines.length) return '';
+  const esc = x => x.replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+  const out = [];
+  let bullets = [];
+  const flush = ()=>{ if(bullets.length){ out.push('<ul>'+bullets.join('')+'</ul>'); bullets=[]; } };
+  lines.forEach(l=>{
+    const m = l.match(/^[-*\u2022\u2013]\s+(.*)$/);
+    if(m){ bullets.push('<li>'+esc(m[1])+'</li>'); }
+    else { flush(); out.push('<p>'+esc(l)+'</p>'); }
+  });
+  flush();
+  return out.join('');
+}
+
+
+/* =========================================================
+   MEETING TIMER
+   Driven by the clock, not a start button — so it reads the
+   same on everyone's phone with nobody running it. It finds
+   the meeting happening right now, works out which agenda
+   item that lands in, and counts down.
+   ========================================================= */
+function agendaForEvent(ev){
+  const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(ev) : null;
+  return posted ? posted.items : (AGENDAS[ev.kind] ? AGENDAS[ev.kind].items : null);
+}
+
+// Still used by the note form to know which agenda item is running.
+function runningMeeting(){
+  const now = new Date();
+  const ev = monthEvents(now.getFullYear(), now.getMonth())[now.getDate()] || [];
+  for(const e of ev){
+    if(e.allDay || e.cancelled || !AGENDAS[e.kind]) continue;
+    const items = agendaForEvent(e);
+    if(!items || !items.length) continue;
+    const total = items[items.length-1][1];
+    const mins = (now - e.dt.getTime()) / 60000;
+    if(mins >= 0 && mins <= total + 10) return {ev:e, items, total, mins};
+  }
+  return null;
+}
+
+/* =========================================================
+   LIVE NOTES
+   The agenda item and speaker fill themselves in from
+   whichever meeting is running. Saves to the phone first,
+   sends when there is signal.
+   ========================================================= */
+let lnNotes = [];
+try{ lnNotes = JSON.parse(localStorage.getItem('bisc.live') || '[]'); }catch(e){ lnNotes = []; }
+function lnSave(){ try{ localStorage.setItem('bisc.live', JSON.stringify(lnNotes)); }catch(e){} lnPaint(); }
+
+let lnTouched = false;   // stop auto-select fighting a manual choice
+
+function lnContext(){
+  const run = (typeof runningMeeting === 'function') ? runningMeeting() : null;
+  if(run){
+    let idx = run.items.findIndex(([a,b]) => run.mins >= a && run.mins < b);
+    if(idx === -1) idx = run.items.length - 1;
+    return {ev: run.ev, items: run.items, idx};
+  }
+  const list = (typeof upcomingWithAgendas === 'function') ? upcomingWithAgendas(1) : [];
+  if(!list.length) return null;
+  const e = list[0];
+  const posted = postedAgendaFor(e);
+  const items = posted ? posted.items : (AGENDAS[e.kind] ? AGENDAS[e.kind].items : []);
+  return {ev: e, items, idx: 0};
+}
+
+function lnFill(){
+  const gate = $('#lnGate'), lock = $('#lnLock');
+  if(!gate) return;
+  const inB = signedIn();
+  gate.hidden = !inB; lock.hidden = inB;
+  if(!inB) return;
+
+  const ctx = lnContext();
+  const sel = $('#lnItem');
+  if(!ctx || !ctx.items.length){
+    sel.innerHTML = '<option value="">No agenda to take notes against</option>';
+    $('#lnAuto').textContent = '';
+    return;
+  }
+
+  const keep = sel.value;
+  sel.innerHTML = ctx.items.map((it,i)=>
+    `<option value="${i}">${String(it[2]).replace(/</g,'&lt;')}</option>`).join('');
+
+  const running = (typeof runningMeeting === 'function') && runningMeeting();
+  if(!lnTouched) sel.value = String(ctx.idx);
+  else if(keep) sel.value = keep;
+
+  $('#lnAuto').textContent = running
+    ? 'Following the meeting. Change it if you are noting something else.'
+    : 'Next meeting: ' + (AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '');
+
+  const sp = $('#lnSpeaker');
+  const who = ctx.items[Number(sel.value) || 0];
+  if(sp && !sp.dataset.edited) sp.value = (who && who[4]) ? who[4] : '';
+}
+
+if($('#lnItem')) $('#lnItem').addEventListener('change', ()=>{ lnTouched = true; 
+  const sp=$('#lnSpeaker'); if(sp) sp.dataset.edited=''; lnFill(); });
+if($('#lnSpeaker')) $('#lnSpeaker').addEventListener('input', e=>{ e.target.dataset.edited='1'; });
+
+if($('#lnSave')) $('#lnSave').addEventListener('click', ()=>{
+  const g = id => $('#'+id).value.trim();
+  if(!g('lnSaid') && !g('lnDec') && !g('lnAct') && !g('lnQ')){ $('#lnSaid').focus(); return; }
+  const ctx = lnContext();
+  if(!ctx) return;
+  const it = ctx.items[Number($('#lnItem').value) || 0] || [];
+  lnNotes.unshift({
+    id: Date.now()+'-'+Math.random().toString(36).slice(2,6),
+    ts: new Date().toISOString(),
+    date: ctx.ev.y+'-'+String(ctx.ev.mo+1).padStart(2,'0')+'-'+String(ctx.ev.day).padStart(2,'0'),
+    meeting: AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '',
+    item: it[2] || '', speaker: g('lnSpeaker'),
+    said: g('lnSaid'), decisions: g('lnDec'), actions: g('lnAct'), questions: g('lnQ'),
+    sent: false
+  });
+  ['lnSaid','lnDec','lnAct','lnQ'].forEach(id=>$('#'+id).value='');
+  lnSave();
+  $('#lnNote').textContent = 'Saved. Carry on.';
+  setTimeout(()=>{ $('#lnNote').textContent = 'Saved notes stay on this phone until you send them.'; }, 2500);
+});
+
+function lnPaint(){
+  const unsent = lnNotes.filter(n=>!n.sent).length;
+  const c = $('#lnCount');
+  if(c) c.textContent = unsent ? unsent + (unsent===1?' note not sent':' notes not sent')
+                               : (lnNotes.length ? 'All sent' : 'Nothing yet');
+  if($('#lnSend')) $('#lnSend').disabled = !unsent;
+  const list = $('#lnList');
+  if(!list) return;
+  list.innerHTML = lnNotes.slice(0,12).map(n=>{
+    const t = new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit'}).format(new Date(n.ts));
+    const bits = [n.said && 'said', n.decisions && 'decision', n.actions && 'action', n.questions && 'question']
+      .filter(Boolean).join(' \u00b7 ');
+    return `<div class="ln-item${n.sent?' sent':''}">
+      <p class="m">${n.sent?'Sent':'On this phone'} \u00b7 ${t}</p>
+      <h4>${String(n.item).replace(/</g,'&lt;')}</h4>
+      ${n.speaker?'<p>'+String(n.speaker).replace(/</g,'&lt;')+'</p>':''}
+      <p>${bits||'note'}</p></div>`;
+  }).join('');
+}
+
+if($('#lnSend')) $('#lnSend').addEventListener('click', async ()=>{
+  const btn = $('#lnSend'), pending = lnNotes.filter(n=>!n.sent);
+  if(!pending.length) return;
+  btn.disabled = true; btn.textContent = 'Sending…';
+  let ok = 0;
+  for(const n of pending){
+    try{
+      const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(Object.assign({type:'live_note', token: AUTH.token}, n))});
+      const out = await r.json().catch(()=>null);
+      if(out && out.ok){ n.sent = true; ok++; }
+    }catch(e){}
+  }
+  lnSave();
+  btn.textContent = 'Send';
+  btn.disabled = ok === pending.length;
+  if(ok < pending.length) $('#lnCount').textContent = (pending.length-ok) + ' still unsent — try again with signal';
+});
+
+lnPaint();
+
+/* ---- asking for time on an agenda ---- */
+function paintRequestForm(){
+  const gate = $('#reqGate'), lock = $('#reqLock');
+  if(!gate) return;
+  const inB = signedIn();
+  gate.hidden = !inB;
+  lock.hidden = inB;
+  if(!inB) return;
+
+  const fac = $('#rqFac');
+  if(fac && !fac.value && AUTH && AUTH.name) fac.value = AUTH.name;
+
+  const sel = $('#rqMeeting');
+  const list = upcomingWithAgendas(6);
+  const keep = sel.value;
+  sel.innerHTML = list.map(e=>{
+    const d = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
+      .format(new Date(e.y,e.mo,e.day));
+    const iso = e.y+'-'+String(e.mo+1).padStart(2,'0')+'-'+String(e.day).padStart(2,'0');
+    return `<option value="${iso}|${AGENDAS[e.kind].label}">${AGENDAS[e.kind].label} — ${d}</option>`;
+  }).join('');
+  if(keep) sel.value = keep;
+}
+
+if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
+  const item = $('#rqItem').value.trim();
+  $('#e-rqItem').hidden = !!item;
+  $('#e-rqSend').hidden = true;
+  if(!item){ $('#rqItem').focus(); return; }
+
+  const [date, meeting] = ($('#rqMeeting').value || '|').split('|');
+  const btn = $('#rqSend');
+  busy(btn, true, 'Sending…');
+  let ok = false;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'agenda_request', token: AUTH.token,
+        date, meeting, item,
+        facilitator: $('#rqFac').value.trim(),
+        minutes: $('#rqMins').value,
+        detail: $('#rqDetail').value.trim()})});
+    const out = await r.json().catch(()=>null);
+    ok = !!(out && out.ok);
+  }catch(e){}
+  busy(btn, false);
+
+  if(ok){
+    $('#reqCard').innerHTML = `
+      <h3 style="color:var(--green-dk)">Request sent</h3>
+      <p style="font-size:15px;margin:0 0 6px">It has gone to whoever is preparing that agenda. You will hear back either way.</p>
+      <p style="font-size:14px;color:var(--stone);margin:0 0 14px">Nothing appears on the agenda until they say so.</p>
+      <button class="btn ghost sm" id="rqAgain">Ask for something else</button>`;
+    $('#rqAgain').addEventListener('click', ()=>location.reload());
+  } else {
+    $('#e-rqSend').hidden = false;
+  }
+});
 
 function renderAgenda(){
+  paintRequestForm();
+  lnFill();
   const list = upcomingWithAgendas(5);
   if(!list.length){ $('#nextUp').innerHTML=''; return; }
   if(agendaPick >= list.length) agendaPick = 0;
+  const liveIdx = list.findIndex(isRunning);
+  if(liveIdx > -1 && !agendaPickTouched) agendaPick = liveIdx;
   const first = list[agendaPick];
 
   const pick = $('#agendaPick');
@@ -2983,8 +3369,9 @@ function renderAgenda(){
     pick.innerHTML = list.map((e,i)=>{
       const d = new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'})
         .format(new Date(e.y,e.mo,e.day));
-      return `<button class="apick${i===agendaPick?' on':''}" data-pick="${i}">
-        <span class="ap-d">${d}</span><span class="ap-k">${AGENDAS[e.kind].label}</span></button>`;
+      const live = isRunning(e);
+      return `<button class="apick${i===agendaPick?' on':''}${live?' live':''}" data-pick="${i}">
+        <span class="ap-d">${live ? 'Now' : d}</span><span class="ap-k">${AGENDAS[e.kind].label}</span></button>`;
     }).join('');
   }
 
@@ -2998,7 +3385,7 @@ function renderAgenda(){
 
   $('#nextUp').innerHTML = `
     <div class="card orange">
-      <p class="eyebrow" style="margin-bottom:4px">${agendaPick===0 ? 'Next up' : 'Coming up'}</p>
+      <p class="eyebrow" style="margin-bottom:4px">${isRunning(first) ? 'Happening now' : (agendaPick===0 ? 'Next up' : 'Coming up')}</p>
       <h3 style="font-size:21px">${AGENDAS[first.kind].label}</h3>
       <p style="font-size:16px;font-weight:600;margin:2px 0 10px">${dateStr}</p>
       ${sameDay.map(e=>`<p style="font-size:15px;margin:0 0 5px">
@@ -3030,8 +3417,10 @@ function renderAgenda(){
       ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.'
     : 'One session, starting ' + clock(0) + ' ' + ampm + ' ' +
       (first.tz === PT ? 'Pacific' : 'Eastern') + '.';
-  $('#agendaBody').innerHTML = items.map(([a,b,t,d])=>
-    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b"><h3>${t}</h3><p>${d||''}</p></div></li>`
+  $('#agendaBody').innerHTML = items.map(([a,b,t,d,w])=>
+    `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b">
+       <h3>${t}</h3>${w ? `<p class="fac">Facilitator: ${w}</p>` : ''}${richText(d)}
+     </div></li>`
   ).join('');
   const src = $('#agendaSrc');
   if(src){
@@ -3138,7 +3527,7 @@ $('#calPrev').addEventListener('click', ()=>{ calM--; if(calM<0){calM=11;calY--;
 $('#calNext').addEventListener('click', ()=>{ calM++; if(calM>11){calM=0;calY++;} renderMeetings(); });
 document.addEventListener('click', e=>{
   const b = e.target.closest('[data-pick]');
-  if(b){ agendaPick = +b.dataset.pick; renderAgenda(); }
+  if(b){ agendaPick = +b.dataset.pick; agendaPickTouched = true; renderAgenda(); }
 });
 
 $('#calGrid').addEventListener('click', e=>{
@@ -3207,8 +3596,9 @@ async function loadAll(){
   applyLang();
   renderMeetings(); renderAgenda();
   restoreScreen();
+  setInterval(()=>{ try{ lnFill(); }catch(e){} }, 15000);
   loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
-  loadAgendas().then(()=>renderAgenda());
+  loadAgendas().then(()=>{ renderAgenda(); lnFill(); });
 }
 async function saveMe(){
   // The full record goes to the sheet. All that stays on this device is a

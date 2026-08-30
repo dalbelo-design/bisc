@@ -655,7 +655,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     <div class="cal-grid" id="calGrid"></div>
     <div class="legend">
       <span><i style="background:#64D5FF"></i>New member</span>
-      <span><i style="background:#519A66"></i>Full union</span>
+      <span><i style="background:#519A66"></i>Community</span>
       <span><i style="background:#FAAA04"></i>National gathering</span>
       <span><i style="background:#247227"></i>Organizing Committee</span>
       <span><i style="background:#FED786;box-shadow:inset 0 0 0 1.5px #B07C14"></i>Events</span>
@@ -679,9 +679,9 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 
   <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
   <div class="card">
-    <p style="font-size:15px;margin:0 0 10px"><strong>Most Wednesdays</strong> — Organizing Committee · 4:00–6:00 PM PT / 7:00–9:00 PM ET · two hours. No meeting on full union week.</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Most Wednesdays</strong> — Organizing Committee · 4:00–6:00 PM PT / 7:00–9:00 PM ET · two hours. No meeting on community meeting week.</p>
     <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT · one hour</p>
-    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Community meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
     <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — National gathering, one session · 1:00 PM PT / 4:00 PM ET</p>
   </div>
 
@@ -1389,15 +1389,15 @@ const RULES = [
   {id:'nm-p', kind:'nm', title:'New member meeting', session:'Pacific session',
    dow:3, week:2, hh:18, mm:0, tz:PT,
    desc:'Introductions, how the union works, and time for your questions.'},
-  {id:'fu-e', kind:'fu', title:'Full union meeting', session:'Eastern session',
+  {id:'fu-e', kind:'fu', title:'Community meeting', session:'Eastern session',
    dow:3, week:'last', hh:18, mm:0, tz:ET,
    desc:'The whole membership. Priorities, decisions, and project updates.'},
-  {id:'fu-p', kind:'fu', title:'Full union meeting', session:'Pacific session',
+  {id:'fu-p', kind:'fu', title:'Community meeting', session:'Pacific session',
    dow:3, week:'last', hh:18, mm:0, tz:PT,
    desc:'The whole membership. Priorities, decisions, and project updates.'},
   {id:'oc', kind:'oc', title:'Organizing Committee', session:'One session',
    dow:3, week:null, except:'last', hh:16, mm:0, tz:PT,
-   desc:'The committee that runs the union. Two hours. No meeting on full union week.'},
+   desc:'The committee that runs the union. Two hours. No meeting on community meeting week.'},
   {id:'sx-s', kind:'sx', title:'National gathering', session:'One session, everyone together',
    dow:6, week:2, hh:13, mm:0, tz:PT,
    desc:'The whole union in one room. Bring your kids, your dog, your lunch.'}
@@ -1452,7 +1452,7 @@ function monthEvents(y, mo){
       if(new Date(y,mo,d).getDay() !== r.dow) continue;
       seen++;
       // a rule can skip the last occurrence of the month — OC steps aside
-      // on full union week so nobody sits through four hours
+      // on community meeting week so nobody sits through four hours
       if(r.except === 'last' && d + 7 > dim) continue;
       if(r.week !== null){
         const hit = r.week === 'last' ? (d + 7 > dim)
@@ -2975,7 +2975,7 @@ const AGENDAS = {
     ]
   },
   fu: {
-    label: 'Full union meeting',
+    label: 'Community meeting',
     items: [
       [0,  10, 'Welcome and attendance', 'Who is here. Attendance is recorded, which is how Active Membership is tracked.'],
       [10, 25, 'Community building', 'Time to actually know each other. Not a warm-up for the real work — part of it.'],
@@ -3049,7 +3049,7 @@ async function loadAgendas(){
    obvious variations rather than failing silently on "OC meeting". */
 const MEETING_ALIASES = {
   nm: ['new member meeting','new member','new members meeting','new members','nm'],
-  fu: ['full union meeting','full union','union meeting','full member meeting','fu'],
+  fu: ['community meeting','community','full union meeting','full union','union meeting','full member meeting','fu'],
   oc: ['organizing committee','organizing committee meeting','oc','oc meeting','organising committee'],
   sx: ['national gathering','gathering','saturday gathering','saturday mixer','mixer','social mixer']
 };

@@ -267,6 +267,15 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bottom))}
 @media (min-width:760px){#mtBar{bottom:0}body.mt-showing #fbBtn{bottom:86px}}
 
+.vt-out{display:flex;gap:10px;align-items:baseline;background:var(--raised);border:1px solid var(--line);
+  border-left:5px solid var(--green-md);border-radius:11px;padding:11px 14px;margin-bottom:7px}
+.vt-out.no{border-left-color:#C4795F}
+.vt-out-k{font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--green-dk);flex:0 0 auto}
+.vt-out.no .vt-out-k{color:#8A3216}
+.vt-out-i{flex:1;font-size:15px;min-width:0}
+.vt-out-n{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);flex:0 0 auto}
+
 .vt-card{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--sky);
   border-radius:var(--r);padding:16px;margin-bottom:11px}
 .vt-card h4{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 3px}
@@ -674,6 +683,11 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 
   <div id="notesGate" hidden>
     <p id="notesStatus" class="sub" style="font-size:15px;color:var(--ink-soft)">Loading…</p>
+    <div class="f" id="notesPickWrap" hidden style="margin-bottom:14px">
+      <label class="q" for="notesPick">Which meeting</label>
+      <select id="notesPick"></select>
+      <p class="help" id="notesPickHelp" style="margin:6px 0 0"></p>
+    </div>
     <div id="notesList"></div>
   </div>
 
@@ -717,6 +731,12 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     <p style="font-size:15px;color:var(--ink-soft)">Requests waiting on a decision. Your vote is one of many — whoever prepares the agenda uses these to decide what makes the hour.</p>
     <div id="vtList"></div>
     <p class="note" id="vtNote"></p>
+
+    <div id="vtDecided" hidden>
+      <h3 style="font-family:var(--display);font-weight:800;font-size:16px;margin:20px 0 4px">Decided</h3>
+      <p style="font-size:14px;color:var(--stone);margin:0 0 10px">How the room voted, once results were shown.</p>
+      <div id="vtDecidedList"></div>
+    </div>
   </div>
 
   <h2>Ask for time on an agenda</h2>
@@ -3304,6 +3324,23 @@ function vtPaint(){
     if(note) note.textContent = 'Nothing waiting on a vote for this meeting.';
     return;
   }
+  // anything revealed is a settled outcome — show it separately so the
+  // other session can see what was decided without re-reading the ballot
+  const decided = vtItems.filter(v=>v.revealed);
+  const wrap = $('#vtDecided'), dlist = $('#vtDecidedList');
+  if(wrap && dlist){
+    wrap.hidden = !decided.length;
+    dlist.innerHTML = decided.map(v=>{
+      const total = v.yes + v.no;
+      const carried = v.yes > v.no;
+      return `<div class="vt-out ${carried?'yes':'no'}">
+        <span class="vt-out-k">${carried?'Carried':'Not carried'}</span>
+        <span class="vt-out-i">${esc(v.item)}</span>
+        <span class="vt-out-n">${v.yes}\u2013${v.no}</span>
+      </div>`;
+    }).join('');
+  }
+
   const anyHidden = vtItems.some(v=>!v.revealed);
   if(note) note.textContent = anyHidden
     ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. You can change your vote until the agenda is set.'
@@ -3431,6 +3468,7 @@ if($('#lnSave')) $('#lnSave').addEventListener('click', ()=>{
     ts: new Date().toISOString(),
     date: ctx.ev.y+'-'+String(ctx.ev.mo+1).padStart(2,'0')+'-'+String(ctx.ev.day).padStart(2,'0'),
     meeting: AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '',
+    session: ctx.ev.session || '',
     item: it[2] || '', speaker: g('lnSpeaker'),
     said: g('lnSaid'), decisions: g('lnDec'), actions: g('lnAct'), questions: g('lnQ'),
     general: g('lnGen'),
@@ -3703,6 +3741,11 @@ let calY, calM, selDay = null;
 
 $('#calPrev').addEventListener('click', ()=>{ calM--; if(calM<0){calM=11;calY--;} renderMeetings(); });
 $('#calNext').addEventListener('click', ()=>{ calM++; if(calM>11){calM=0;calY++;} renderMeetings(); });
+if($('#notesPick')) $('#notesPick').addEventListener('change', e=>{
+  notesPickIdx = Number(e.target.value) || 0;
+  if(notesCache) paintNotesList(notesCache);
+});
+
 document.addEventListener('click', e=>{
   const b = e.target.closest('[data-pick]');
   if(b){ agendaPick = +b.dataset.pick; agendaPickTouched = true; renderAgenda(); }
@@ -4025,6 +4068,7 @@ async function fetchGated(){
 
 /* ---- meeting notes archive, fetched from the sheet ---- */
 let notesCache = null;
+let notesPickIdx = 0;
 
 function esc(t){ return String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
 
@@ -4051,19 +4095,48 @@ async function loadNotes(force){
 }
 
 function paintNotesList(items){
-  const status = $('#notesStatus'), list = $('#notesList');
+  const status = $('#notesStatus'), list = $('#notesList'), wrap = $('#notesPickWrap');
   if(!items.length){
     status.hidden = false;
     status.textContent = 'No notes have been posted yet.';
     list.innerHTML = '';
+    if(wrap) wrap.hidden = true;
     return;
   }
   status.hidden = true;
-  list.innerHTML = items.map((n,i)=>`
+
+  // group by meeting — both sessions of the same meeting belong together,
+  // which is the whole point: you can read what the other room decided
+  const groups = [];
+  const byKey = {};
+  items.forEach(n=>{
+    const k = n.date + '|' + n.meeting;
+    if(!byKey[k]){ byKey[k] = {key:k, date:n.date, iso:n.iso, meeting:n.meeting, sessions:[]}; groups.push(byKey[k]); }
+    byKey[k].sessions.push(n);
+  });
+
+  const sel = $('#notesPick');
+  if(wrap && sel){
+    wrap.hidden = groups.length < 2;
+    const keep = sel.value;
+    sel.innerHTML = groups.map((g,i)=>
+      `<option value="${i}">${esc(g.meeting)} — ${esc(g.date)}</option>`).join('');
+    if(keep && keep < groups.length) sel.value = keep;
+    if(notesPickIdx >= groups.length) notesPickIdx = 0;
+    sel.value = String(notesPickIdx);
+    const g = groups[notesPickIdx];
+    const help = $('#notesPickHelp');
+    if(help) help.textContent = g.sessions.length > 1
+      ? 'Both sessions of this meeting are below.'
+      : (g.sessions[0].session ? 'Notes from the ' + g.sessions[0].session + '.' : '');
+  }
+
+  const g = groups[Math.min(notesPickIdx, groups.length-1)];
+  list.innerHTML = g.sessions.map((n,i)=>`
     <details class="mnote"${i===0?' open':''}>
       <summary>
-        <span class="mdate">${esc(n.date)}</span>
-        <span class="mkind">${esc(n.meeting)}</span>
+        <span class="mdate">${esc(n.session || n.meeting)}</span>
+        <span class="mkind">${esc(n.date)}</span>
       </summary>
       <div class="mnote-b">
         ${n.attendance ? '<p class="att"><strong>Attendance:</strong> '+esc(n.attendance)+'</p>' : ''}

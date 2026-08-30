@@ -15,7 +15,7 @@
 :root{
   --paper:#FFFFF8;--ink:#49420C;--ink-soft:#6B6222;--stone:#736C42;
   --sky:#64D5FF;--green-dk:#247227;--green-md:#519A66;--orange:#FAAA04;--yellow:#FED786;
-  --line:#E4E1CC;--raised:#FFFFFF;--r:14px;--nav-h:74px;
+  --brick:#9B2C1A;--line:#E4E1CC;--raised:#FFFFFF;--r:14px;--nav-h:74px;
   --display:'League Spartan','Helvetica Neue',sans-serif;
   --body:'Inter','Helvetica Neue',Arial,sans-serif;
 }
@@ -210,7 +210,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .dots{display:flex;gap:2.5px;height:6px;align-items:center}
 .dot{width:6px;height:6px;border-radius:50%}
 .dot.nm{background:var(--sky)}.dot.fu{background:var(--green-md)}.dot.sx{background:var(--orange)}
-.dot.ac{background:var(--yellow);box-shadow:inset 0 0 0 1.5px #B07C14}
+.dot.ac{background:var(--brick)}
 .dot.oc{background:var(--green-dk)}
 
 .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
@@ -221,7 +221,7 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 .day-panel h3{font-family:var(--display);font-size:17px;margin:0 0 9px;color:var(--green-dk)}
 .ev{background:var(--raised);border:1px solid var(--line);border-left-width:5px;border-radius:11px;padding:13px 15px;margin-bottom:8px}
 .ev.nm{border-left-color:var(--sky)}.ev.fu{border-left-color:var(--green-md)}.ev.sx{border-left-color:var(--orange)}
-.ev.ac{border-left-color:var(--yellow)}
+.ev.ac{border-left-color:var(--brick)}
 .ev.oc{border-left-color:var(--green-dk)}
 .ev h4{font-family:var(--display);font-weight:700;font-size:16.5px;margin:0 0 2px}
 .ev .t1{font-family:var(--display);font-weight:700;font-size:16px;color:var(--green-dk);margin:0 0 2px}
@@ -658,7 +658,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
       <span><i style="background:#519A66"></i>Community</span>
       <span><i style="background:#FAAA04"></i>National gathering</span>
       <span><i style="background:#247227"></i>Organizing Committee</span>
-      <span><i style="background:#FED786;box-shadow:inset 0 0 0 1.5px #B07C14"></i>Events</span>
+      <span><i style="background:#9B2C1A"></i>Events</span>
     </div>
   </div>
 

@@ -779,13 +779,18 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <ol class="steps" id="agendaBody"></ol>
   </div>
 
-  <h2 data-i18n="ag.later.h">Later this season</h2>
-  <p style="font-size:15px;color:var(--ink-soft)">The meetings after the one above.</p>
-  <div id="laterList"></div>
+  <h2>Vote on what's next</h2>
 
-  <div class="card">
-    <h3>Saturday mixer</h3>
-    <p style="font-size:15px;margin:0">No agenda, on purpose. Drop in, say hello, leave when you like.</p>
+  <div id="vtLock" class="lockcard" hidden>
+    <h3>Members only</h3>
+    <p style="font-size:15px;margin:0 0 12px">Voting is for members of the union. Sign in with the email you joined with.</p>
+    <button class="btn sm gold" data-go="auth">Sign in</button>
+  </div>
+
+  <div id="vtGate" hidden>
+    <p style="font-size:15px;color:var(--ink-soft)">Requests waiting on a decision. Your vote is one of many — whoever prepares the agenda uses these to decide what makes the hour.</p>
+    <div id="vtList"></div>
+    <p class="note" id="vtNote"></p>
   </div>
 
   <h2>Ask for time on an agenda</h2>
@@ -895,19 +900,6 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     <div id="lnList"></div>
   </div>
 
-  <h2>Vote on what's next</h2>
-
-  <div id="vtLock" class="lockcard" hidden>
-    <h3>Members only</h3>
-    <p style="font-size:15px;margin:0 0 12px">Voting is for members of the union. Sign in with the email you joined with.</p>
-    <button class="btn sm gold" data-go="auth">Sign in</button>
-  </div>
-
-  <div id="vtGate" hidden>
-    <p style="font-size:15px;color:var(--ink-soft)">Requests waiting on a decision. Your vote is one of many — whoever prepares the agenda uses these to decide what makes the hour.</p>
-    <div id="vtList"></div>
-    <p class="note" id="vtNote"></p>
-  </div>
 </section>
 
 <!-- LEARNING -->
@@ -1243,7 +1235,6 @@ const I18N = {
   'mtg.access.h': {en:'Access', es:''},
   'ag.h1': {en:'Agenda', es:''},
   'ag.notes.h': {en:'Notes from the last meeting', es:''},
-  'ag.later.h': {en:'Later this season', es:''},
   'ab.h1': {en:'About the union', es:''},
   'ab.story.h': {en:'Our story', es:''},
   'ab.values.h': {en:'Our values', es:''},
@@ -3696,17 +3687,6 @@ function renderAgenda(){
 
   const firstKey = first.y+'-'+first.mo+'-'+first.day+'-'+first.kind;
   const seen = new Set([firstKey]);
-  $('#laterList').innerHTML = upcomingMeetings(6).filter(e=>{
-    const k = e.y+'-'+e.mo+'-'+e.day+'-'+e.kind;
-    if(seen.has(k)) return false;
-    seen.add(k); return true;
-  }).slice(0,4).map(e=>`
-    <div class="card" style="padding:14px 16px">
-      <p style="font-size:15px;margin:0"><strong>${e.title}</strong></p>
-      <p style="font-size:14px;color:var(--stone);margin:2px 0 0">${
-        new Intl.DateTimeFormat('en-US',{weekday:'short',month:'long',day:'numeric'}).format(new Date(e.y,e.mo,e.day))
-      }${e.kind==='ac' ? ' · ' + e.where : e.kind==='sx' ? ' · one session' : ' · two sessions'}</p>
-    </div>`).join('');
 }
 
 function renderMeetings(){

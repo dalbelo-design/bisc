@@ -3142,6 +3142,7 @@ function richText(t){
    item that lands in, and counts down.
    ========================================================= */
 let mtHidden = null;   // key of a meeting the person chose to hide
+let mtLastItem = null; // which agenda item the bar is showing
 
 /* ---- demo mode, for testing before a real meeting ----------------
    Add ?timer=demo to the address and the timer pretends the next
@@ -3206,16 +3207,25 @@ function tickTimer(){
   }
 
   const key = run.ev.y+'-'+run.ev.mo+'-'+run.ev.day+'-'+run.ev.kind;
+  // which item are we in
+  let idx = run.items.findIndex(([a,b]) => run.mins >= a && run.mins < b);
+  const past = idx === -1;
+  if(past) idx = run.items.length - 1;
+
+  // Keep the note form on the same item as the countdown. This runs before
+  // the hidden check on purpose — someone can dismiss the bar and still
+  // have their notes follow the meeting.
+  const stamp = key + '#' + idx;
+  if(stamp !== mtLastItem){
+    mtLastItem = stamp;
+    try{ lnFill(); }catch(e){}
+  }
+
   if(mtHidden === key){
     bar.classList.remove('on');
     document.body.classList.remove('mt-showing');
     return;
   }
-
-  // which item are we in
-  let idx = run.items.findIndex(([a,b]) => run.mins >= a && run.mins < b);
-  const past = idx === -1;
-  if(past) idx = run.items.length - 1;
   const [a,b,title] = run.items[idx];
   const next = run.items[idx+1];
 
@@ -3251,7 +3261,7 @@ if($('#mtHide')) $('#mtHide').addEventListener('click', ()=>{
 function startTimer(){
   try{ tickTimer(); }catch(e){ console.error('timer:', e); }
   setInterval(()=>{ try{ tickTimer(); }catch(e){} }, 1000);
-  setInterval(()=>{ try{ lnFill(); }catch(e){} }, 15000);
+  setInterval(()=>{ try{ lnFill(); }catch(e){} }, 30000);   // fallback only
 }
 
 

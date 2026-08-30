@@ -643,7 +643,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <div class="card sky">
     <h3 data-i18n="mtg.two.h">Two sessions, same meeting</h3>
     <p style="font-size:15px;margin:0 0 8px">All meetings run <strong>once a month, in two sessions on the same day</strong>. Same content — come to whichever works.</p>
-    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The Saturday mixer and the Organizing Committee meeting each run once, not twice.</p>
+    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The national gathering and the Organizing Committee meeting each run once, not twice.</p>
   </div>
 
   <div class="cal">
@@ -656,7 +656,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     <div class="legend">
       <span><i style="background:#64D5FF"></i>New member</span>
       <span><i style="background:#519A66"></i>Full union</span>
-      <span><i style="background:#FAAA04"></i>Social mixer</span>
+      <span><i style="background:#FAAA04"></i>National gathering</span>
       <span><i style="background:#247227"></i>Organizing Committee</span>
       <span><i style="background:#FED786;box-shadow:inset 0 0 0 1.5px #B07C14"></i>Events</span>
     </div>
@@ -682,7 +682,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     <p style="font-size:15px;margin:0 0 10px"><strong>Most Wednesdays</strong> — Organizing Committee · 4:00–6:00 PM PT / 7:00–9:00 PM ET · two hours. No meeting on full union week.</p>
     <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT · one hour</p>
     <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Full union meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
-    <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — Saturday mixer, one session · 1:00 PM PT / 4:00 PM ET</p>
+    <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — National gathering, one session · 1:00 PM PT / 4:00 PM ET</p>
   </div>
 
   <h2 data-i18n="mtg.access.h">Access</h2>
@@ -1398,7 +1398,7 @@ const RULES = [
   {id:'oc', kind:'oc', title:'Organizing Committee', session:'One session',
    dow:3, week:null, except:'last', hh:16, mm:0, tz:PT,
    desc:'The committee that runs the union. Two hours. No meeting on full union week.'},
-  {id:'sx-s', kind:'sx', title:'Saturday mixer', session:'One session, everyone together',
+  {id:'sx-s', kind:'sx', title:'National gathering', session:'One session, everyone together',
    dow:6, week:2, hh:13, mm:0, tz:PT,
    desc:'The whole union in one room. Bring your kids, your dog, your lunch.'}
 ];
@@ -2131,7 +2131,7 @@ const MODULES = {
           'The two questions you should be ready for are whether it costs anything and whether it affects their benefits. Know the union\u2019s current answers before your first call.']},
       {h:'Over the first months',
        p:['Check in around week three or four — the point where people drift. One message.',
-          'Nudge them toward one concrete thing: a new member meeting, a working group, a mixer. One, not a menu.',
+          'Nudge them toward one concrete thing: a new member meeting, a working group, the national gathering. One, not a menu.',
           'Then step back. The goal is that they know other members, not that they know you.']},
       {h:'What this is not',
        p:['You are not responsible for their wellbeing, and you are not a crisis service. If someone shares something serious, you can listen, and you should tell the onboarding lead rather than carrying it alone.',
@@ -3051,7 +3051,7 @@ const MEETING_ALIASES = {
   nm: ['new member meeting','new member','new members meeting','new members','nm'],
   fu: ['full union meeting','full union','union meeting','full member meeting','fu'],
   oc: ['organizing committee','organizing committee meeting','oc','oc meeting','organising committee'],
-  sx: ['saturday mixer','mixer','social mixer']
+  sx: ['national gathering','gathering','saturday gathering','saturday mixer','mixer','social mixer']
 };
 
 function meetingMatches(typed, kind){

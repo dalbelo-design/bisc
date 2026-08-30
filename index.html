@@ -450,7 +450,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <button data-go="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg><span data-i18n="nav.home">Home</span></button>
   <button data-go="learn"><svg viewBox="0 0 24 24"><path d="M4 5v14a2 2 0 0 1 2-2h13V3H6a2 2 0 0 0-2 2z"/></svg><span data-i18n="nav.about">About</span></button>
   <button data-go="join"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="nav.join">Join</span></button>
-  <button data-go="meetings"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg><span data-i18n="nav.meetings">Meetings</span></button>
+  <button data-go="meetings"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg><span data-i18n="nav.meetings">Calendar</span></button>
   <button data-go="agenda"><svg viewBox="0 0 24 24"><path d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M8 11h8M8 15h5"/></svg><span data-i18n="nav.agenda">Agenda</span></button>
   <button data-go="learning"><svg viewBox="0 0 24 24"><path d="M12 7v13M12 7a5 5 0 0 0-5-4H3v13h4a5 5 0 0 1 5 4 5 5 0 0 1 5-4h4V3h-4a5 5 0 0 0-5 4z"/></svg><span data-i18n="nav.learning">Learning</span></button>
 </nav>
@@ -645,7 +645,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 
 <!-- MEETINGS -->
 <section class="screen" id="s-meetings">
-  <h1 data-i18n="mtg.h1">Meetings and events</h1>
+  <h1 data-i18n="mtg.h1">Calendar</h1>
   <p class="lede" data-i18n="mtg.lede">All on Zoom. Nothing to download — you join from a browser link.</p>
   <div class="tz-bar"><strong>Times shown in your zone:</strong> <span id="tzName"></span></div>
 
@@ -1162,7 +1162,7 @@ const I18N = {
   'nav.home': {en:'Home', es:''},
   'nav.about': {en:'About', es:''},
   'nav.join': {en:'Join', es:''},
-  'nav.meetings': {en:'Meetings', es:''},
+  'nav.meetings': {en:'Calendar', es:''},
   'nav.agenda': {en:'Agenda', es:''},
   'nav.learning': {en:'Learning', es:''},
   'home.h1': {en:'You got the money.<br>Now let\'s get the power.', es:''},
@@ -1197,7 +1197,7 @@ const I18N = {
   'ph.lang': {en:'Which language?', es:''},
   'f.submit': {en:'Join the union', es:''},
   'f.note': {en:'Free, and always will be. We won\'t flood your inbox. You can step back any time and still be a member. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.', es:''},
-  'mtg.h1': {en:'Meetings and events', es:''},
+  'mtg.h1': {en:'Calendar', es:''},
   'mtg.lede': {en:'All on Zoom. Nothing to download — you join from a browser link.', es:''},
   'mtg.two.h': {en:'Two sessions, same meeting', es:''},
   'mtg.rhythm.h': {en:'The rhythm', es:''},
@@ -3832,6 +3832,10 @@ async function loadAll(){
   try{ const m=await window.storage.get('bisc:me',false); me=m?JSON.parse(m.value):null; }catch(e){ me=null; }
   paintContacts();
   paintAuth();
+  refreshStatus().then(()=>{
+    loadNotes(true); loadVotes();
+    loadAgendas().then(()=>renderAgenda());
+  });
   try{ const l=await window.storage.get('bisc:lang',false); if(l && l.value==='es') LANG='es'; }catch(e){}
   applyLang();
   renderMeetings(); renderAgenda();
@@ -4007,6 +4011,29 @@ function memberRank(){
   return STATUS_RANK.hasOwnProperty(k) ? STATUS_RANK[k] : 0;
 }
 function isActivated(){ return signedIn() && memberRank() >= 1; }
+
+
+/* Status can change on the sheet at any time — someone gets activated,
+   or joins the Organizing Committee. Ask the server on every load rather
+   than trusting whatever was stored when they signed in. */
+async function refreshStatus(){
+  if(!signedIn()) return;
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'auth_check', token: AUTH.token})});
+    const out = await r.json().catch(()=>null);
+    if(out && out.ok){
+      if(out.status && out.status !== AUTH.status){
+        AUTH.status = out.status;
+        try{ localStorage.setItem('bisc.auth', JSON.stringify(AUTH)); }catch(e){}
+      }
+      if(!AUTH.status){ AUTH.status = out.status || 'New member'; }
+    } else if(out && out.ok === false){
+      saveAuth(null);            // token revoked or expired on the server
+    }
+  }catch(e){ /* offline — keep what we have */ }
+  paintAuth();
+}
 
 function paintAuth(){
   const inB = signedIn();
@@ -4201,7 +4228,7 @@ const APP_NAME = 'Member companion';
   if(!FEEDBACK_ON){ if(btn) btn.remove(); if(wrap) wrap.remove(); return; }
   if(!btn || !wrap) return;   // never let a missing element break the app
 
-  const PAGES = {home:'Home', learn:'About', join:'Join', meetings:'Meetings and events',
+  const PAGES = {home:'Home', learn:'About', join:'Join', meetings:'Calendar',
                  agenda:'Agenda', learning:'Learning', module:'Learning module', welcome:'After joining'};
   let kind = '', selected = '';
 

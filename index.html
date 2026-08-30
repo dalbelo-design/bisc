@@ -675,6 +675,12 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 
   <h2>Past meeting notes</h2>
 
+  <div class="lockcard" id="notesWait" hidden>
+    <h3>You're in the next group</h3>
+    <p style="font-size:15px;margin:0 0 8px">You're a member. Meetings, agendas and notes open up once your group comes round and your BISC Buddy has walked you in.</p>
+    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
+  </div>
+
   <div id="notesLock" class="lockcard" hidden>
     <h3>Members only</h3>
     <p style="font-size:15px;margin:0 0 12px">Notes from past meetings are for members of the union. Sign in with the email you joined with — it takes about a minute.</p>
@@ -721,6 +727,12 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 
   <h2>Vote on what's next</h2>
 
+  <div class="lockcard" id="vtWait" hidden>
+    <h3>You're in the next group</h3>
+    <p style="font-size:15px;margin:0 0 8px">You're a member. Meetings, agendas and notes open up once your group comes round and your BISC Buddy has walked you in.</p>
+    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
+  </div>
+
   <div id="vtLock" class="lockcard" hidden>
     <h3>Members only</h3>
     <p style="font-size:15px;margin:0 0 12px">Voting is for members of the union. Sign in with the email you joined with.</p>
@@ -740,6 +752,12 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <h2>Ask for time on an agenda</h2>
+
+  <div class="lockcard" id="reqWait" hidden>
+    <h3>You're in the next group</h3>
+    <p style="font-size:15px;margin:0 0 8px">You're a member. Meetings, agendas and notes open up once your group comes round and your BISC Buddy has walked you in.</p>
+    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
+  </div>
 
   <div id="reqLock" class="lockcard" hidden>
     <h3>Members only</h3>
@@ -788,6 +806,12 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <h2>Meeting notes</h2>
+
+  <div class="lockcard" id="lnWait" hidden>
+    <h3>You're in the next group</h3>
+    <p style="font-size:15px;margin:0 0 8px">You're a member. Meetings, agendas and notes open up once your group comes round and your BISC Buddy has walked you in.</p>
+    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
+  </div>
 
   <div id="lnLock" class="lockcard" hidden>
     <h3>Members only</h3>
@@ -1533,6 +1557,7 @@ function monthEvents(y, mo){
       (map[d] = map[d] || []).push({
         kind:'ac', title:e.title, where:e.where, allDay:true, day:d, y, mo,
         when: e.start===e.end ? fmtDay(sy,sm,sd) : fmtRange(sy,sm,sd,ey,em,ed),
+        lead: e.lead || '',
         link: e.hasToolkit ? {url:e.url, label:e.label, gated:e.gated} : null,
         dt:new Date(y,mo,d,9,0)
       });
@@ -3053,7 +3078,7 @@ function upcomingMeetings(limit){
 let agendaCache = null;
 
 async function loadAgendas(){
-  if(!signedIn()){ agendaCache = []; return agendaCache; }   // members only
+  if(!isActivated()){ agendaCache = []; return agendaCache; }   // activated members only
   if(agendaCache) return agendaCache;
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -3084,7 +3109,7 @@ function meetingMatches(typed, kind){
 }
 
 function postedAgendaFor(ev){
-  if(!signedIn()) return null;
+  if(!isActivated()) return null;
   if(!agendaCache || !agendaCache.length) return null;
   const key = ev.y + '-' + String(ev.mo+1).padStart(2,'0') + '-' + String(ev.day).padStart(2,'0');
   const rows = agendaCache.filter(a =>
@@ -3304,9 +3329,7 @@ function vtDate(){
 async function loadVotes(){
   const gate = $('#vtGate'), lock = $('#vtLock');
   if(!gate) return;
-  const inB = signedIn();
-  gate.hidden = !inB; lock.hidden = inB;
-  if(!inB) return;
+  if(!isActivated()) return;
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({type:'votes_fetch', token: AUTH.token, date: vtDate()})});
@@ -3424,9 +3447,7 @@ function lnContext(){
 function lnFill(){
   const gate = $('#lnGate'), lock = $('#lnLock');
   if(!gate) return;
-  const inB = signedIn();
-  gate.hidden = !inB; lock.hidden = inB;
-  if(!inB) return;
+  if(!isActivated()) return;
 
   const ctx = lnContext();
   const sel = $('#lnItem');
@@ -3526,10 +3547,7 @@ lnPaint();
 function paintRequestForm(){
   const gate = $('#reqGate'), lock = $('#reqLock');
   if(!gate) return;
-  const inB = signedIn();
-  gate.hidden = !inB;
-  lock.hidden = inB;
-  if(!inB) return;
+  if(!isActivated()) return;
 
   const fac = $('#rqFac');
   if(fac && !fac.value && AUTH && AUTH.name) fac.value = AUTH.name;
@@ -3719,6 +3737,7 @@ function renderDayPanel(){
     <div class="ev ${e.kind}">
       <h4>${e.title}</h4>
       <p class="t1">${e.when}</p>
+      ${e.lead ? `<p class="t2"><strong>${e.lead}</strong></p>` : ''}
       <p class="t2">${e.where}</p>
       ${linkFor(e)}
     </div>` : `
@@ -3977,6 +3996,18 @@ function saveAuth(a){
 }
 function signedIn(){ return !!(AUTH && new Date(AUTH.expires) > new Date()); }
 
+// A New member can sign in but does not get meetings, agendas or notes
+// until someone activates them. Anything unrecognised counts as new.
+const STATUS_RANK = {'new member':0,'new':0,'pending':0,'waiting':0,'':0,
+  'member':1,'active member':1,'active':1,'founding member':1,'founding':1,
+  'organizing committee':2,'organizing committee member':2,'oc':2,
+  'steering committee':3,'steering committee member':3,'steering':3};
+function memberRank(){
+  const k = String((AUTH && AUTH.status) || '').trim().toLowerCase();
+  return STATUS_RANK.hasOwnProperty(k) ? STATUS_RANK[k] : 0;
+}
+function isActivated(){ return signedIn() && memberRank() >= 1; }
+
 function paintAuth(){
   const inB = signedIn();
   $('#authBtn').textContent = inB ? (AUTH.name || 'Account') : 'Sign in';
@@ -3985,9 +4016,16 @@ function paintAuth(){
   $('#authStep2').hidden = true;
   $('#authDone').hidden = !inB;
   if(inB) $('#whoName').textContent = AUTH.name ? 'Signed in as ' + AUTH.name : 'Signed in';
-  const ng = $('#notesGate'), nl = $('#notesLock');
-  if(ng) ng.hidden = !inB;
-  if(nl) nl.hidden = inB;
+  const act = isActivated();
+  [['notesGate','notesLock','notesWait'],
+   ['vtGate','vtLock','vtWait'],
+   ['lnGate','lnLock','lnWait'],
+   ['reqGate','reqLock','reqWait']].forEach(([g,l,w])=>{
+    const G=$('#'+g), L=$('#'+l), W=$('#'+w);
+    if(G) G.hidden = !act;             // the real thing
+    if(L) L.hidden = inB;              // signed out
+    if(W) W.hidden = !(inB && !act);   // signed in, not yet activated
+  });
   if(typeof renderMeetings === 'function') renderMeetings();
 }
 
@@ -4030,7 +4068,7 @@ $('#verifyCode').addEventListener('click', async ()=>{
   }catch(e){}
   b.disabled = false; b.textContent = 'Sign in';
   if(out && out.ok){
-    saveAuth({token: out.token, name: out.name, expires: out.expires});
+    saveAuth({token: out.token, name: out.name, status: out.status || 'New member', expires: out.expires});
     msg.textContent = '';
     $('#codeInput').value = '';
     notesCache = null;
@@ -4078,7 +4116,7 @@ function noteBlock(label, arr){
 }
 
 async function loadNotes(force){
-  if(!signedIn()) return;
+  if(!isActivated()) return;
   const status = $('#notesStatus'), list = $('#notesList');
   if(!status) return;
   if(notesCache && !force){ paintNotesList(notesCache); return; }

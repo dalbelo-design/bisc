@@ -279,6 +279,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-btn.no.on{background:#8A3216;border-color:#8A3216;color:#fff}
 .vt-btn:disabled{opacity:.55;cursor:default}
 .vt-tally{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);margin-left:auto}
+.vt-tally.quiet{font-weight:600;color:var(--stone);opacity:.8}
 .vt-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:11px;display:flex}
 .vt-bar i{display:block;height:100%}
 .vt-bar .y{background:var(--green-md)}
@@ -3377,12 +3378,19 @@ function vtPaint(){
     if(note) note.textContent = 'Nothing waiting on a vote for this meeting.';
     return;
   }
-  if(note) note.textContent = 'You can change your vote until the agenda is set.';
+  const anyHidden = vtItems.some(v=>!v.revealed);
+  if(note) note.textContent = anyHidden
+    ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. You can change your vote until the agenda is set.'
+    : 'You can change your vote until the agenda is set.';
   const esc = t => String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   list.innerHTML = vtItems.map(v=>{
-    const total = v.yes + v.no;
+    const cast = v.cast || 0;
+    const total = v.revealed ? (v.yes + v.no) : 0;
     const yPct = total ? (v.yes/total*100) : 0;
     const nPct = total ? (v.no/total*100) : 0;
+    const tallyText = v.revealed
+      ? (total ? v.yes+' yes \u00b7 '+v.no+' no' : 'no votes')
+      : (cast ? cast + (cast===1 ? ' vote cast' : ' votes cast') : 'no votes yet');
     const bits = [v.facilitator && esc(v.facilitator), v.minutes && (v.minutes + ' min'), v.by && esc(v.by)]
       .filter(Boolean).join(' \u00b7 ');
     return `<div class="vt-card">
@@ -3392,9 +3400,9 @@ function vtPaint(){
       <div class="vt-row">
         <button class="vt-btn yes${v.mine==='yes'?' on':''}" data-vote="yes" data-id="${v.id}">Yes</button>
         <button class="vt-btn no${v.mine==='no'?' on':''}" data-vote="no" data-id="${v.id}">No</button>
-        <span class="vt-tally">${total ? v.yes+' yes \u00b7 '+v.no+' no' : 'no votes yet'}</span>
+        <span class="vt-tally${v.revealed?'':' quiet'}">${tallyText}</span>
       </div>
-      ${total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
+      ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
     </div>`;
   }).join('');
 }
@@ -3405,10 +3413,13 @@ document.addEventListener('click', async e=>{
   vtBusy = true;
   const id = b.dataset.id, vote = b.dataset.vote;
   const v = vtItems.find(x=>x.id===id);
-  if(v){                                   // show it straight away
-    if(v.mine === 'yes') v.yes--; if(v.mine === 'no') v.no--;
+  if(v){                                   // show the choice straight away
+    if(!v.mine) v.cast = (v.cast || 0) + 1;
+    if(v.revealed){
+      if(v.mine === 'yes') v.yes--; if(v.mine === 'no') v.no--;
+      if(vote === 'yes') v.yes++; else v.no++;
+    }
     v.mine = vote;
-    if(vote === 'yes') v.yes++; else v.no++;
     vtPaint();
   }
   try{

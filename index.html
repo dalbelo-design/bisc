@@ -742,7 +742,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <ol class="steps" id="agendaBody"></ol>
   </div>
 
-  <h2 class="fold" id="vtFold"><span>What we're deciding</span><span class="fold-n" id="vtCount"></span><span class="fold-x"></span></h2>
+  <h2 class="fold open" id="vtFold"><span>What we're deciding</span><span class="fold-n" id="vtCount"></span><span class="fold-x"></span></h2>
 
   <div class="lockcard" id="vtWait" hidden>
     <h3>You're in the next group</h3>
@@ -3454,7 +3454,11 @@ function vtPaint(){
     if(note) note.textContent = vtError || 'Nothing is waiting on a vote right now.';
     const w = $('#vtDecided'); if(w) w.hidden = true;
     const b0 = $('#vtCount'); if(b0) b0.textContent = '';
-    if(vtFolded === null) vtSetFold(false);
+    if(vtFolded === null){
+      let st = null;
+      try{ st = localStorage.getItem('bisc.vtFold'); }catch(e){}
+      vtSetFold(st !== '1');
+    }
     return;
   }
   // anything revealed is a settled outcome — show it separately so the
@@ -3479,9 +3483,11 @@ function vtPaint(){
   const badge = $('#vtCount');
   if(badge) badge.textContent = waiting ? String(waiting) : '';
   if(vtFolded === null){
+    // open unless the person collapsed it themselves — this is the part of
+    // the page people are meant to act on, so it should not hide itself
     let stored = null;
     try{ stored = localStorage.getItem('bisc.vtFold'); }catch(e){}
-    vtSetFold(waiting > 0 && stored !== '1');
+    vtSetFold(stored !== '1');
   }
 
   const anyHidden = vtItems.some(v=>!v.revealed);

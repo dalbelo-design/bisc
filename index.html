@@ -276,6 +276,14 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-out-i{flex:1;font-size:15px;min-width:0}
 .vt-out-n{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);flex:0 0 auto}
 
+h2.fold{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+h2.fold .fold-x{margin-left:auto;color:var(--orange);font-size:26px;line-height:.7;font-weight:700}
+h2.fold .fold-x::after{content:'+'}
+h2.fold.open .fold-x::after{content:'\2013'}
+.fold-n{font-family:var(--display);font-weight:700;font-size:12.5px;letter-spacing:.04em;
+  background:var(--orange);color:var(--ink);border-radius:99px;padding:3px 9px;text-transform:none}
+.fold-n:empty{display:none}
+
 .vt-kind{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--green-md);margin:0 0 4px}
 .vt-card.decision{border-left-color:var(--orange)}
@@ -731,7 +739,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <ol class="steps" id="agendaBody"></ol>
   </div>
 
-  <h2>What we're deciding</h2>
+  <h2 class="fold" id="vtFold"><span>What we're deciding</span><span class="fold-n" id="vtCount"></span><span class="fold-x"></span></h2>
 
   <div class="lockcard" id="vtWait" hidden>
     <h3>You're in the next group</h3>
@@ -746,6 +754,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <div id="vtGate" hidden>
+    <div id="vtBody">
     <p style="font-size:15px;color:var(--ink-soft)">What the community is putting to a vote — things members have asked to take on, and requests for time on the next agenda.</p>
     <div id="vtList"></div>
     <p class="note" id="vtNote"></p>
@@ -755,9 +764,10 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
       <p style="font-size:14px;color:var(--stone);margin:0 0 10px">How the room voted, once results were shown.</p>
       <div id="vtDecidedList"></div>
     </div>
+    </div>
   </div>
 
-  <h2>Ask for time on an agenda</h2>
+  <h2 class="fold" id="rqFold"><span>Ask for time on an agenda</span><span class="fold-x"></span></h2>
 
   <div class="lockcard" id="reqWait" hidden>
     <h3>You're in the next group</h3>
@@ -772,6 +782,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <div id="reqGate" hidden>
+    <div id="rqBody">
     <p style="font-size:15px;color:var(--ink-soft)">It goes to whoever is preparing that agenda. They decide what goes on and in what order — you will hear back either way.</p>
     <div class="card" id="reqCard">
       <div class="f" style="margin-bottom:16px">
@@ -817,9 +828,10 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
       <div class="err" id="e-rqSend" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
       <p class="note">Nothing appears on the agenda until the person preparing it says so.</p>
     </div>
+    </div>
   </div>
 
-  <h2>Meeting notes</h2>
+  <h2 class="fold" id="lnFold"><span>Meeting notes</span><span class="fold-n" id="lnCount"></span><span class="fold-x"></span></h2>
 
   <div class="lockcard" id="lnWait" hidden>
     <h3>You're in the next group</h3>
@@ -834,6 +846,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <div id="lnGate" hidden>
+    <div id="lnBody">
     <p style="font-size:15px;color:var(--ink-soft)">The agenda item and who is leading it fill in on their own. Write only what matters — saves on this phone straight away, sends when you have signal.</p>
 
     <div class="ln-sync">
@@ -882,6 +895,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
     </div>
 
     <div id="lnList"></div>
+    </div>
   </div>
 
 </section>
@@ -3388,6 +3402,47 @@ async function loadVotes(){
   vtPaint();
 }
 
+
+/* The deciding section folds away, but opens itself whenever something
+   is waiting on your vote — collapsed by default would mean nobody votes. */
+let vtFolded = null;
+function vtSetFold(open){
+  const h = $('#vtFold'), b = $('#vtBody');
+  if(!h || !b) return;
+  h.classList.toggle('open', open);
+  b.hidden = !open;
+}
+if($('#vtFold')) $('#vtFold').addEventListener('click', ()=>{
+  const nowOpen = !$('#vtFold').classList.contains('open');
+  vtFolded = !nowOpen;
+  vtSetFold(nowOpen);
+  try{ localStorage.setItem('bisc.vtFold', vtFolded ? '1' : '0'); }catch(e){}
+});
+
+
+/* Same folding for the note form and the request form. Notes open while
+   a meeting is running; the request form stays shut until wanted. Both
+   remember what you chose on this device. */
+function makeFold(headId, bodyId, key, openByDefault){
+  const h = $('#'+headId), b = $('#'+bodyId);
+  if(!h || !b) return;
+  let stored = null;
+  try{ stored = localStorage.getItem(key); }catch(e){}
+  const open = stored === null ? openByDefault : stored === '0';
+  h.classList.toggle('open', open);
+  b.hidden = !open;
+  h.addEventListener('click', ()=>{
+    const nowOpen = !h.classList.contains('open');
+    h.classList.toggle('open', nowOpen);
+    b.hidden = !nowOpen;
+    try{ localStorage.setItem(key, nowOpen ? '0' : '1'); }catch(e){}
+  });
+}
+
+makeFold('lnFold', 'lnBody', 'bisc.lnFold',
+         !!(typeof runningMeeting === 'function' && runningMeeting()));
+makeFold('rqFold', 'rqBody', 'bisc.rqFold', false);
+
 function vtPaint(){
   const list = $('#vtList'), note = $('#vtNote');
   if(!list) return;
@@ -3395,6 +3450,8 @@ function vtPaint(){
     list.innerHTML = '';
     if(note) note.textContent = vtError || 'Nothing is waiting on a vote right now.';
     const w = $('#vtDecided'); if(w) w.hidden = true;
+    const b0 = $('#vtCount'); if(b0) b0.textContent = '';
+    if(vtFolded === null) vtSetFold(false);
     return;
   }
   // anything revealed is a settled outcome — show it separately so the
@@ -3412,6 +3469,16 @@ function vtPaint(){
         <span class="vt-out-n">${v.yes}\u2013${v.no}</span>
       </div>`;
     }).join('');
+  }
+
+  // how many are open and not yet voted on by you — that is the badge
+  const waiting = vtItems.filter(v=>!v.closed && !v.mine).length;
+  const badge = $('#vtCount');
+  if(badge) badge.textContent = waiting ? String(waiting) : '';
+  if(vtFolded === null){
+    let stored = null;
+    try{ stored = localStorage.getItem('bisc.vtFold'); }catch(e){}
+    vtSetFold(waiting > 0 && stored !== '1');
   }
 
   const anyHidden = vtItems.some(v=>!v.revealed);
@@ -3583,8 +3650,7 @@ if($('#lnSave')) $('#lnSave').addEventListener('click', ()=>{
 function lnPaint(){
   const unsent = lnNotes.filter(n=>!n.sent).length;
   const c = $('#lnCount');
-  if(c) c.textContent = unsent ? unsent + (unsent===1?' note not sent':' notes not sent')
-                               : (lnNotes.length ? 'All sent' : 'Nothing yet');
+  if(c) c.textContent = unsent ? String(unsent) : '';
   if($('#lnSend')) $('#lnSend').disabled = !unsent;
   const list = $('#lnList');
   if(!list) return;

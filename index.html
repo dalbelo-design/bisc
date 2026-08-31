@@ -3540,7 +3540,7 @@ function vtPaint(){
   const esc = t => String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   const ordered = vtItems.slice().sort((a,b)=>
     (a.closed?1:0)-(b.closed?1:0) || String(a.date).localeCompare(String(b.date)));
-  list.innerHTML = ordered.map(v=>{
+  list.innerHTML = ordered.map(v=>{ try{
     const cast = v.cast || 0;
     const total = v.revealed ? (v.yes + v.no) : 0;
     const yPct = total ? (v.yes/total*100) : 0;
@@ -3548,9 +3548,17 @@ function vtPaint(){
     const tallyText = v.revealed
       ? (total ? v.yes+' yes \u00b7 '+v.no+' no' : 'no votes')
       : (cast ? cast + (cast===1 ? ' vote cast' : ' votes cast') : 'no votes yet');
-    const when = v.date ? (()=>{ const [y,m,d]=v.date.split('-').map(Number);
-      return new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'})
-        .format(new Date(y,m-1,d)); })() : '';
+    // a Date cell that is not a real date used to throw here and wipe the
+    // whole list, so fall back to showing whatever was typed
+    const when = (()=>{
+      const raw = String(v.date || '').trim();
+      if(!raw) return '';
+      const [y,m,d] = raw.split('-').map(Number);
+      if(!y || !m || !d) return raw;
+      const dt = new Date(y, m-1, d);
+      if(isNaN(dt)) return raw;
+      return new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'}).format(dt);
+    })();
     const isDec = v.kind === 'Decision';
     const bits = [when && esc(when), v.facilitator && esc(v.facilitator),
       (!isDec && v.minutes) && (v.minutes + ' min'), v.by && esc(v.by)]
@@ -3569,7 +3577,11 @@ function vtPaint(){
         : v.mine ? '<p class="vt-hint">Tap '+v.mine+' again to withdraw your vote.</p>' : ''}
       ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
     </div>`;
-  }).join('');
+  }catch(err){
+    console.error('vote card failed', v && v.id, err);
+    return `<div class="vt-card"><h4>${esc((v && v.item) || 'This item could not be shown')}</h4>
+      <p class="vt-meta">Something is wrong with this row in the sheet \u2014 check its date.</p></div>`;
+  } }).join('');
 }
 
 document.addEventListener('click', e=>{

@@ -3430,10 +3430,10 @@ function vtPaint(){
     const when = v.date ? (()=>{ const [y,m,d]=v.date.split('-').map(Number);
       return new Intl.DateTimeFormat('en-US',{weekday:'short',month:'short',day:'numeric'})
         .format(new Date(y,m-1,d)); })() : '';
+    const isDec = v.kind === 'Decision';
     const bits = [when && esc(when), v.facilitator && esc(v.facilitator),
       (!isDec && v.minutes) && (v.minutes + ' min'), v.by && esc(v.by)]
       .filter(Boolean).join(' \u00b7 ');
-    const isDec = v.kind === 'Decision';
     return `<div class="vt-card${isDec?' decision':''}">
       <p class="vt-kind">${isDec ? 'Decision' : 'For the agenda'}</p>
       <h4>${esc(v.item)}</h4>
@@ -3446,8 +3446,6 @@ function vtPaint(){
       </div>
       ${v.closed ? '<p class="vt-hint">Voting has closed on this one.</p>'
         : v.mine ? '<p class="vt-hint">Tap '+v.mine+' again to withdraw your vote.</p>' : ''}
-      <div style="display:none">
-      </div>
       ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
     </div>`;
   }).join('');

@@ -3331,6 +3331,7 @@ function startTimer(){
    replaces your earlier vote.
    ========================================================= */
 let vtItems = [];
+let vtError = '';
 let vtBusy = false;
 
 
@@ -3361,12 +3362,24 @@ async function loadVotes(){
   const gate = $('#vtGate'), lock = $('#vtLock');
   if(!gate) return;
   if(!isActivated()) return;
+  vtError = '';
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({type:'votes_fetch', token: AUTH.token})});
     const out = await r.json().catch(()=>null);
-    vtItems = (out && out.ok) ? out.items : [];
-  }catch(e){ vtItems = []; }
+    if(out && out.ok){ vtItems = out.items || []; }
+    else {
+      vtItems = [];
+      // say what actually went wrong rather than reporting an empty ballot
+      vtError = out && out.error === 'not activated'
+        ? 'Your membership is not activated yet, so voting is closed to you for now.'
+        : out && out.error === 'not signed in'
+          ? 'Your sign-in has expired. Sign in again to vote.'
+          : out && out.error
+            ? 'Could not load the ballot (' + out.error + ').'
+            : 'Could not reach the server. Check your connection and reload.';
+    }
+  }catch(e){ vtItems = []; vtError = 'Could not reach the server. Check your connection and reload.'; }
   vtPaint();
 }
 
@@ -3375,7 +3388,8 @@ function vtPaint(){
   if(!list) return;
   if(!vtItems.length){
     list.innerHTML = '';
-    if(note) note.textContent = 'Nothing waiting on a vote for this meeting.';
+    if(note) note.textContent = vtError || 'Nothing is waiting on a vote right now.';
+    const w = $('#vtDecided'); if(w) w.hidden = true;
     return;
   }
   // anything revealed is a settled outcome — show it separately so the
@@ -4217,7 +4231,11 @@ async function loadNotes(force){
   status.textContent = 'Loading…';
   const res = await fetchGated();
   if(!res || !res.ok){
-    status.textContent = 'Could not load notes just now. Check your connection and try again.';
+    status.textContent = res && res.error === 'not activated'
+      ? 'Your membership is not activated yet, so past notes are closed to you for now.'
+      : res && res.error === 'not signed in'
+        ? 'Your sign-in has expired. Sign in again to read past notes.'
+        : 'Could not load notes just now. Check your connection and try again.';
     return;
   }
   notesCache = res.items || [];

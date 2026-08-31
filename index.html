@@ -3332,7 +3332,7 @@ function startTimer(){
    ========================================================= */
 let vtItems = [];
 let vtError = '';
-let vtBusy = false;
+const vtTimers = {};
 
 
 /* Items are presented and voted at one meeting, then land on the next
@@ -3358,10 +3358,13 @@ function votingClosesFor(targetISO){
   return (best || target).toISOString();
 }
 
+let vtLoading = false;
 async function loadVotes(){
   const gate = $('#vtGate'), lock = $('#vtLock');
   if(!gate) return;
   if(!isActivated()) return;
+  if(vtLoading) return;
+  vtLoading = true;
   vtError = '';
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -3369,7 +3372,8 @@ async function loadVotes(){
     const out = await r.json().catch(()=>null);
     if(out && out.ok){ vtItems = out.items || []; }
     else {
-      vtItems = [];
+      // keep whatever is already showing rather than blanking the ballot
+      if(!vtItems.length) vtItems = [];
       // say what actually went wrong rather than reporting an empty ballot
       vtError = out && out.error === 'not activated'
         ? 'Your membership is not activated yet, so voting is closed to you for now.'
@@ -3379,7 +3383,8 @@ async function loadVotes(){
             ? 'Could not load the ballot (' + out.error + ').'
             : 'Could not reach the server. Check your connection and reload.';
     }
-  }catch(e){ vtItems = []; vtError = 'Could not reach the server. Check your connection and reload.'; }
+  }catch(e){ vtError = 'Could not reach the server — showing what was last loaded.'; }
+  vtLoading = false;
   vtPaint();
 }
 
@@ -3451,36 +3456,45 @@ function vtPaint(){
   }).join('');
 }
 
-document.addEventListener('click', async e=>{
+document.addEventListener('click', e=>{
   const b = e.target.closest('[data-vote]');
-  if(!b || vtBusy) return;
-  vtBusy = true;
+  if(!b) return;
   const id = b.dataset.id;
   const v = vtItems.find(x=>x.id===id);
-  if(v && v.closed){ vtBusy = false; return; }
-  // tapping your own choice again withdraws it — an abstention
-  const vote = (v && v.mine === b.dataset.vote) ? 'none' : b.dataset.vote;
+  if(!v || v.closed) return;
 
-  if(v){                                   // show the choice straight away
-    const had = v.mine === 'yes' || v.mine === 'no';
-    const now = vote === 'yes' || vote === 'no';
-    if(!had && now) v.cast = (v.cast || 0) + 1;
-    if(had && !now) v.cast = Math.max(0, (v.cast || 1) - 1);
-    if(v.revealed){
-      if(v.mine === 'yes') v.yes--; else if(v.mine === 'no') v.no--;
-      if(vote === 'yes') v.yes++; else if(vote === 'no') v.no++;
-    }
-    v.mine = (vote === 'none') ? '' : vote;
-    vtPaint();
+  // tapping your own choice again withdraws it
+  const vote = (v.mine === b.dataset.vote) ? 'none' : b.dataset.vote;
+
+  const had = v.mine === 'yes' || v.mine === 'no';
+  const now = vote === 'yes' || vote === 'no';
+  if(!had && now) v.cast = (v.cast || 0) + 1;
+  if(had && !now) v.cast = Math.max(0, (v.cast || 1) - 1);
+  if(v.revealed){
+    if(v.mine === 'yes') v.yes--; else if(v.mine === 'no') v.no--;
+    if(vote === 'yes') v.yes++; else if(vote === 'no') v.no++;
   }
-  try{
-    await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({type:'vote_cast', token: AUTH.token, id, vote,
-        date: v ? v.date : '', meeting: v ? v.meeting : '', item: v ? v.item : ''})});
-  }catch(err){}
-  vtBusy = false;
-  loadVotes();
+  v.mine = (vote === 'none') ? '' : vote;
+  vtPaint();                       // redraw straight away, no waiting
+
+  // send the last state after a short pause, so rapid taps make one write
+  clearTimeout(vtTimers[id]);
+  vtTimers[id] = setTimeout(()=>sendVote(v, vote), 700);
 });
+
+async function sendVote(v, vote){
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({type:'vote_cast', token: AUTH.token, id: v.id, vote,
+        date: v.date || '', meeting: v.meeting || '', item: v.item || ''})});
+    const out = await r.json().catch(()=>null);
+    if(out && out.ok === false && out.error === 'voting closed'){
+      v.closed = true; vtPaint();
+    }
+  }catch(err){
+    // offline — the vote stays shown; it will be sent on the next tap
+  }
+}
 
 /* =========================================================
    LIVE NOTES

@@ -3411,7 +3411,11 @@ function votingClosesFor(targetISO){
       });
     if(best) break;
   }
-  return (best || target).toISOString();
+  // If that meeting has already been and gone — someone requesting time a
+  // day before the target — closing then would shut voting before it ever
+  // opened. Fall back to the target meeting's own start.
+  if(!best || best <= new Date()) best = target;
+  return best.toISOString();
 }
 
 let vtLoading = false;

@@ -277,6 +277,13 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-out-n{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);flex:0 0 auto}
 
 /* the marker sits on the left so a floating button can never cover it */
+.asm{margin-bottom:13px}
+.asm-row{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--green-md);
+  border-radius:var(--r);padding:15px 17px;margin-bottom:9px}
+.asm-row h3{font-family:var(--display);font-weight:800;font-size:17.5px;margin:0 0 3px}
+.asm-row .asm-s{font-size:13.5px;color:var(--stone);margin:0 0 8px;line-height:1.45}
+.asm-row p:last-child{font-size:15px;color:var(--ink-soft);margin:0}
+
 h2.fold{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
 h2.fold .fold-x{order:-1;flex:0 0 auto;width:26px;height:26px;border-radius:7px;
   background:var(--orange);color:var(--ink);font-size:19px;line-height:26px;
@@ -525,7 +532,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
 
   <div class="card sky">
     <h3>It costs nothing, and it never will</h3>
-    <p style="font-size:15px;margin:0">No dues, no fees, no minimum commitment. Show up for what you can, step back when life demands it, and you are still a member.</p>
+    <p style="font-size:15px;margin:0">Show up for what you can, step back when life demands it, and you are still a member.</p>
   </div>
 
   <div class="panel-green">
@@ -541,7 +548,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
 <!-- JOIN -->
 <section class="screen" id="s-join">
   <h1 data-i18n="join.h1">Join</h1>
-  <p class="lede" data-i18n="join.lede">About two minutes. We don't ask you to prove anything.</p>
+  <p class="lede" data-i18n="join.lede">About two minutes.</p>
 
   <div class="panel-green">
   <h2 data-i18n="join.after.h">What happens after you join</h2>
@@ -640,7 +647,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
     </div>
     <button class="btn gold" type="submit" data-i18n="f.submit">Join the union</button>
     <div class="err" id="e-send" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
-    <p class="note" data-i18n="f.note">Free, and always will be. We won't flood your inbox. You can step back any time and still be a member. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.</p>
+    <p class="note" data-i18n="f.note">We won't flood your inbox, and you can step back any time. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.</p>
   </form>
 
 </section>
@@ -1057,6 +1064,37 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
   </div>
 
+  <h2>Where members gather</h2>
+  <p style="font-size:15px;color:var(--ink-soft)">Pilots happened in particular places, and what worked in Jackson is not what worked in Stockton. Assemblies are how that stays true in a national community — four regions to start, each meeting on its own rhythm, each carrying what its members actually know.</p>
+
+  <div class="asm">
+    <div class="asm-row">
+      <h3>Pacific</h3>
+      <p class="asm-s">California · Oregon · Washington · Nevada · Alaska · Hawaii</p>
+      <p>The longest pilot history in the country — Stockton, Compton, Los Angeles, Sonoma. A lot of members here have already been studied, quoted, and moved on from.</p>
+    </div>
+    <div class="asm-row">
+      <h3>South</h3>
+      <p class="asm-s">Texas · Louisiana · Mississippi · Alabama · Arkansas · Tennessee · Kentucky · Georgia · Florida · the Carolinas · Virginia</p>
+      <p>Home to some of the most significant participant-led work anywhere, and to states where the politics of cash assistance are hardest. Both things are true at once.</p>
+    </div>
+    <div class="asm-row">
+      <h3>Midwest &amp; Mountain</h3>
+      <p class="asm-s">Illinois · Michigan · Ohio · Minnesota · Missouri · Colorado · Utah · Montana · and across the plains</p>
+      <p>Big distances, county-level fights, and a lot of members who are the only person from their pilot still organizing. Being findable matters more here than anywhere.</p>
+    </div>
+    <div class="asm-row">
+      <h3>Northeast &amp; Mid-Atlantic</h3>
+      <p class="asm-s">New York · New Jersey · Pennsylvania · New England · Maryland · Delaware · Washington DC</p>
+      <p>Close to where national policy gets written, which is useful and also a trap. The job is making sure members speak for themselves rather than being spoken about nearby.</p>
+    </div>
+  </div>
+
+  <div class="card sky" style="margin-bottom:14px">
+    <p style="font-size:15px;margin:0 0 8px">Four is a starting point, not a settled map. Where enough members organize, a region can become its own assembly — California and the Gulf Coast will likely need to before the others do.</p>
+    <p style="font-size:15px;margin:0">Alongside these, assemblies form around shared experience rather than geography: caregivers, young members, rural members, returning citizens. You can belong to more than one.</p>
+  </div>
+
   <div class="card green"><p style="margin:0"><strong>Inclusion means everyone.</strong> Religion, age, race, gender, economic status — everyone is welcomed here.</p></div>
 
   <h2 data-i18n="ab.values.h">Our values</h2>
@@ -1067,7 +1105,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
   <h2 data-i18n="ab.faq.h">Common questions</h2>
-  <details><summary>Does this cost anything?</summary><p>No. There are no dues and no fees. Membership is free.</p></details>
+  <details><summary>Does this cost anything?</summary><p>No. Membership is free.</p></details>
   <details><summary>Will joining affect my benefits?</summary><p><strong>Draft answer — needs review before launch.</strong> Joining is free and no money changes hands, so there's nothing to report as income. If you have a question about your own situation, ask your BISC Buddy and we'll help you find someone who can answer it properly.</p></details>
   <details><summary>Do I have to prove I was in a pilot?</summary><p>No. You tell us your pilot and we take your word for it. You've been asked to prove enough.</p></details>
   <details><summary>What does membership ask of me?</summary><p>Nothing required. Come to what you can, take on what interests you, step back when life demands it. You stay a member either way.</p></details>
@@ -1205,7 +1243,7 @@ const I18N = {
   'home.why.h': {en:'Why join?', es:''},
   'home.ways.h': {en:'Ways to take part', es:''},
   'join.h1': {en:'Join', es:''},
-  'join.lede': {en:'About two minutes. We don\'t ask you to prove anything.', es:''},
+  'join.lede': {en:'About two minutes.', es:''},
   'join.after.h': {en:'What happens after you join', es:''},
   'join.form.h': {en:'Join us', es:''},
   'f.name.l': {en:'Your name', es:''},
@@ -1228,7 +1266,7 @@ const I18N = {
   'ph.pilot': {en:'Pilot, organization, or city', es:''},
   'ph.lang': {en:'Which language?', es:''},
   'f.submit': {en:'Join the union', es:''},
-  'f.note': {en:'Free, and always will be. We won\'t flood your inbox. You can step back any time and still be a member. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.', es:''},
+  'f.note': {en:'We won\'t flood your inbox, and you can step back any time. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.', es:''},
   'mtg.h1': {en:'Calendar', es:''},
   'mtg.lede': {en:'Our own meetings, plus what other organizations are doing. Some online, some in person.', es:''},
   'mtg.two.h': {en:'Two sessions, same meeting', es:''},

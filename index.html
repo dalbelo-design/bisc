@@ -276,6 +276,11 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-out-i{flex:1;font-size:15px;min-width:0}
 .vt-out-n{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);flex:0 0 auto}
 
+.vt-kind{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--green-md);margin:0 0 4px}
+.vt-card.decision{border-left-color:var(--orange)}
+.vt-card.decision .vt-kind{color:#B87C08}
+
 .vt-card{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--sky);
   border-radius:var(--r);padding:16px;margin-bottom:11px}
 .vt-card h4{font-family:var(--display);font-weight:700;font-size:17px;margin:0 0 3px}
@@ -289,6 +294,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-btn:disabled{opacity:.55;cursor:default}
 .vt-tally{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);margin-left:auto}
 .vt-tally.quiet{font-weight:600;color:var(--stone);opacity:.8}
+.vt-hint{font-size:13px;color:var(--stone);margin:9px 0 0}
 .vt-bar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:11px;display:flex}
 .vt-bar i{display:block;height:100%}
 .vt-bar .y{background:var(--green-md)}
@@ -725,7 +731,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <ol class="steps" id="agendaBody"></ol>
   </div>
 
-  <h2>Vote on what's next</h2>
+  <h2>What we're deciding</h2>
 
   <div class="lockcard" id="vtWait" hidden>
     <h3>You're in the next group</h3>
@@ -740,7 +746,7 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   </div>
 
   <div id="vtGate" hidden>
-    <p style="font-size:15px;color:var(--ink-soft)">Requests waiting on a decision. Your vote is one of many — whoever prepares the agenda uses these to decide what makes the hour.</p>
+    <p style="font-size:15px;color:var(--ink-soft)">What the community is putting to a vote — things members have asked to take on, and requests for time on the next agenda.</p>
     <div id="vtList"></div>
     <p class="note" id="vtNote"></p>
 
@@ -768,6 +774,14 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
   <div id="reqGate" hidden>
     <p style="font-size:15px;color:var(--ink-soft)">It goes to whoever is preparing that agenda. They decide what goes on and in what order — you will hear back either way.</p>
     <div class="card" id="reqCard">
+      <div class="f" style="margin-bottom:16px">
+        <label class="q">What are you putting forward?</label>
+        <div class="choice-row" id="rqKind">
+          <label class="choice sel"><input type="radio" name="rqkind" value="Agenda item" checked><span>Time on the agenda</span></label>
+          <label class="choice"><input type="radio" name="rqkind" value="Decision"><span>Something to decide</span></label>
+        </div>
+        <p class="help" id="rqKindHelp" style="margin:7px 0 0">A slot in the running order for the meeting you pick.</p>
+      </div>
       <div class="f" style="margin-bottom:16px">
         <label class="q" for="rqMeeting">Which meeting</label>
         <select id="rqMeeting"></select>
@@ -3319,6 +3333,30 @@ function startTimer(){
 let vtItems = [];
 let vtBusy = false;
 
+
+/* Items are presented and voted at one meeting, then land on the next
+   one's agenda — so voting closes when the presenting meeting ends.
+   Worked out here because the app holds the schedule, and written into
+   the sheet when the request is made. */
+function votingClosesFor(targetISO){
+  const [y,m,d] = String(targetISO).split('-').map(Number);
+  if(!y) return '';
+  const target = new Date(y, m-1, d);
+  let best = null;
+  for(let back=0; back<2; back++){
+    const p = new Date(y, m-1-back, 1);
+    const ev = monthEvents(p.getFullYear(), p.getMonth());
+    Object.keys(ev).map(Number).flatMap(day=>ev[day])
+      .filter(e => !e.allDay && !e.cancelled && AGENDAS[e.kind] && e.dt < target)
+      .forEach(e=>{
+        const ends = new Date(e.dt.getTime() + agendaMinutes(e)*60000);
+        if(!best || ends > best) best = ends;
+      });
+    if(best) break;
+  }
+  return (best || target).toISOString();
+}
+
 function vtDate(){
   const list = (typeof upcomingWithAgendas === 'function') ? upcomingWithAgendas(5) : [];
   if(!list.length) return '';
@@ -3365,9 +3403,12 @@ function vtPaint(){
   }
 
   const anyHidden = vtItems.some(v=>!v.revealed);
-  if(note) note.textContent = anyHidden
-    ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. You can change your vote until the agenda is set.'
-    : 'You can change your vote until the agenda is set.';
+  const open = vtItems.filter(v=>!v.closed);
+  if(note) note.textContent = !open.length
+    ? 'Voting has closed on everything here. Results are below.'
+    : anyHidden
+      ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. Voting closes when the meeting these were presented at ends.'
+      : 'Voting closes when the meeting these were presented at ends.';
   const esc = t => String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   list.innerHTML = vtItems.map(v=>{
     const cast = v.cast || 0;
@@ -3377,16 +3418,22 @@ function vtPaint(){
     const tallyText = v.revealed
       ? (total ? v.yes+' yes \u00b7 '+v.no+' no' : 'no votes')
       : (cast ? cast + (cast===1 ? ' vote cast' : ' votes cast') : 'no votes yet');
-    const bits = [v.facilitator && esc(v.facilitator), v.minutes && (v.minutes + ' min'), v.by && esc(v.by)]
+    const bits = [v.facilitator && esc(v.facilitator), (!isDec && v.minutes) && (v.minutes + ' min'), v.by && esc(v.by)]
       .filter(Boolean).join(' \u00b7 ');
-    return `<div class="vt-card">
+    const isDec = v.kind === 'Decision';
+    return `<div class="vt-card${isDec?' decision':''}">
+      <p class="vt-kind">${isDec ? 'Decision' : 'For the agenda'}</p>
       <h4>${esc(v.item)}</h4>
       ${bits ? '<p class="vt-meta">'+bits+'</p>' : ''}
       ${v.detail ? '<p class="vt-detail">'+esc(v.detail).replace(/\n/g,'<br>')+'</p>' : ''}
       <div class="vt-row">
-        <button class="vt-btn yes${v.mine==='yes'?' on':''}" data-vote="yes" data-id="${v.id}">Yes</button>
-        <button class="vt-btn no${v.mine==='no'?' on':''}" data-vote="no" data-id="${v.id}">No</button>
+        <button class="vt-btn yes${v.mine==='yes'?' on':''}" data-vote="yes" data-id="${v.id}"${v.closed?' disabled':''}>Yes</button>
+        <button class="vt-btn no${v.mine==='no'?' on':''}" data-vote="no" data-id="${v.id}"${v.closed?' disabled':''}>No</button>
         <span class="vt-tally${v.revealed?'':' quiet'}">${tallyText}</span>
+      </div>
+      ${v.closed ? '<p class="vt-hint">Voting has closed on this one.</p>'
+        : v.mine ? '<p class="vt-hint">Tap '+v.mine+' again to withdraw your vote.</p>' : ''}
+      <div style="display:none">
       </div>
       ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
     </div>`;
@@ -3397,15 +3444,22 @@ document.addEventListener('click', async e=>{
   const b = e.target.closest('[data-vote]');
   if(!b || vtBusy) return;
   vtBusy = true;
-  const id = b.dataset.id, vote = b.dataset.vote;
+  const id = b.dataset.id;
   const v = vtItems.find(x=>x.id===id);
+  if(v && v.closed){ vtBusy = false; return; }
+  // tapping your own choice again withdraws it — an abstention
+  const vote = (v && v.mine === b.dataset.vote) ? 'none' : b.dataset.vote;
+
   if(v){                                   // show the choice straight away
-    if(!v.mine) v.cast = (v.cast || 0) + 1;
+    const had = v.mine === 'yes' || v.mine === 'no';
+    const now = vote === 'yes' || vote === 'no';
+    if(!had && now) v.cast = (v.cast || 0) + 1;
+    if(had && !now) v.cast = Math.max(0, (v.cast || 1) - 1);
     if(v.revealed){
-      if(v.mine === 'yes') v.yes--; if(v.mine === 'no') v.no--;
-      if(vote === 'yes') v.yes++; else v.no++;
+      if(v.mine === 'yes') v.yes--; else if(v.mine === 'no') v.no--;
+      if(vote === 'yes') v.yes++; else if(vote === 'no') v.no++;
     }
-    v.mine = vote;
+    v.mine = (vote === 'none') ? '' : vote;
     vtPaint();
   }
   try{
@@ -3564,6 +3618,16 @@ function paintRequestForm(){
   if(keep) sel.value = keep;
 }
 
+$$('#rqKind input').forEach(r=>r.addEventListener('change', e=>{
+  $$('#rqKind .choice').forEach(c=>c.classList.toggle('sel', c.contains(e.target)));
+  const dec = e.target.value === 'Decision';
+  $('#rqKindHelp').textContent = dec
+    ? 'Put to the vote at that meeting. It is decided, not scheduled — it will not take a slot in the running order.'
+    : 'A slot in the running order for the meeting you pick.';
+  const mins = $('#rqMins').closest('.f');
+  if(mins) mins.hidden = dec;
+}));
+
 if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
   const item = $('#rqItem').value.trim();
   $('#e-rqItem').hidden = !!item;
@@ -3580,7 +3644,9 @@ if($('#rqSend')) $('#rqSend').addEventListener('click', async ()=>{
         date, meeting, item,
         facilitator: $('#rqFac').value.trim(),
         minutes: $('#rqMins').value,
-        detail: $('#rqDetail').value.trim()})});
+        detail: $('#rqDetail').value.trim(),
+        kind: (document.querySelector('input[name=rqkind]:checked')||{}).value || 'Agenda item',
+        votingCloses: votingClosesFor(date)})});
     const out = await r.json().catch(()=>null);
     ok = !!(out && out.ok);
   }catch(e){}

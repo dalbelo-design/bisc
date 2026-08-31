@@ -3523,8 +3523,10 @@ function vtPaint(){
     }).join('');
   }
 
-  // how many are open and not yet voted on by you — that is the badge
-  const waiting = vtItems.filter(v=>!v.closed && !v.mine).length;
+  // how many are still open to vote on — the count of what is live, not a
+  // to-do list. Counting only unvoted items made the badge climb whenever
+  // someone withdrew a vote, and vanish once they had voted on everything.
+  const waiting = vtItems.filter(v=>!v.closed).length;
   const badge = $('#vtCount');
   if(badge) badge.textContent = waiting ? String(waiting) : '';
   if(vtFolded === null){

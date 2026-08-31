@@ -1064,10 +1064,10 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
   </div>
 
-  <h2>Where members gather</h2>
+  <h2 class="fold" id="asmFold"><span>Where members gather</span><span class="fold-x"></span></h2>
   <p style="font-size:15px;color:var(--ink-soft)">Pilots happened in particular places, and what worked in Jackson is not what worked in Stockton. Assemblies are how that stays true in a national community — four regions to start, each meeting on its own rhythm, each carrying what its members actually know.</p>
 
-  <div class="asm">
+  <div class="asm" id="asmBody">
     <div class="asm-row">
       <h3>Pacific</h3>
       <p class="asm-s">California · Oregon · Washington · Nevada · Alaska · Hawaii</p>
@@ -3484,6 +3484,7 @@ function makeFold(headId, bodyId, key, openByDefault){
 makeFold('lnFold', 'lnBody', 'bisc.lnFold',
          !!(typeof runningMeeting === 'function' && runningMeeting()));
 makeFold('rqFold', 'rqBody', 'bisc.rqFold', false);
+makeFold('asmFold', 'asmBody', 'bisc.asmFold', false);
 
 function vtPaint(){
   const list = $('#vtList'), note = $('#vtNote');

@@ -3492,6 +3492,7 @@ makeFold('asmFold', 'asmBody', 'bisc.asmFold', false);
 
 function vtPaint(){
   const list = $('#vtList'), note = $('#vtNote');
+  const esc = t => String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   if(!list) return;
   if(!vtItems.length){
     list.innerHTML = '';
@@ -3541,7 +3542,6 @@ function vtPaint(){
     : anyHidden
       ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. Voting closes when the meeting these were presented at ends.'
       : 'Voting closes when the meeting these were presented at ends.';
-  const esc = t => String(t).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
   const ordered = vtItems.slice().sort((a,b)=>
     (a.closed?1:0)-(b.closed?1:0) || String(a.date).localeCompare(String(b.date)));
   list.innerHTML = ordered.map(v=>{ try{

@@ -1582,8 +1582,9 @@ function monthEvents(y, mo){
     map[d] = map[d].flatMap(e=>{
       const c = changeFor(y, mo, d, e.title);
       if(!c) return [e];
-      if(c.change === 'canceled') return [{...e, canceled:true, reason:c.reason}];
-      if(c.change === 'moved' && c.newDate){
+      const ch = c.change === 'cancelled' ? 'canceled' : c.change;
+      if(ch === 'canceled') return [{...e, canceled:true, reason:c.reason}];
+      if(ch === 'moved' && c.newDate){
         const [ny,nm,nd] = c.newDate.split('-').map(Number);
         if(ny===y && nm-1===mo){
           const moved = {...e, day:nd, dt: zoned(y, mo, nd, e.hh, e.mm, e.tz), movedFrom:d, reason:c.reason};
@@ -3208,7 +3209,7 @@ function upcomingWithAgendas(limit){
     const ev = monthEvents(p.getFullYear(), p.getMonth());
     Object.keys(ev).map(Number).sort((a,b)=>a-b)
       .flatMap(d => ev[d])
-      .filter(e => AGENDAS[e.kind] && !e.cancelled &&
+      .filter(e => AGENDAS[e.kind] && !e.canceled &&
                    (e.dt.getTime() + (agendaMinutes(e) + 15) * 60000) > now)
       .sort((a,b)=>a.dt-b.dt)
       .forEach(e=>{
@@ -3292,7 +3293,7 @@ function runningMeeting(){
   const now = timerNow();
   const ev = monthEvents(now.getFullYear(), now.getMonth())[now.getDate()] || [];
   for(const e of ev){
-    if(e.allDay || e.cancelled || !AGENDAS[e.kind]) continue;
+    if(e.allDay || e.canceled || !AGENDAS[e.kind]) continue;
     const items = agendaForEvent(e);
     if(!items || !items.length) continue;
     const total = items[items.length-1][1];
@@ -3404,7 +3405,7 @@ function votingClosesFor(targetISO){
     const p = new Date(y, m-1-back, 1);
     const ev = monthEvents(p.getFullYear(), p.getMonth());
     Object.keys(ev).map(Number).flatMap(day=>ev[day])
-      .filter(e => !e.allDay && !e.cancelled && AGENDAS[e.kind] && e.dt < target)
+      .filter(e => !e.allDay && !e.canceled && AGENDAS[e.kind] && e.dt < target)
       .forEach(e=>{
         const ends = new Date(e.dt.getTime() + agendaMinutes(e)*60000);
         if(!best || ends > best) best = ends;
@@ -3485,10 +3486,16 @@ function makeFold(headId, bodyId, key, openByDefault){
   });
 }
 
-makeFold('lnFold', 'lnBody', 'bisc.lnFold',
-         !!(typeof runningMeeting === 'function' && runningMeeting()));
-makeFold('rqFold', 'rqBody', 'bisc.rqFold', false);
-makeFold('asmFold', 'asmBody', 'bisc.asmFold', false);
+// Called from loadAll, not here. Working out whether a meeting is running
+// reaches AUTH, which is declared further down — doing it at parse time
+// threw on any day with a meeting and took the whole script with it.
+function setUpFolds(){
+  let running = false;
+  try{ running = !!(typeof runningMeeting === 'function' && runningMeeting()); }catch(e){}
+  makeFold('lnFold', 'lnBody', 'bisc.lnFold', running);
+  makeFold('rqFold', 'rqBody', 'bisc.rqFold', false);
+  makeFold('asmFold', 'asmBody', 'bisc.asmFold', false);
+}
 
 function vtPaint(){
   const list = $('#vtList'), note = $('#vtNote');
@@ -4056,6 +4063,7 @@ async function loadAll(){
   try{ const m=await window.storage.get('bisc:me',false); me=m?JSON.parse(m.value):null; }catch(e){ me=null; }
   paintContacts();
   paintAuth();
+  setUpFolds();
   refreshStatus().then(()=>{
     loadNotes(true); loadVotes();
     loadAgendas().then(()=>renderAgenda());

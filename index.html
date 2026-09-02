@@ -424,6 +424,12 @@ h2.fold.open .fold-x::after{content:'\2013'}
 .ev-flag.off{background:#F6E0DA;color:#8A3216}
 .ev-flag.moved{background:var(--yellow);color:#5C4A0C}
 
+.ev-join{display:inline-block;margin-top:8px;background:var(--sky);color:var(--ink);
+  text-decoration:none;border-radius:9px;padding:9px 15px;font-family:var(--display);
+  font-weight:700;font-size:14.5px;min-height:40px}
+.ev-join:hover{filter:brightness(1.06)}
+.ev p a{color:var(--green-dk);word-break:break-word}
+
 .ev-link{display:inline-block;margin-top:9px;background:var(--green-dk);color:#fff;text-decoration:none;
   border-radius:9px;padding:10px 15px;font-family:var(--display);font-weight:700;font-size:14.5px;min-height:42px}
 .ev-link:hover{filter:brightness(1.1)}
@@ -1555,6 +1561,30 @@ function changeFor(y, mo, d, title){
   return CAL.changes.find(c =>
     c.date === ymd(y,mo,d) &&
     (!c.meeting || meetingMatches(c.meeting, kindForTitle(title))));
+}
+
+
+/* The Where field often holds a Zoom link. Render it as something you can
+   actually tap — a bare link becomes a join button, a link inside a
+   sentence becomes a normal link, and plain text is left alone. */
+function linkify(text){
+  const raw = String(text || '').trim();
+  if(!raw) return '';
+  const esc = t => String(t).replace(/[<>&"]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const urlRe = /https?:\/\/[^\s<>"]+/g;
+
+  const only = raw.match(/^https?:\/\/\S+$/);
+  if(only){
+    const u = esc(raw);
+    let label = 'Open the link';
+    if(/zoom\.us|zoom\.com/i.test(raw)) label = 'Join on Zoom';
+    else if(/meet\.google/i.test(raw)) label = 'Join on Google Meet';
+    else if(/teams\.microsoft/i.test(raw)) label = 'Join on Teams';
+    else { try{ label = 'Open ' + new URL(raw).hostname.replace(/^www\./,''); }catch(e){} }
+    return `<a class="ev-join" href="${u}" target="_blank" rel="noopener">${label} \u2192</a>`;
+  }
+  return esc(raw).replace(urlRe, m =>
+    `<a href="${m}" target="_blank" rel="noopener">${m}</a>`);
 }
 
 function monthEvents(y, mo){
@@ -3969,7 +3999,7 @@ function renderDayPanel(){
       <h4>${e.title}</h4>
       <p class="t1">${e.when}</p>
       ${e.lead ? `<p class="t2"><strong>${e.lead}</strong></p>` : ''}
-      <p class="t2">${e.where}</p>
+      <p class="t2">${linkify(e.where)}</p>
       ${linkFor(e)}
     </div>` : `
     <div class="ev ${e.kind}${e.canceled ? ' is-off' : ''}">

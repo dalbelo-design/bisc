@@ -784,11 +784,14 @@ h2.fold.open .fold-x::after{content:'\2013'}
     <div id="vtList"></div>
     <p class="note" id="vtNote"></p>
 
-    <div id="vtDecided" hidden>
-      <h3 style="font-family:var(--display);font-weight:800;font-size:16px;margin:20px 0 4px">Decided</h3>
-      <p style="font-size:14px;color:var(--stone);margin:0 0 10px">How the room voted, once results were shown.</p>
-      <div id="vtDecidedList"></div>
     </div>
+  </div>
+
+  <div id="vtDecided" hidden>
+    <h2 class="fold" id="dcFold"><span>Decided</span><span class="fold-n" id="dcCount"></span><span class="fold-x"></span></h2>
+    <div id="dcBody">
+      <p style="font-size:15px;color:var(--ink-soft)">How the community voted, once results were shown.</p>
+      <div id="vtDecidedList"></div>
     </div>
   </div>
 
@@ -3533,6 +3536,7 @@ function setUpFolds(){
   makeFold('lnFold', 'lnBody', 'bisc.lnFold', running);
   makeFold('rqFold', 'rqBody', 'bisc.rqFold', false);
   makeFold('asmFold', 'asmBody', 'bisc.asmFold', false);
+  makeFold('dcFold', 'dcBody', 'bisc.dcFold', false);
 }
 
 function vtPaint(){
@@ -3560,6 +3564,8 @@ function vtPaint(){
   const wrap = $('#vtDecided'), dlist = $('#vtDecidedList');
   if(wrap && dlist){
     wrap.hidden = !decided.length;
+    const dcBadge = $('#dcCount');
+    if(dcBadge) dcBadge.textContent = decided.length ? String(decided.length) : '';
     const byDate = {};
     decided.forEach(v=>{ (byDate[v.date || ''] = byDate[v.date || ''] || []).push(v); });
     const dates = Object.keys(byDate).sort().reverse();

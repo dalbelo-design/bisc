@@ -3612,8 +3612,16 @@ function vtPaint(){
     : anyHidden
       ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. Voting closes when the meeting these were presented at ends.'
       : 'Voting closes when the meeting these were presented at ends.';
-  const ordered = vtItems.slice().sort((a,b)=>
-    (a.closed?1:0)-(b.closed?1:0) || String(a.date).localeCompare(String(b.date)));
+  // only what is still open to vote on — anything closed lives under Decided
+  const ordered = vtItems.filter(v=>!v.closed)
+    .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  if(!ordered.length){
+    list.innerHTML = '';
+    if(note) note.textContent = decided.length
+      ? 'Nothing open at the moment. Recent results are under Decided.'
+      : 'Nothing is waiting on a vote right now.';
+    return;
+  }
   list.innerHTML = ordered.map(v=>{ try{
     const cast = v.cast || 0;
     const total = v.revealed ? (v.yes + v.no) : 0;

@@ -3456,7 +3456,11 @@ function votingClosesFor(targetISO){
   // If that meeting has already been and gone — someone requesting time a
   // day before the target — closing then would shut voting before it ever
   // opened. Fall back to the target meeting's own start.
-  if(!best || best <= new Date()) best = target;
+  // If the presenting meeting has passed, close at the end of the target
+  // meeting's day rather than its start — the vote is live through the meeting.
+  if(!best || best <= new Date()){
+    best = new Date(target.getFullYear(), target.getMonth(), target.getDate(), 23, 59, 59);
+  }
   return best.toISOString();
 }
 
@@ -3621,7 +3625,7 @@ function vtPaint(){
     ? 'Voting has closed on everything here. Results are below.'
     : anyHidden
       ? 'Results stay hidden while voting is open, so nobody votes with the tally in front of them. Voting closes when the meeting these were presented at ends.'
-      : 'Voting closes when the meeting these were presented at ends.';
+      : 'Voting closes at the end of the meeting these were presented at.';
   // only what is still open to vote on — anything closed lives under Decided
   const ordered = vtItems.filter(v=>!v.closed)
     .sort((a,b)=>String(a.date).localeCompare(String(b.date)));

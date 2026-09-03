@@ -3605,6 +3605,16 @@ function vtPaint(){
     });
   }
 
+  // how many are still open to vote on — the badge on the heading
+  const waiting = vtItems.filter(v=>!v.closed).length;
+  const badge = $('#vtCount');
+  if(badge) badge.textContent = waiting ? String(waiting) : '';
+  if(vtFolded === null){
+    let stored = null;
+    try{ stored = localStorage.getItem('bisc.vtFold'); }catch(e){}
+    vtSetFold(stored !== '1');
+  }
+
   const anyHidden = vtItems.some(v=>!v.revealed);
   const open = vtItems.filter(v=>!v.closed);
   if(note) note.textContent = !open.length

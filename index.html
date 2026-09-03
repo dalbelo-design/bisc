@@ -267,6 +267,14 @@ details p{margin:10px 0 0;font-size:16px;color:var(--ink-soft)}
 body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bottom))}
 @media (min-width:760px){#mtBar{bottom:0}body.mt-showing #fbBtn{bottom:86px}}
 
+.vt-when{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--stone);margin:14px 0 7px}
+.vt-when:first-child{margin-top:0}
+.vt-more{width:100%;margin-top:10px;background:transparent;border:1.5px solid var(--line);
+  border-radius:11px;padding:11px;font-family:var(--display);font-weight:600;font-size:14.5px;
+  color:var(--ink);cursor:pointer;min-height:46px}
+.vt-more:hover{background:#F6F5E6}
+
 .vt-out{display:flex;gap:10px;align-items:baseline;background:var(--raised);border:1px solid var(--line);
   border-left:5px solid var(--green-md);border-radius:11px;padding:11px 14px;margin-bottom:7px}
 .vt-out.no{border-left-color:#C4795F}
@@ -3545,33 +3553,50 @@ function vtPaint(){
   }
   // anything revealed is a settled outcome — show it separately so the
   // other session can see what was decided without re-reading the ballot
+  // Decisions pile up — twenty a meeting would bury the live ballot. Group
+  // them by the meeting they were decided at, show the most recent, and
+  // fold the rest away so the record is still reachable.
   const decided = vtItems.filter(v=>v.revealed);
   const wrap = $('#vtDecided'), dlist = $('#vtDecidedList');
   if(wrap && dlist){
     wrap.hidden = !decided.length;
-    dlist.innerHTML = decided.map(v=>{
-      const total = v.yes + v.no;
+    const byDate = {};
+    decided.forEach(v=>{ (byDate[v.date || ''] = byDate[v.date || ''] || []).push(v); });
+    const dates = Object.keys(byDate).sort().reverse();
+
+    const fmtDate = iso => {
+      const [y,m,d] = String(iso).split('-').map(Number);
+      if(!y || !m || !d) return String(iso || 'Earlier');
+      const dt = new Date(y, m-1, d);
+      return isNaN(dt) ? String(iso)
+        : new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(dt);
+    };
+    const outcome = v => {
       const carried = v.yes > v.no;
       return `<div class="vt-out ${carried?'yes':'no'}">
         <span class="vt-out-k">${carried?'Carried':'Not carried'}</span>
         <span class="vt-out-i">${esc(v.item)}</span>
         <span class="vt-out-n">${v.yes}\u2013${v.no}</span>
       </div>`;
-    }).join('');
-  }
+    };
 
-  // how many are still open to vote on — the count of what is live, not a
-  // to-do list. Counting only unvoted items made the badge climb whenever
-  // someone withdrew a vote, and vanish once they had voted on everything.
-  const waiting = vtItems.filter(v=>!v.closed).length;
-  const badge = $('#vtCount');
-  if(badge) badge.textContent = waiting ? String(waiting) : '';
-  if(vtFolded === null){
-    // open unless the person collapsed it themselves — this is the part of
-    // the page people are meant to act on, so it should not hide itself
-    let stored = null;
-    try{ stored = localStorage.getItem('bisc.vtFold'); }catch(e){}
-    vtSetFold(stored !== '1');
+    const recent = dates.slice(0,1), older = dates.slice(1);
+    const olderCount = older.reduce((n,d)=>n+byDate[d].length,0);
+
+    dlist.innerHTML =
+      recent.map(d=>`<p class="vt-when">${fmtDate(d)}</p>` + byDate[d].map(outcome).join('')).join('')
+      + (older.length ? `
+        <button class="vt-more" id="vtMore" type="button">Earlier decisions (${olderCount})</button>
+        <div id="vtOlder" hidden>${
+          older.map(d=>`<p class="vt-when">${fmtDate(d)}</p>` + byDate[d].map(outcome).join('')).join('')
+        }</div>` : '');
+
+    const more = $('#vtMore');
+    if(more) more.addEventListener('click', ()=>{
+      const o = $('#vtOlder');
+      o.hidden = !o.hidden;
+      more.textContent = o.hidden ? `Earlier decisions (${olderCount})` : 'Hide earlier decisions';
+    });
   }
 
   const anyHidden = vtItems.some(v=>!v.revealed);

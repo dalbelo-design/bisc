@@ -369,6 +369,18 @@ h2.fold.open .fold-x::after{content:'\2013'}
 .apick.on .ap-d{color:#fff}
 .apick.on .ap-k{color:#B6DCB8}
 
+/* the two-way chooser at the top of Join */
+.pick{display:flex;flex-direction:column;gap:10px;margin:18px 0 6px}
+.pick-c{display:flex;flex-direction:column;gap:4px;text-align:left;padding:16px;
+  border:1.5px solid var(--line);border-radius:10px;background:var(--raised);
+  cursor:pointer;font:inherit;color:inherit;transition:border-color .15s,background .15s}
+.pick-c:hover{border-color:var(--green-dk)}
+.pick-c.on{border-color:var(--green-dk);border-width:2px;background:var(--paper)}
+.pick-k{font-weight:700;color:var(--green-dk);font-size:16px}
+.pick-c.on .pick-k::after{content:' ✓';color:var(--green-dk)}
+.pick-d{font-size:14px;color:var(--ink-soft);line-height:1.4}
+@media(min-width:620px){.pick{flex-direction:row}.pick-c{flex:1}}
+
 .lockcard{background:var(--raised);border:1px solid var(--line);border-left:5px solid var(--orange);
   border-radius:var(--r);padding:18px;margin-bottom:12px}
 .lockcard h3{color:var(--green-dk);margin-bottom:4px}
@@ -562,9 +574,20 @@ h2.fold.open .fold-x::after{content:'\2013'}
 <!-- JOIN -->
 <section class="screen" id="s-join">
   <h1 data-i18n="join.h1">Join</h1>
-  <p class="lede" data-i18n="join.lede">About two minutes.</p>
+  <p class="lede" id="joinLede" data-i18n="join.lede">About two minutes.</p>
 
-  <div class="panel-green">
+  <div class="pick" id="joinPick">
+    <button type="button" class="pick-c on" data-path="member">
+      <span class="pick-k">I've received guaranteed income</span>
+      <span class="pick-d">Join as a member. Members build BISC and vote on what it does.</span>
+    </button>
+    <button type="button" class="pick-c" data-path="partner">
+      <span class="pick-k">I represent an organization</span>
+      <span class="pick-d">Join as a partner. Endorse, partner with us, or fund the work.</span>
+    </button>
+  </div>
+
+  <div class="panel-green" data-path-member>
   <h2 data-i18n="join.after.h">What happens after you join</h2>
   <ol class="steps">
     <li><div class="when">Straight away</div><div class="step-b"><h3>A welcome from us</h3><p>An email confirming you're a member, and what happens from here.</p></div></li>
@@ -575,10 +598,10 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </ol>
   </div>
 
-  <h2 data-i18n="join.form.h">Join us</h2>
-  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px">Everything below stays with the union. We won't share it, sell it, or hand it to anyone.</p>
+  <h2 data-i18n="join.form.h" data-path-member>Join us</h2>
+  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px" data-path-member>Everything below stays with the union. We won't share it, sell it, or hand it to anyone.</p>
 
-  <form id="joinForm" novalidate>
+  <form id="joinForm" novalidate data-path-member>
     <div class="f">
       <label class="q" for="fname" data-i18n="f.name.l">Your name</label>
       <p class="help" data-i18n="f.name.h">First and last.</p>
@@ -664,17 +687,145 @@ h2.fold.open .fold-x::after{content:'\2013'}
     <p class="note" data-i18n="f.note">We won't flood your inbox, and you can step back any time. We bring people in a group at a time, so there may be a wait before your Buddy gets in touch — you are a member from the day you join either way.</p>
   </form>
 
+  <!-- PARTNER PATH -->
+  <div class="panel-green" data-path-partner hidden>
+  <h2>How an organization joins</h2>
+  <ol class="steps">
+    <li><div class="when">Straight away</div><div class="step-b"><h3>We confirm we have it</h3><p>Within 48 hours, with a plain note on what happens next and when. You get the calendar right away, so you can see what we do and when we meet.</p></div></li>
+    <li><div class="when">Next</div><div class="step-b"><h3>The organizing committee reviews it</h3><p>At their next meeting. Yes, no, or a request for more information. Endorsements do not wait for this.</p></div></li>
+    <li><div class="when">Then</div><div class="step-b"><h3>A thirty-minute call</h3><p>Two organizers on it, at least one of them a member. A partnership conversation held entirely by staff is how a participant-led body stops being one.</p></div></li>
+    <li><div class="when">Once it's agreed</div><div class="step-b"><h3>Listed, with a liaison</h3><p>The agreement is recorded, your organization is listed publicly, and a member is assigned as your liaison.</p></div></li>
+    <li><div class="when">Ongoing</div><div class="step-b"><h3>Reviewed once a year</h3><p>Partnerships are not permanent by default. We check that it is still working for both of us.</p></div></li>
+  </ol>
+  </div>
+
+  <div class="card" data-path-partner hidden>
+    <h3>Before you fill this in</h3>
+    <p style="font-size:15px;margin:0 0 8px">Organizations join alongside members, not as members. In practice that means:</p>
+    <ul style="font-size:15px;margin:0;padding-left:20px">
+      <li>Organizations do not vote. Members do.</li>
+      <li>No organization speaks for members, brands itself as BISC, or presents itself as speaking on behalf of participants.</li>
+      <li>Members are compensated for their work. This is not negotiable and it is not a starting position.</li>
+      <li>We do not supply people to tell hardship stories on request — not for a report, a board meeting, a site visit, or a fundraiser.</li>
+      <li>Member contact information does not leave BISC. You reach members through us, or through an invitation members opted into.</li>
+    </ul>
+  </div>
+
+  <h2 data-path-partner hidden>Three levels</h2>
+  <div class="card" data-path-partner hidden>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Endorse.</strong> Sign on to what BISC stands for and be listed publicly. Costs nothing, takes two minutes.</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>Partner.</strong> Endorsement plus one concrete thing — connecting your participants to BISC, hosting an assembly, space, translation, training, research access, or an introduction we could not get ourselves.</p>
+    <p style="font-size:15px;margin:0"><strong>Funding partner.</strong> Money, on written terms agreed with the organizing committee. Funding does not buy direction, agenda, or access to members.</p>
+    <p class="note" style="margin:12px 0 0">The levels are meant to be climbable. Most organizations endorse and nothing more, and that is a real contribution.</p>
+  </div>
+
+  <h2 data-path-partner hidden>Apply as a partner</h2>
+  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px" data-path-partner hidden>Nothing is agreed here. This starts the conversation.</p>
+
+  <form id="partnerForm" novalidate data-path-partner hidden>
+    <div class="f">
+      <label class="q" for="pOrg">Organization</label>
+      <p class="help">The name as you'd want it listed publicly.</p>
+      <input type="text" id="pOrg" placeholder="Organization name">
+      <div class="err" id="pe-org" hidden>Please add the organization's name.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pSite">Website <span class="opt">— optional</span></label>
+      <input type="text" id="pSite" placeholder="example.org">
+    </div>
+    <div class="f">
+      <label class="q" for="pName">Contact name and role</label>
+      <p class="help">Whoever we should talk to. This is also the person who signs in to the app, so use an address they check.</p>
+      <div class="row2"><input type="text" id="pName" placeholder="Full name" autocomplete="name"><input type="text" id="pRole" placeholder="Their role"></div>
+      <div class="err" id="pe-name" hidden>Please add a contact name.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pEmail">Contact email</label>
+      <input type="email" id="pEmail" placeholder="you@organization.org" autocomplete="email">
+      <div class="err" id="pe-email" hidden>Please add an email we can reach you at.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pPhone">Phone <span class="opt">— optional</span></label>
+      <input type="tel" id="pPhone" placeholder="(555) 555-5555" autocomplete="tel">
+    </div>
+    <div class="f">
+      <label class="q">How should we reach you?</label>
+      <div class="choices" id="pPref">
+        <label class="choice"><input type="checkbox" value="Email" checked><span>Email</span></label>
+        <label class="choice"><input type="checkbox" value="Phone call"><span>Phone call</span></label>
+        <label class="choice"><input type="checkbox" value="Video call"><span>Video call</span></label>
+      </div>
+      <div class="err" id="pe-pref" hidden>Please pick at least one way we can reach you.</div>
+    </div>
+    <div class="f">
+      <label class="q">What kind of organization?</label>
+      <div class="choices" id="pType">
+        <label class="choice"><input type="radio" name="ptype" value="Pilot administrator"><span>We run a guaranteed income pilot</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Nonprofit"><span>Nonprofit or community organization</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Public agency"><span>Public agency</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Funder"><span>Funder or foundation</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Research"><span>Research or academic</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Coalition"><span>Coalition or network</span></label>
+        <label class="choice"><input type="radio" name="ptype" value="Other"><span>Something else</span></label>
+      </div>
+      <div class="err" id="pe-type" hidden>Please pick the closest one.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pPilot">Do you run or fund a guaranteed income pilot? <span class="opt">— optional</span></label>
+      <p class="help">If our members are in a pilot you administer or fund, say so here. It is not disqualifying — some of our best relationships will be exactly that — but it has to be visible from the start.</p>
+      <input type="text" id="pPilot" placeholder="Which pilot, and your role in it">
+    </div>
+    <div class="f">
+      <label class="q" for="pReach">Roughly how many participants could you connect to BISC? <span class="opt">— optional</span></label>
+      <p class="help">A rough number is fine. Zero is a perfectly good answer.</p>
+      <input type="text" id="pReach" placeholder="An estimate">
+    </div>
+    <div class="f">
+      <label class="q" for="pOffer">What are you offering?</label>
+      <p class="help">In your own words. Be concrete.</p>
+      <textarea id="pOffer" placeholder="What your organization would bring."></textarea>
+      <div class="err" id="pe-offer" hidden>Please tell us what you're offering.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pAsk">What are you asking of us?</label>
+      <p class="help">Also in your own words. This one matters as much as the last.</p>
+      <textarea id="pAsk" placeholder="What you'd want from BISC."></textarea>
+      <div class="err" id="pe-ask" hidden>Please tell us what you're asking for.</div>
+    </div>
+    <div class="f">
+      <label class="q">Which level are you asking for?</label>
+      <div class="choices" id="pLevel">
+        <label class="choice"><input type="radio" name="plevel" value="Endorse"><span>Endorse — sign on and be listed</span></label>
+        <label class="choice"><input type="radio" name="plevel" value="Partner"><span>Partner — endorsement plus something concrete</span></label>
+        <label class="choice"><input type="radio" name="plevel" value="Fund"><span>Funding partner — on written terms</span></label>
+        <label class="choice"><input type="radio" name="plevel" value="Not sure"><span>Not sure yet — we'd like to talk it through</span></label>
+      </div>
+      <div class="err" id="pe-level" hidden>Please pick a level, or tell us you're not sure.</div>
+    </div>
+    <div class="f">
+      <label class="q" for="pConflict">Anything we should know up front? <span class="opt">— optional</span></label>
+      <textarea id="pConflict" placeholder="Conflicts, constraints, deadlines, anything that would come out later anyway."></textarea>
+    </div>
+    <div style="position:absolute;left:-9999px" aria-hidden="true">
+      <label for="pWebsiteHp">Leave this blank</label>
+      <input type="text" id="pWebsiteHp" tabindex="-1" autocomplete="off">
+    </div>
+    <button class="btn gold" type="submit">Send this to the committee</button>
+    <div class="err" id="pe-send" hidden>We couldn't send that just now. Check your connection and try again — nothing was lost.</div>
+    <p class="note">Sending this does not agree anything. The organizing committee decides, and nobody at BISC can commit to a partnership on the spot.</p>
+  </form>
+
 </section>
 
 <!-- WELCOME -->
 <section class="screen" id="s-welcome">
-  <p class="eyebrow">You're in</p>
+  <p class="eyebrow" id="welcomeEyebrow">You're in</p>
   <h1 id="welcomeH">Welcome to the union.</h1>
-  <p class="lede">You're a member as of today. Here's what happens next — nothing needed from you right now.</p>
+  <p class="lede" id="welcomeLede">You're a member as of today. Here's what happens next — nothing needed from you right now.</p>
   <ol class="steps" id="welcomeSteps"></ol>
   <div class="card green">
-    <h3>One thing that helps</h3>
-    <p>Watch for our email. When your group comes up, your Buddy will bring you to a new member meeting and sit with you through it.</p>
+    <h3 id="welcomeCardH">One thing that helps</h3>
+    <p id="welcomeCardP">Watch for our email. When your group comes up, your Buddy will bring you to a new member meeting and sit with you through it.</p>
     <div class="btn-row"><button class="btn sm gold" data-go="meetings">See upcoming meetings</button></div>
   </div>
   <h2>Need something now?</h2>
@@ -765,6 +916,18 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
   <h2 class="fold open" id="vtFold"><span>What we're deciding</span><span class="fold-n" id="vtCount"></span><span class="fold-x"></span></h2>
+
+  <div class="lockcard" data-partner-pending hidden>
+    <h3>Your application is with the committee</h3>
+    <p style="font-size:15px;margin:0 0 8px">The calendar is open to you now. The agenda opens once the organizing committee has reviewed your application.</p>
+    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
+  </div>
+
+  <div class="lockcard" data-partner-live hidden>
+    <h3>Members decide this part</h3>
+    <p style="font-size:15px;margin:0 0 8px">You can see the agenda, but voting is for members of the union. Organizations do not vote on what BISC does — that is the whole point of a participant-led body.</p>
+    <p style="font-size:15px;margin:0">If there is something you'd like raised, tell your liaison and a member can bring it.</p>
+  </div>
 
   <div class="lockcard" id="vtWait" hidden>
     <h3>You're in the next group</h3>
@@ -3190,7 +3353,7 @@ function upcomingMeetings(limit){
 let agendaCache = null;
 
 async function loadAgendas(){
-  if(!isActivated()){ agendaCache = []; return agendaCache; }   // activated members only
+  if(!canSeeAgenda()){ agendaCache = []; return agendaCache; }   // members, and approved partners
   if(agendaCache) return agendaCache;
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -3221,7 +3384,7 @@ function meetingMatches(typed, kind){
 }
 
 function postedAgendaFor(ev){
-  if(!isActivated()) return null;
+  if(!canSeeAgenda()) return null;
   if(!agendaCache || !agendaCache.length) return null;
   const key = ev.y + '-' + String(ev.mo+1).padStart(2,'0') + '-' + String(ev.day).padStart(2,'0');
   const rows = agendaCache.filter(a =>
@@ -4222,6 +4385,10 @@ $('#joinForm').addEventListener('submit', async e=>{
   $$('#joinForm .err').forEach(e=>e.hidden=true);
 
   $('#welcomeH').textContent='Welcome, '+me.first+'.';
+  $('#welcomeEyebrow').textContent = "You're in";
+  $('#welcomeLede').textContent = "You're a member as of today. Here's what happens next — nothing needed from you right now.";
+  $('#welcomeCardH').textContent = 'One thing that helps';
+  $('#welcomeCardP').textContent = 'Watch for our email. When your group comes up, your Buddy will bring you to a new member meeting and sit with you through it.';
   buildWelcomeSteps(); renderMeetings(); renderAgenda(); go('welcome');
 });
 
@@ -4327,6 +4494,34 @@ function memberRank(){
 }
 function isActivated(){ return signedIn() && memberRank() >= 1; }
 
+/* Organizations join as partners, not members, and they sit on their own
+   ladder. This is kept separate from STATUS_RANK on purpose — a partner is
+   not a junior member, and putting them on one ladder means every ranked
+   check in the app silently starts letting them through.
+     1 = calendar only, waiting on the organizing committee
+     2 = calendar and the posted agenda
+   isActivated() above still means "an active member", so every members-only
+   call site in this file keeps working untouched. Only the agenda asks the
+   wider question. The server enforces the same split; this is for the UI. */
+const PARTNER_RANK = {
+  'partner pending': 1, 'pending partner': 1, 'partner (pending)': 1,
+  'endorser': 2, 'partner': 2, 'funding partner': 2, 'partner approved': 2,
+  'partner declined': 0, 'partner paused': 0, 'partner ended': 0
+};
+const PARTNER_CALENDAR = 1;
+const PARTNER_AGENDA   = 2;
+
+function partnerKey(){
+  const k = String((AUTH && AUTH.status) || '').trim().toLowerCase();
+  return PARTNER_RANK.hasOwnProperty(k) ? k : null;
+}
+function isPartner(){ return signedIn() && partnerKey() !== null; }
+function partnerRank(){ const k = partnerKey(); return k ? PARTNER_RANK[k] : 0; }
+
+/* The agenda is the one thing an approved partner sees that a pending one
+   does not. Everything else stays on isActivated(). */
+function canSeeAgenda(){ return isActivated() || (signedIn() && partnerRank() >= PARTNER_AGENDA); }
+
 
 /* Status can change on the sheet at any time — someone gets activated,
    or joins the Organizing Committee. Ask the server on every load rather
@@ -4359,15 +4554,26 @@ function paintAuth(){
   $('#authDone').hidden = !inB;
   if(inB) $('#whoName').textContent = AUTH.name ? 'Signed in as ' + AUTH.name : 'Signed in';
   const act = isActivated();
+  const ptn = isPartner();
   [['notesGate','notesLock','notesWait'],
    ['vtGate','vtLock','vtWait'],
    ['lnGate','lnLock','lnWait'],
    ['reqGate','reqLock','reqWait']].forEach(([g,l,w])=>{
     const G=$('#'+g), L=$('#'+l), W=$('#'+w);
-    if(G) G.hidden = !act;             // the real thing
-    if(L) L.hidden = inB;              // signed out
-    if(W) W.hidden = !(inB && !act);   // signed in, not yet activated
+    if(G) G.hidden = !act;                    // the real thing, members only
+    if(L) L.hidden = inB;                     // signed out
+    // A partner is signed in and never becomes activated, so the
+    // "you're in the next group" card would sit there forever telling an
+    // organization to wait for a BISC Buddy. They get their own card.
+    if(W) W.hidden = !(inB && !act && !ptn);
   });
+  // Decided sits behind the same server fetch as the live ballot, so it
+  // goes with it. Opening it to partners is a separate piece of work.
+  const dec = $('#vtDecided'); if(dec && ptn) dec.hidden = true;
+
+  $$('[data-partner-note]').forEach(el => el.hidden = !ptn);
+  $$('[data-partner-pending]').forEach(el => el.hidden = !(ptn && partnerRank() < PARTNER_AGENDA));
+  $$('[data-partner-live]').forEach(el => el.hidden = !(ptn && partnerRank() >= PARTNER_AGENDA));
   if(typeof renderMeetings === 'function') renderMeetings();
 }
 
@@ -4610,6 +4816,111 @@ const APP_NAME = 'Member companion';
     }
   });
 })();
+
+/* ---- Join: individual or organization ---------------------------------
+   One Join tab, two paths. The organization path is also reachable at
+   ?join=org so the conference QR code can land straight on it, which is
+   what the organizations plan asked for without needing a second page. */
+function setJoinPath(path){
+  const org = path === 'partner';
+  $$('#s-join [data-path-member]').forEach(el => el.hidden = org);
+  $$('#s-join [data-path-partner]').forEach(el => el.hidden = !org);
+  $$('#joinPick .pick-c').forEach(b => b.classList.toggle('on', (b.dataset.path === 'partner') === org));
+  const lede = $('#joinLede');
+  if(lede) lede.textContent = org
+    ? 'A few minutes. Nothing is agreed by filling this in.'
+    : 'About two minutes.';
+  try{ localStorage.setItem('bisc.joinpath', path); }catch(e){}
+}
+
+$$('#joinPick .pick-c').forEach(b => b.addEventListener('click', ()=>{
+  setJoinPath(b.dataset.path);
+  $('#joinPick').scrollIntoView({block:'start', behavior:'smooth'});
+}));
+
+(function initJoinPath(){
+  let path = 'member';
+  try{
+    const q = new URLSearchParams(location.search).get('join');
+    if(q === 'org' || q === 'partner' || q === 'organization') path = 'partner';
+    else if(localStorage.getItem('bisc.joinpath') === 'partner') path = 'partner';
+  }catch(e){}
+  setJoinPath(path);
+})();
+
+$('#partnerForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const v = id => ($('#'+id) ? $('#'+id).value.trim() : '');
+  let ok = true;
+  const set = (id,bad) => { $('#'+id).hidden = !bad; if(bad) ok = false; };
+  const prefs = $$('#pPref input:checked').map(i=>i.value);
+  const type  = ($('#pType input:checked')  || {}).value || '';
+  const level = ($('#pLevel input:checked') || {}).value || '';
+  set('pe-org',   !v('pOrg'));
+  set('pe-name',  !v('pName'));
+  set('pe-email', !/^\S+@\S+\.\S+$/.test(v('pEmail')));
+  set('pe-pref',  prefs.length === 0);
+  set('pe-type',  !type);
+  set('pe-offer', !v('pOffer'));
+  set('pe-ask',   !v('pAsk'));
+  set('pe-level', !level);
+  if(!ok){ $('#partnerForm .err:not([hidden])').scrollIntoView({block:'center',behavior:'smooth'}); return; }
+
+  const btn = $('#partnerForm button[type=submit]');
+  busy(btn, true, 'Sending…');
+  $('#pe-send').hidden = true;
+
+  const res = await sendToSheet({
+    type:'partner_join',
+    org:v('pOrg'), website:v('pSite'), contact:v('pName'), role:v('pRole'),
+    email:v('pEmail'), phone:v('pPhone'), pref:prefs.join(', '),
+    orgType:type, pilot:v('pPilot'), reach:v('pReach'),
+    offering:v('pOffer'), asking:v('pAsk'), level:level, conflict:v('pConflict'),
+    hp: $('#pWebsiteHp') ? $('#pWebsiteHp').value : ''
+  });
+  busy(btn, false);
+
+  if(!res.ok && res.reason !== 'no-endpoint'){
+    $('#pe-send').hidden = false;
+    $('#pe-send').scrollIntoView({block:'center',behavior:'smooth'});
+    return;
+  }
+
+  const orgName = v('pOrg');
+  const selfServe = level === 'Endorse';
+
+  $('#partnerForm').reset();
+  $$('#partnerForm .choice').forEach(c=>c.classList.remove('sel'));
+  $$('#partnerForm input[type=checkbox], #partnerForm input[type=radio]').forEach(i=>i.checked=false);
+  const eml = $('#pPref input[value=Email]');
+  if(eml){ eml.checked = true; if(eml.closest('.choice')) eml.closest('.choice').classList.add('sel'); }
+  $$('#partnerForm .err').forEach(el=>el.hidden=true);
+
+  $('#welcomeH').textContent = 'Thank you, ' + orgName + '.';
+  $('#welcomeEyebrow').textContent = selfServe ? "You're listed" : "We've got it";
+  $('#welcomeLede').textContent = selfServe
+    ? 'Your endorsement is recorded. Here is what happens from here.'
+    : 'Your application is with us. Here is what happens from here — nothing needed from you right now.';
+  buildPartnerWelcome(selfServe);
+  $('#welcomeCardH').textContent = 'While you wait';
+  $('#welcomeCardP').textContent = 'The calendar is open to you now. Everything BISC does in the open is on it, and it is the best way to see how we work before we talk.';
+  go('welcome');
+});
+
+function buildPartnerWelcome(selfServe){
+  const steps = selfServe
+    ? [['Now','Your endorsement is recorded','You will appear on the public list of organizations that have signed on.'],
+       ['Now','The calendar is open to you','You can see what we do and when we meet.'],
+       ['Any time','If you want to go further','Partner and funding partner both start with a conversation. Reply to the confirmation email and we will set one up.']]
+    : [['Within 48 hours','We confirm we have it','A plain note on what happens next and when.'],
+       ['Now','The calendar is open to you','You do not have to wait for the committee to see what we do and when we meet.'],
+       ['Next committee meeting','The organizing committee reviews it','Yes, no, or a request for more information. Nobody at BISC can agree a partnership without them.'],
+       ['After that','A thirty-minute call','Two organizers, at least one of them a member.'],
+       ['Once agreed','Listed, with a liaison','Your organization is listed publicly and a member is assigned to you.']];
+  $('#welcomeSteps').innerHTML = steps.map(([w,h,p]) =>
+    '<li><div class="when">' + esc(w) + '</div><div class="step-b"><h3>' + esc(h) +
+    '</h3><p>' + esc(p) + '</p></div></li>').join('');
+}
 
 loadAll();
 </script>

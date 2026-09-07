@@ -393,6 +393,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   padding:6px 13px;font-family:var(--display);font-weight:600;font-size:13px;cursor:pointer;min-height:34px;
   align-self:flex-start;margin-left:8px}
 .authbtn:hover{background:rgba(255,255,255,.14)}
+.nav button[hidden]{display:none}
 .nav button.locked{opacity:.5}
 .nav button.locked svg{stroke:var(--stone)}
 .lockmsg{background:var(--yellow);color:#5C4A0C;border-radius:11px;padding:14px 16px;font-size:15px;margin-bottom:14px}
@@ -592,7 +593,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <ol class="steps">
     <li><div class="when">Straight away</div><div class="step-b"><h3>A welcome from us</h3><p>An email confirming you're a member, and what happens from here.</p></div></li>
     <li><div class="when">Next</div><div class="step-b"><h3>The next group</h3><p>We welcome new members in small groups, so everyone gets a real welcome rather than a form letter. You'll be in the next group we bring in.</p></div></li>
-    <li><div class="when">While you wait</div><div class="step-b"><h3>Start learning</h3><p>Twenty-seven short modules, free, on your phone — what lived expertise means, the case for basic income, how power actually works. Ten minutes at a time, whenever you have them. No need to wait for anyone.</p><p style="margin:6px 0 0">Find them under <strong>Learning</strong> in the menu.</p></div></li>
+    <li><div class="when">While you wait</div><div class="step-b"><h3>Start learning</h3><p>Twenty-seven short modules, free, on your phone — what lived expertise means, the case for basic income, how power actually works. Ten minutes at a time, whenever you have them. No need to wait for your group.</p><p style="margin:6px 0 0">Sign in with the email you just used and you'll find them under <strong>Learning</strong>.</p></div></li>
     <li><div class="when">When your group comes up</div><div class="step-b"><h3>Your BISC Buddy</h3><p>When your group comes up, a member gets in touch the way you asked — call, text, or email. A real person. They walk you in and stay with you.</p></div></li>
     <li><div class="when">Ongoing</div><div class="step-b"><h3>Work you pick</h3><p>Storytelling, advocacy, building tools, training. You choose, when you're ready. Nothing is required.</p></div></li>
   </ol>
@@ -821,7 +822,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <div class="card green">
     <h3 id="welcomeCardH">One thing that helps</h3>
     <p id="welcomeCardP">Watch for our email. When your group comes up, your Buddy will bring you to a new member meeting and sit with you through it.</p>
-    <div class="btn-row"><button class="btn sm gold" data-go="meetings">See upcoming meetings</button></div>
+    <div class="btn-row"><button class="btn sm gold" data-go="meetings">Sign in and see what's coming up</button></div>
   </div>
   <h2>Need something now?</h2>
   <div data-contact
@@ -911,12 +912,6 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
   <h2 class="fold open" id="vtFold"><span>What we're deciding</span><span class="fold-n" id="vtCount"></span><span class="fold-x"></span></h2>
-
-  <div class="lockcard" data-partner-pending hidden>
-    <h3>Your application is with the committee</h3>
-    <p style="font-size:15px;margin:0 0 8px">The calendar is open to you now. The agenda opens once the organizing committee has reviewed your application.</p>
-    <p style="font-size:15px;margin:0">Nothing to do — we'll be in touch.</p>
-  </div>
 
   <div class="lockcard" data-partner-live hidden>
     <h3>This part is the members' call</h3>
@@ -1195,8 +1190,13 @@ h2.fold.open .fold-x::after{content:'\2013'}
 
 <!-- AUTH -->
 <section class="screen" id="s-auth">
-  <h1>Members only</h1>
-  <p class="lede">Meeting notes and event toolkits are for members. Sign in with the email you joined with.</p>
+  <h1 id="authH">Members only</h1>
+  <p class="lede">Sign in with the email you joined with.</p>
+  <div class="lockmsg" id="authWhy" hidden></div>
+  <div id="authJoin">
+    <p style="font-size:15px;color:var(--ink-soft);margin-bottom:8px">Not a member yet? Joining takes about two minutes.</p>
+    <div class="btn-row" style="margin-bottom:18px"><button class="btn ghost sm" data-go="join">Join the union</button></div>
+  </div>
 
   <div id="authStep1" class="authbox">
     <p style="font-size:15px;color:var(--ink-soft)">We'll email you a six-digit code. No password to remember.</p>
@@ -3235,6 +3235,7 @@ function moduleProgress(){
 let curMod = null;
 
 function openModule(id){
+  if(!signedIn()){ go('learning'); return; }   // go() bounces to sign-in
   const m = MODULES[id]; if(!m) return;
   curMod = id;
   const sib = Object.keys(MODULES).filter(k => MODULES[k].track === m.track);
@@ -4269,8 +4270,36 @@ function restoreScreen(){
   if(ok) go(h);
 }
 
+/* Who can open a whole screen. Anything not listed here is public:
+   Home, About and Join stay open to everyone.
+
+   Three tiers, and they are not the same question:
+     calendar  — anyone signed in, including a brand new member
+     learning  — same, so people can start the modules while they wait
+     agenda    — full members and above, plus approved partners
+
+   A new member can therefore sign in and get straight to the calendar and
+   the modules, and the agenda appears once their membership is activated.
+   The functions below are hoisted, and every call to go() happens after the
+   rank tables are set up, so reading them here is safe. */
+const SCREEN_ACCESS = {
+  meetings: function(){ return canSeeCalendar(); },
+  learning: function(){ return canSeeLearning(); },
+  module:   function(){ return canSeeLearning(); },
+  agenda:   function(){ return canSeeAgenda(); }
+};
+const GATED = Object.keys(SCREEN_ACCESS);
+function screenOpen(id){
+  const rule = SCREEN_ACCESS[id];
+  return rule ? rule() : true;
+}
+
 function go(id){
-  if(typeof GATED !== 'undefined' && GATED.includes(id) && !signedIn()) id = 'auth';
+  let bounced = '';
+  if(typeof SCREEN_ACCESS !== 'undefined' && SCREEN_ACCESS[id] && !screenOpen(id)){
+    bounced = id; id = 'auth';
+  }
+  if(bounced) paintDenied(bounced); else clearDenied();
   rememberScreen(id);
   $$('.screen').forEach(s=>s.classList.remove('on'));
   const t=$('#s-'+id); if(t) t.classList.add('on');
@@ -4458,7 +4487,6 @@ function prefPhrase(p){
    unlocks. Anything genuinely sensitive is fetched from the
    sheet after sign-in, never shipped inside this file.
    ========================================================= */
-const GATED = [];  // nothing is a whole gated page now
 let AUTH = null;   // {token, name, expires}
 
 function loadAuth(){
@@ -4517,6 +4545,20 @@ function partnerRank(){ const k = partnerKey(); return k ? PARTNER_RANK[k] : 0; 
    does not. Everything else stays on isActivated(). */
 function canSeeAgenda(){ return isActivated() || (signedIn() && partnerRank() >= PARTNER_AGENDA); }
 
+/* A new member counts here — the whole point is that they can use these
+   from the day they join, without waiting for their group to be welcomed. */
+function canSeeCalendar(){
+  if(!signedIn()) return false;
+  return isPartner() ? partnerRank() >= PARTNER_CALENDAR : true;
+}
+/* Partners get the modules once the committee has approved them. Change
+   PARTNER_AGENDA to PARTNER_CALENDAR here to open them to partners on
+   submit instead, or drop the partner clause to keep them for members. */
+function canSeeLearning(){
+  if(!signedIn()) return false;
+  return isPartner() ? partnerRank() >= PARTNER_AGENDA : true;
+}
+
 
 /* Status can change on the sheet at any time — someone gets activated,
    or joins the Organizing Committee. Ask the server on every load rather
@@ -4540,10 +4582,52 @@ async function refreshStatus(){
   paintAuth();
 }
 
+/* The sign-in screen doubles as the "not for you yet" screen, so it has to
+   say the right thing to three different people: someone signed out, a new
+   member whose membership is not activated, and a partner whose application
+   is still with the committee. Sending any of them a bare "Members only"
+   would be wrong, and for the two who are already signed in it would be
+   confusing as well. */
+function paintDenied(screen){
+  const h = $('#authH'), why = $('#authWhy'), join = $('#authJoin');
+  const thing = {meetings:'The calendar', agenda:'The agenda',
+                 learning:'The learning modules',
+                 module:'The learning modules'}[screen] || 'That page';
+  if(!why) return;
+  why.hidden = false;
+
+  if(!signedIn()){
+    if(h) h.textContent = 'Members only';
+    if(join) join.hidden = false;
+    why.textContent = thing + ' opens up once you sign in. We email you a link — there is no password to remember.';
+    return;
+  }
+  if(join) join.hidden = true;
+
+  if(isPartner()){
+    if(h) h.textContent = 'Not just yet';
+    why.textContent = 'Your application is with the organizing committee. The calendar is open to you now, and ' +
+      thing.charAt(0).toLowerCase() + thing.slice(1) + ' opens once they have reviewed it. Nothing needed from you.';
+    return;
+  }
+  if(h) h.textContent = 'Not just yet';
+  why.textContent = thing + ' opens up once your membership is activated, which happens when your group is welcomed in. ' +
+    'The calendar and the learning modules are open to you now.';
+}
+
+function clearDenied(){
+  const h = $('#authH'), why = $('#authWhy'), join = $('#authJoin');
+  if(why) why.hidden = true;
+  if(h) h.textContent = 'Members only';
+  if(join) join.hidden = !signedIn() ? false : true;
+}
+
 function paintAuth(){
   const inB = signedIn();
   $('#authBtn').textContent = inB ? (AUTH.name || 'Account') : 'Sign in';
-  $$('#nav button').forEach(b => b.classList.toggle('locked', GATED.includes(b.dataset.go) && !inB));
+  $$('#nav button').forEach(b => {
+    b.hidden = !screenOpen(b.dataset.go);
+  });
   $('#authStep1').hidden = inB;
   $('#authStep2').hidden = true;
   $('#authDone').hidden = !inB;
@@ -4567,7 +4651,6 @@ function paintAuth(){
   const dec = $('#vtDecided'); if(dec && ptn) dec.hidden = true;
 
   $$('[data-partner-note]').forEach(el => el.hidden = !ptn);
-  $$('[data-partner-pending]').forEach(el => el.hidden = !(ptn && partnerRank() < PARTNER_AGENDA));
   $$('[data-partner-live]').forEach(el => el.hidden = !(ptn && partnerRank() >= PARTNER_AGENDA));
   if(typeof renderMeetings === 'function') renderMeetings();
 }

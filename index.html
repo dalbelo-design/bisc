@@ -1755,7 +1755,7 @@ const fmtRange = (y1,m1,d1,y2,m2,d2) => (m1===m2 && y1===y2)
   : fmtDay(y1,m1,d1) + ' \u2013 ' + fmtDay(y2,m2,d2);
 
 /* ---- calendar: sheet events and meeting changes ---- */
-let CAL = {events:[], changes:[], loaded:false};
+let CAL = {events:[], changes:[], links:{}, loaded:false};
 
 async function loadCalendar(){
   try{
@@ -1764,7 +1764,8 @@ async function loadCalendar(){
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify(body)});
     const out = await r.json().catch(()=>null);
-    if(out && out.ok) CAL = {events:out.events||[], changes:out.changes||[], loaded:true};
+    if(out && out.ok) CAL = {events:out.events||[], changes:out.changes||[],
+                             links:out.links||{}, loaded:true};
   }catch(e){ /* keep whatever is built into the app */ }
   return CAL;
 }
@@ -4244,6 +4245,14 @@ function renderDayPanel(){
     .format(new Date(selDay.y, selDay.mo, selDay.d));
   if(!ev.length){ p.innerHTML = `<h3>${dateStr}</h3><p class="empty-day">Nothing scheduled.</p>`; return; }
   const linkFor = e => {
+    /* Recurring meetings carry no link of their own — the join link comes
+       from the server, keyed by meeting kind, and only arrives if this
+       person's rank clears the 'Visible to' column. If it is not in
+       CAL.links, they were not meant to have it, so nothing renders. */
+    if(!e.link && !e.allDay && CAL.links && CAL.links[e.kind]){
+      const j = CAL.links[e.kind];
+      return `<a class="ev-link" href="${j.url}" target="_blank" rel="noopener">${esc(j.label)} \u2192</a>`;
+    }
     if(!e.link) return '';
     const gated = e.link.gated !== false;
     if(gated && !signedIn())
@@ -4271,6 +4280,7 @@ function renderDayPanel(){
       <p class="t1">${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</p>
       <p class="t2">${fmtT(e.dt, ET)} ET \u00b7 ${fmtT(e.dt, PT)} PT \u2014 ${e.session}</p>
       <p class="d">${e.desc}</p>
+      ${e.canceled ? '' : linkFor(e)}
     </div>`).join('');
 }
 

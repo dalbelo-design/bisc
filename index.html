@@ -121,6 +121,20 @@ p{margin:0 0 14px;max-width:60ch}
 
 .vals{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .val{font-family:var(--display);font-weight:600;font-size:14px;background:var(--yellow);color:var(--ink);border-radius:99px;padding:7px 14px}
+/* Each value is a tappable bubble that opens our definition of it.
+   Uses <details>, so it works with no JavaScript and reads correctly
+   to a screen reader. Same +/- affordance as the Learning tracks. */
+.vals{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.vx{background:var(--raised);border:1px solid var(--line);border-radius:12px}
+.vx[open]{border-color:var(--green-dk)}
+.vx summary{padding:11px 14px;align-items:center;gap:10px}
+.vx summary::-webkit-details-marker{display:none}
+.vx summary::after{content:'+';margin-left:auto;color:var(--orange);font-size:24px;line-height:.8;font-weight:700}
+.vx[open] summary::after{content:'–'}
+.vx-k{font-family:var(--display);font-weight:700;font-size:15px;background:var(--yellow);color:var(--ink);border-radius:99px;padding:7px 15px}
+.vx[open] .vx-k{background:var(--green-dk);color:#fff}
+.vx-b{padding:2px 16px 15px}
+.vx-b p{font-size:15px;line-height:1.55;color:var(--ink-soft);margin:0}
 
 .btn{display:block;width:100%;min-height:54px;border:none;border-radius:11px;background:var(--green-dk);color:#fff;font-family:var(--display);font-weight:700;font-size:18px;cursor:pointer;transition:transform .12s ease,filter .15s ease;padding:14px 18px}
 .btn:active{transform:scale(.985)}
@@ -512,9 +526,9 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <p class="lede" data-i18n="home.lede">A national union of people who have been through a guaranteed income pilot. We know what direct cash did. We should be the ones saying so.</p>
 
   <div class="mission">
-    <p><strong>The Basic Income Solidarity Community (BISC) Union is a community-led initiative run by people power.</strong></p>
+    <p><strong>The Basic Income Solidarity Community Union is a people-powered movement to reclaim our collective right to economic security and dignity.</strong></p>
     <p>We believe that lasting change comes from organized communities.</p>
-    <p style="margin-bottom:0">Our union, founded by former pilot participants, welcomes people from across the U.S. to co-design a community that supports and advocates for direct cash and its benefits. Our mission is to win a basic income for every person in America by turning curiosity into courage, solidarity into power, and isolation into belonging. We are reclaiming our collective right to economic security and instilling dignity in the process.</p>
+    <p style="margin-bottom:0">Our mission is to win a basic income for every person in America by turning curiosity into courage, solidarity into power, and isolation into belonging.</p>
   </div>
   <div class="qr-block">
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAGkAQMAAABEgsN2AAAABlBMVEX///8kcifShZNdAAACCUlEQVR42u2bTY7qQAyEywlSZtfvBnATuFnCzZKbZG5AdiAB9RbuDsnwVqNZ5HmqNvw0n5Asy6q2HUCSJEmSpF+rmi/dAbTkFXt2QGIPNF+OgepbfyNK1M9SO3/5POTPBNJlzur7ZG/HiqGoIFRLkn1JbfsAgIf9+eexYigqKlUv81wxFBXK2yyV/QyAhymGojZM5co8lre8I5U7ZJe/a1bHiqGoENS+5DkA4FzhZgeg5gVHvh0rhqL+e+phL+0wGZ+ltif2wG11rBiKilLnnwvz4h2Y9g5gMO+fm+q8qE1SNQezmlcAtkNiB9zsgLO9+ocAgMEUQ1FBb6PP1WTz6kdJFVtUmJyHj/Ebb5AntyTj4jaqGIoK6G1ITnaanbnZwZ05fJtFzlxUMG+T2+pHZg/Dq99GE3u4tzGSvTrtojboUtbp2T69veKpWnopF2hOJCqOSxnRPuwDgDW84Fyh4WDd+qdJG1yiQt1GS9dl3jPPLmUp5byoONSnWeUz0B3gdZ7Mg1Azs1Lz5W1Ebc+lfH30BzfvpUx2Wm1wabIvKkovZU7qchttOBaXApQLqiq2qEg5nx8YKnV+sam4knJeVFSq4eBriqfZmU9m2oERtXEq+fRnz672Pjk54lxpm0VUWGeefP825/yRfhvVlFNUrJx/68Dk2WjumY+AZqOiIuW8JEmSJEm/Tn8B5laGxRzv+XAAAAAASUVORK5CYII=" alt="QR code that opens the BISC Union app">
@@ -1271,10 +1285,32 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
 <h2 data-i18n="ab.values.h">Our values</h2>
+  <p style="font-size:15px;color:var(--ink-soft);margin:0 0 12px">Tap any value to read what we mean by it.</p>
   <div class="vals">
-    <span class="val">Learning &amp; shared knowledge</span><span class="val">Collective power &amp; solidarity</span>
-    <span class="val">Respect &amp; representation</span><span class="val">Dignity</span><span class="val">Inclusion</span>
-    <span class="val">Integrity &amp; transparency</span><span class="val">Curiosity &amp; growth</span><span class="val">Safety &amp; support</span>
+    <details class="vx">
+      <summary><span class="vx-k">Solidarity</span></summary>
+      <div class="vx-b"><p>BISC stands together with a unified voice as we explore how basic income can support our diversity of lived experience. Through this, BISC empowers members to redefine how our society and government supports community. We approach this through kindness and a belief in the importance of being in service to others.</p></div>
+    </details>
+    <details class="vx">
+      <summary><span class="vx-k">Inclusion</span></summary>
+      <div class="vx-b"><p>BISC is a welcoming space where all people can connect with one another and feel like they belong. BISC embraces full and unconditional acceptance with the understanding that all members need to uphold the value of mutual respect.</p></div>
+    </details>
+    <details class="vx">
+      <summary><span class="vx-k">Growth</span></summary>
+      <div class="vx-b"><p>BISC is built by a small but mighty group dedicated to growing a movement that advocates for basic income. Through continuous supportive collaboration, members grow in their knowledge and collectively gain the capacity to strengthen a movement.</p></div>
+    </details>
+    <details class="vx">
+      <summary><span class="vx-k">Transparency</span></summary>
+      <div class="vx-b"><p>BISC operates by providing clear and continuous communication through our community centered process. Giving members several opportunities to provide feedback, collaborate, and stay informed.</p></div>
+    </details>
+    <details class="vx">
+      <summary><span class="vx-k">Safety</span></summary>
+      <div class="vx-b"><p>BISC strives to create a safe space that is judgement free and respectful of each other's experience. We want all members to feel good when they share their thoughts, ideas, opinions, and feelings with the larger group.</p></div>
+    </details>
+    <details class="vx">
+      <summary><span class="vx-k">Dignity</span></summary>
+      <div class="vx-b"><p>BISC upholds a culture of mutual respect between members and approaches member's shared ideas in a thoughtful, unbiased, and open manner.</p></div>
+    </details>
   </div>
 
   <div class="card green"><p style="margin:0"><strong>Inclusion means everyone.</strong> Religion, age, race, gender, economic status — everyone is welcomed here.</p></div>

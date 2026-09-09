@@ -56,6 +56,10 @@ p{margin:0 0 14px;max-width:60ch}
 .panel-green .card{background:var(--paper);border-color:transparent}
 .panel-green .card h3{color:var(--green-dk)}
 
+/* a green panel holding prose rather than a steps list */
+.panel-green.prose{padding-bottom:20px}
+.panel-green > p{color:#DCEFDE;font-size:15px}
+.panel-green > p:last-child{margin-bottom:0}
 .panel-green .steps li{border-bottom-color:#479B4A}
 .panel-green .when{color:#FEE6B0}
 #agendaBody .when{flex:0 0 96px}
@@ -710,11 +714,11 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </form>
 
   <!-- PARTNER PATH -->
-  <div class="card" data-path-partner hidden>
-    <h3>Working together</h3>
-    <p style="font-size:15px;margin:0 0 8px">Organizations work alongside members. Members set the direction and decide what BISC takes on; you bring what you're good at.</p>
-    <p style="font-size:15px;margin:0 0 8px">Members are paid for their time, so we build that in from the start rather than raising it late. When members share their experience, it's because they chose to and on terms they set.</p>
-    <p style="font-size:15px;margin:0">We make introductions rather than hand over lists, so you'll always have a member alongside you.</p>
+  <div class="panel-green prose" data-path-partner hidden>
+    <h2>Working together</h2>
+    <p style="margin:0 0 10px">Organizations work alongside members. Members set the direction and decide what BISC takes on; you bring what you're good at.</p>
+    <p style="margin:0 0 10px">Members are paid for their time, so we build that in from the start rather than raising it late. When members share their experience, it's because they chose to and on terms they set.</p>
+    <p style="margin:0">We make introductions rather than hand over lists, so you'll always have a member alongside you.</p>
   </div>
 
   <h2 data-path-partner hidden>Three ways in</h2>

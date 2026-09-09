@@ -1237,7 +1237,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
   <div id="authDone" hidden>
-    <div class="whoami"><strong id="whoName"></strong> — you're signed in on this device for 30 days.</div>
+    <div class="whoami"><strong id="whoName"></strong><span id="whoStatus"></span> — you're signed in on this device for 30 days.</div>
     <div class="btn-row"><button class="btn ghost" id="signOut">Sign out</button></div>
   </div>
 
@@ -4692,7 +4692,17 @@ function paintAuth(){
   $('#authStep1').hidden = inB;
   $('#authStep2').hidden = true;
   $('#authDone').hidden = !inB;
-  if(inB) $('#whoName').textContent = AUTH.name ? 'Signed in as ' + AUTH.name : 'Signed in';
+  if(inB){
+    $('#whoName').textContent = AUTH.name ? 'Signed in as ' + AUTH.name : 'Signed in';
+    /* Show the standing the server has on record. What someone can reach
+       hangs on this exact word, so being able to read it saves guessing
+       when a link or a page is not appearing. */
+    const st = $('#whoStatus');
+    if(st){
+      const raw = String((AUTH && AUTH.status) || '').trim();
+      st.textContent = raw ? ' \u00b7 ' + raw : '';
+    }
+  }
   const act = isActivated();
   const ptn = isPartner();
   [['notesGate','notesLock','notesWait'],

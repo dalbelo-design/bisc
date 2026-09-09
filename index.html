@@ -1165,14 +1165,15 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </details>
 
   <details class="trk">
-    <summary><span data-i18n="t5.name">Running the union</span> <span class="ready">Ready</span> <span class="cnt">5 modules</span></summary>
+    <summary><span data-i18n="t5.name">Running the union</span> <span class="ready">Ready</span> <span class="cnt">6 modules</span></summary>
     <div class="trk-b">
       <p data-i18n="t5.blurb">The work of keeping this thing going. Take these when you are ready to take something on.</p>
-      <div class="mod live" data-mod="m19"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m19.listtitle">Facilitating a meeting</h4><p data-i18n="m19.listdesc">Holding time, handling interruptions, making room for quiet people.</p></div><div class="mod-t">12 min</div></div>
-      <div class="mod live" data-mod="m20"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m20.listtitle">Planning an event</h4><p data-i18n="m20.listdesc">Budget, access, logistics, and what always goes wrong.</p></div><div class="mod-t">10 min</div></div>
-      <div class="mod live" data-mod="m21"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m21.listtitle">Notes people actually use</h4><p data-i18n="m21.listdesc">Recording decisions and commitments, not everything said.</p></div><div class="mod-t">6 min</div></div>
-      <div class="mod live" data-mod="m22"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m22.listtitle">Becoming a BISC Buddy</h4><p data-i18n="m22.listdesc">Welcoming new members and staying with them through the first months.</p></div><div class="mod-t">10 min</div></div>
-      <div class="mod live" data-mod="m23"><div class="mod-n">5</div><div class="mod-b"><h4 data-i18n="m23.listtitle">Conflict and repair</h4><p data-i18n="m23.listdesc">What to do when it goes wrong between members.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m28"><div class="mod-n">1</div><div class="mod-b"><h4 data-i18n="m28.listtitle">How we decide things</h4><p data-i18n="m28.listdesc">The seven-day cycle, and how a vote works in the companion.</p></div><div class="mod-t">11 min</div></div>
+      <div class="mod live" data-mod="m19"><div class="mod-n">2</div><div class="mod-b"><h4 data-i18n="m19.listtitle">Facilitating a meeting</h4><p data-i18n="m19.listdesc">Holding time, handling interruptions, making room for quiet people.</p></div><div class="mod-t">12 min</div></div>
+      <div class="mod live" data-mod="m20"><div class="mod-n">3</div><div class="mod-b"><h4 data-i18n="m20.listtitle">Planning an event</h4><p data-i18n="m20.listdesc">Budget, access, logistics, and what always goes wrong.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m21"><div class="mod-n">4</div><div class="mod-b"><h4 data-i18n="m21.listtitle">Notes people actually use</h4><p data-i18n="m21.listdesc">Recording decisions and commitments, not everything said.</p></div><div class="mod-t">6 min</div></div>
+      <div class="mod live" data-mod="m22"><div class="mod-n">5</div><div class="mod-b"><h4 data-i18n="m22.listtitle">Becoming a BISC Buddy</h4><p data-i18n="m22.listdesc">Welcoming new members and staying with them through the first months.</p></div><div class="mod-t">10 min</div></div>
+      <div class="mod live" data-mod="m23"><div class="mod-n">6</div><div class="mod-b"><h4 data-i18n="m23.listtitle">Conflict and repair</h4><p data-i18n="m23.listdesc">What to do when it goes wrong between members.</p></div><div class="mod-t">10 min</div></div>
     </div>
   </details>
 
@@ -2396,8 +2397,56 @@ const MODULES = {
     tryit:'Name three organizations within ten miles of you that touch the same households. Find out who runs each one.'
   },
 
+  m28: {
+    track:'Running the union', n:1, mins:11, title:'How we decide things',
+    lede:'The seven-day cycle, and how a vote actually works in the companion. Everything else in this track assumes you know this.',
+    sections:[
+      {h:'Deciding is uncomfortable. Discussing is not.',
+       p:['A group left to itself will discuss forever and call it being careful. Meanwhile nothing is settled and the same question comes back every week, a little more tired each time.',
+          'So the union runs a cycle. It fixes when a thing is raised, how long you have to think about it, and when the thinking stops. That way nobody has to be the person who forces a decision. The calendar does it.']},
+      {h:'Most things are not a vote',
+       p:['The fastest way to drown a committee is to bring it everything. Before something goes on an agenda, work out which kind it is.',
+          '<strong>Doing the work.</strong> Wording an email, picking a time, fixing a page. Whoever holds the role decides. No vote.',
+          '<strong>Small and reversible.</strong> Trying a new format for one meeting. The working group decides and tells everyone after.',
+          '<strong>Structural, spending, or public.</strong> Adopting agreements, spending money, anything the outside world will see. This goes through the full cycle.',
+          'The test: if it can be undone next week and costs nothing, it is not a vote. Someone should just do it and say so.']},
+      {h:'The seven days',
+       p:['Every item lives across two meetings. Presented at one, decided at the next. Nobody is asked to vote on something they first heard about twenty minutes ago.',
+          '<strong>Any time</strong> — you request time or put something to the vote, in the companion.',
+          '<strong>Monday evening</strong> — cutoff. Anything in by then reaches Wednesday. Later requests wait a week.',
+          '<strong>Tuesday</strong> — the agenda is published in the companion. You can read every item before the meeting.',
+          '<strong>Wednesday</strong> — voting closes on last week&rsquo;s items and results are read out. New items are presented. Voting opens on them.',
+          '<strong>Thursday to Tuesday</strong> — the voting week. Vote whenever suits you, and change your mind as often as you like until it closes.']},
+      {h:'The fifteen minutes',
+       p:['The decision block runs in a fixed order, every week, on a timer. Voting closes on last week&rsquo;s items, said out loud so everyone knows the moment. Results are read out, carried or not carried, with the count. No re-litigating.',
+          'Then new items are presented, two minutes each, by whoever asked for them. Questions of clarification only. &ldquo;What would this cost?&rdquo; yes. &ldquo;I think we should do something else instead&rdquo; no, that belongs in the voting week.',
+          'An item is presented once. If it needs more explaining than two minutes, the card was not written well enough, and the fix is a better card rather than more meeting.']},
+      {h:'Where the arguing goes',
+       p:['It does not disappear. It moves out of the room and into the week.',
+          'The card carries the case. Every ballot item says what Yes means, what No means, and what it costs. Written well, most questions never get asked.',
+          'The seven days are for the actual discussion, wherever it happens. That is more time to think than any meeting gives you.',
+          'If a real problem surfaces mid-week, whoever raised the item can pull it and bring it back changed. That is better than voting down something that was nearly right.']},
+      {h:'Quorum, and abstaining',
+       p:['A result only stands if enough people took part. That threshold is set by the body doing the deciding, and it is the reason your vote matters even when you are fairly sure which way a thing will go.',
+          'Abstaining counts as taking part. If you read an item and decide you are not ready, that is participation, not absence. It counts toward quorum but not toward yes or no.',
+          'That is deliberate. An honest abstention is worth more than a guess, and you should never feel you have to invent an opinion to avoid holding things up.',
+          'If not enough people vote, the item carries to the next cycle once, with a reminder. If it misses again it is decided by those who did vote. Otherwise a quiet fortnight could block the union indefinitely, and not voting would become a way of voting no without saying so.']},
+      {h:'When something does not carry',
+       p:['It can come back once, changed. Not unchanged, because that is just asking the room again until it gives the answer someone wanted.',
+          'If it fails a second time it goes to a working group, with a named person and a date to report back.',
+          'Nothing sits open forever. Every item ends as carried, not carried, or handed to someone with a deadline.']},
+      {h:'Doing it in the companion',
+       p:['Open the Agenda tab. Items open for voting are listed there with the case for each one.',
+          'You can vote any time during the seven days and change your mind until voting closes. The last thing you selected is what counts.',
+          'To put something to the vote yourself, use the request form on the same screen before the Monday cutoff.',
+          'One thing worth holding onto: the app does not decide any of this. It only carries it. Every time the companion has looked like it had a design problem, it turned out to be a question the union had not answered yet.']}
+    ],
+    key:'Raised one week, decided the next. Seven days to think, abstaining counts, and an item that fails can come back once if it has changed.',
+    tryit:'Open the Agenda tab and read one item that is currently open. Work out what Yes would commit the union to and what it would cost, then vote or abstain.'
+  },
+
   m19: {
-    track:'Running the union', n:1, mins:12, title:'Facilitating a meeting',
+    track:'Running the union', n:2, mins:12, title:'Facilitating a meeting',
     lede:'Holding time, handling interruptions, and making room for the people who have not spoken. The core skill of running anything.',
     sections:[
       {h:'Your job is not to talk',
@@ -2427,7 +2476,7 @@ const MODULES = {
   },
 
   m20: {
-    track:'Running the union', n:2, mins:10, title:'Planning an event',
+    track:'Running the union', n:3, mins:10, title:'Planning an event',
     lede:'Budget, access, logistics, and the things that always go wrong. A checklist more than a philosophy.',
     sections:[
       {h:'Start from the purpose and the number',
@@ -2455,7 +2504,7 @@ const MODULES = {
   },
 
   m21: {
-    track:'Running the union', n:3, mins:6, title:'Notes people actually use',
+    track:'Running the union', n:4, mins:6, title:'Notes people actually use',
     lede:'Recording decisions and commitments, not everything that was said. Shorter is better and more useful.',
     sections:[
       {h:'The mistake',
@@ -2482,7 +2531,7 @@ const MODULES = {
   },
 
   m22: {
-    track:'Running the union', n:4, mins:10, title:'Becoming a BISC Buddy',
+    track:'Running the union', n:5, mins:10, title:'Becoming a BISC Buddy',
     lede:'Welcoming new members and staying with them through their first months. The role the whole union depends on.',
     sections:[
       {h:'What a Buddy is for',
@@ -2509,7 +2558,7 @@ const MODULES = {
   },
 
   m23: {
-    track:'Running the union', n:5, mins:10, title:'Conflict and repair',
+    track:'Running the union', n:6, mins:10, title:'Conflict and repair',
     lede:'What to do when it goes wrong between members. Every organization has this; the ones that last have a practice for it.',
     sections:[
       {h:'It is going to happen',
@@ -4251,7 +4300,12 @@ function renderDayPanel(){
        CAL.links, they were not meant to have it, so nothing renders. */
     if(!e.link && !e.allDay && CAL.links && CAL.links[e.kind]){
       const j = CAL.links[e.kind];
-      return `<a class="ev-link" href="${j.url}" target="_blank" rel="noopener">${esc(j.label)} \u2192</a>`;
+      /* Only absolute http(s), or the browser resolves it against bisc.work
+         and the button 404s. Quotes are escaped because esc() does not touch
+         them and this value goes straight into an attribute. */
+      const href = /^https?:\/\//i.test(String(j.url || '')) ? String(j.url) : '';
+      if(!href) return '';
+      return `<a class="ev-link" href="${esc(href).replace(/"/g,'&quot;')}" target="_blank" rel="noopener">${esc(j.label)} \u2192</a>`;
     }
     if(!e.link) return '';
     const gated = e.link.gated !== false;

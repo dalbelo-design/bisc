@@ -342,6 +342,24 @@ h2.fold.open .fold-x::after{content:'\2013'}
   padding:9px 18px;font-family:var(--display);font-weight:700;font-size:14.5px;cursor:pointer;min-height:44px}
 .vt-btn.yes.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
 .vt-btn.no.on{background:#8A3216;border-color:#8A3216;color:#fff}
+.vt-btn.abstain.on{background:var(--stone);border-color:var(--stone);color:#fff}
+.vt-why{margin-top:11px;border-top:1px solid var(--line);padding-top:10px}
+.vt-why>summary{list-style:none;cursor:pointer;font-family:var(--display);font-weight:700;
+  font-size:14px;color:var(--green-dk);padding:3px 0;min-height:28px;display:flex;align-items:center;gap:7px}
+.vt-why>summary::-webkit-details-marker{display:none}
+.vt-why>summary::after{content:'+';font-size:17px;font-weight:700;color:var(--stone);margin-left:auto}
+.vt-why[open]>summary::after{content:'\2013'}
+.vt-why textarea{width:100%;box-sizing:border-box;min-height:74px;margin:8px 0 0;
+  font-family:var(--body);font-size:15px;color:var(--ink);background:var(--paper);
+  border:1.5px solid var(--line);border-radius:10px;padding:10px 11px;resize:vertical}
+.vt-why textarea:focus{outline:none;border-color:var(--green-md)}
+.vt-why-row{display:flex;align-items:center;gap:10px;margin-top:9px}
+.vt-why-save{border:1.5px solid var(--green-dk);background:var(--green-dk);color:#fff;
+  border-radius:99px;font-family:var(--display);font-weight:700;font-size:14px;
+  padding:7px 16px;min-height:36px;cursor:pointer}
+.vt-why-save:disabled{opacity:.5;cursor:default}
+.vt-why-note{font-size:13px;color:var(--stone)}
+.vt-bar .a{background:var(--stone);opacity:.5}
 .vt-btn:disabled{opacity:.55;cursor:default}
 .vt-tally{font-family:var(--display);font-weight:700;font-size:14px;color:var(--stone);margin-left:auto}
 .vt-tally.quiet{font-weight:600;color:var(--stone);opacity:.8}
@@ -3698,6 +3716,8 @@ function startTimer(){
    replaces your earlier vote.
    ========================================================= */
 let vtItems = [];
+// which reason boxes are open, so a repaint does not shut them
+const vtWhyOpen = new Set();
 let vtError = '';
 const vtTimers = {};
 
@@ -3855,7 +3875,7 @@ function vtPaint(){
       return `<div class="vt-out ${carried?'yes':'no'}">
         <span class="vt-out-k">${carried?'Carried':'Not carried'}</span>
         <span class="vt-out-i">${esc(v.item)}</span>
-        <span class="vt-out-n">${v.yes}\u2013${v.no}</span>
+        <span class="vt-out-n">${v.yes}\u2013${v.no}${v.abstain ? ' ('+v.abstain+' abs)' : ''}</span>
       </div>`;
     };
 
@@ -3907,11 +3927,14 @@ function vtPaint(){
   }
   list.innerHTML = ordered.map(v=>{ try{
     const cast = v.cast || 0;
-    const total = v.revealed ? (v.yes + v.no) : 0;
+    const ab = v.abstain || 0;
+    // abstentions count as taking part, so they belong in the totals
+    const total = v.revealed ? (v.yes + v.no + ab) : 0;
     const yPct = total ? (v.yes/total*100) : 0;
     const nPct = total ? (v.no/total*100) : 0;
+    const aPct = total ? (ab/total*100) : 0;
     const tallyText = v.revealed
-      ? (total ? v.yes+' yes \u00b7 '+v.no+' no' : 'no votes')
+      ? (total ? [v.yes+' yes', v.no+' no', ab ? ab+' abstained' : ''].filter(Boolean).join(' \u00b7 ') : 'no votes')
       : (cast ? cast + (cast===1 ? ' vote cast' : ' votes cast') : 'no votes yet');
     // a Date cell that is not a real date used to throw here and wipe the
     // whole list, so fall back to showing whatever was typed
@@ -3936,11 +3959,20 @@ function vtPaint(){
       <div class="vt-row">
         <button class="vt-btn yes${v.mine==='yes'?' on':''}" data-vote="yes" data-id="${v.id}"${v.closed?' disabled':''}>Yes</button>
         <button class="vt-btn no${v.mine==='no'?' on':''}" data-vote="no" data-id="${v.id}"${v.closed?' disabled':''}>No</button>
+        <button class="vt-btn abstain${v.mine==='abstain'?' on':''}" data-vote="abstain" data-id="${v.id}"${v.closed?' disabled':''}>Abstain</button>
         <span class="vt-tally${v.revealed?'':' quiet'}">${tallyText}</span>
       </div>
       ${v.closed ? '<p class="vt-hint">Voting has closed on this one.</p>'
-        : v.mine ? '<p class="vt-hint">Tap '+v.mine+' again to withdraw your vote.</p>' : ''}
-      ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i></div>` : ''}
+        : v.mine ? '<p class="vt-hint">Tap '+(v.mine==='abstain'?'Abstain':v.mine)+' again to withdraw your vote.</p>' : ''}
+      ${(!v.closed && v.mine) ? `<details class="vt-why"${vtWhyOpen.has(v.id)?' open':''} data-why="${v.id}">
+        <summary>${v.mineReason ? 'Your reason' : 'Say why (optional)'}</summary>
+        <textarea data-whytext="${v.id}" placeholder="Nobody else sees this while voting is open. Say as much or as little as you want." maxlength="1000">${esc(v.mineReason || '')}</textarea>
+        <div class="vt-why-row">
+          <button type="button" class="vt-why-save" data-whysave="${v.id}">Save reason</button>
+          <span class="vt-why-note" data-whynote="${v.id}"></span>
+        </div>
+      </details>` : ''}
+      ${v.revealed && total ? `<div class="vt-bar"><i class="y" style="width:${yPct}%"></i><i class="n" style="width:${nPct}%"></i><i class="a" style="width:${aPct}%"></i></div>` : ''}
     </div>`;
   }catch(err){
     console.error('vote card failed', v && v.id, err);
@@ -3959,15 +3991,20 @@ document.addEventListener('click', e=>{
   // tapping your own choice again withdraws it
   const vote = (v.mine === b.dataset.vote) ? 'none' : b.dataset.vote;
 
-  const had = v.mine === 'yes' || v.mine === 'no';
-  const now = vote === 'yes' || vote === 'no';
+  // an abstention is a cast vote — it counts toward taking part
+  const counts = x => x === 'yes' || x === 'no' || x === 'abstain';
+  const had = counts(v.mine), now = counts(vote);
   if(!had && now) v.cast = (v.cast || 0) + 1;
   if(had && !now) v.cast = Math.max(0, (v.cast || 1) - 1);
   if(v.revealed){
     if(v.mine === 'yes') v.yes--; else if(v.mine === 'no') v.no--;
+    else if(v.mine === 'abstain') v.abstain = Math.max(0, (v.abstain || 1) - 1);
     if(vote === 'yes') v.yes++; else if(vote === 'no') v.no++;
+    else if(vote === 'abstain') v.abstain = (v.abstain || 0) + 1;
   }
   v.mine = (vote === 'none') ? '' : vote;
+  // withdrawing a vote takes the reason with it
+  if(vote === 'none'){ v.mineReason = ''; vtWhyOpen.delete(id); }
   vtPaint();                       // redraw straight away, no waiting
 
   // send the last state after a short pause, so rapid taps make one write
@@ -3975,17 +4012,53 @@ document.addEventListener('click', e=>{
   vtTimers[id] = setTimeout(()=>sendVote(v, vote), 700);
 });
 
-async function sendVote(v, vote){
+/* ---- reason for a vote ---- */
+document.addEventListener('toggle', e=>{
+  const d = e.target.closest && e.target.closest('[data-why]');
+  if(!d) return;
+  if(d.open) vtWhyOpen.add(d.dataset.why); else vtWhyOpen.delete(d.dataset.why);
+}, true);
+
+// keep what is typed on the item, so a repaint mid-sentence loses nothing
+document.addEventListener('input', e=>{
+  const t = e.target.closest && e.target.closest('[data-whytext]');
+  if(!t) return;
+  const v = vtItems.find(x=>x.id === t.dataset.whytext);
+  if(v) v.mineReason = t.value;
+});
+
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-whysave]');
+  if(!b) return;
+  const id = b.dataset.whysave;
+  const v = vtItems.find(x=>x.id===id);
+  if(!v || v.closed || !v.mine) return;
+  const box = document.querySelector('[data-whytext="'+CSS.escape(id)+'"]');
+  const note = document.querySelector('[data-whynote="'+CSS.escape(id)+'"]');
+  v.mineReason = box ? box.value : (v.mineReason || '');
+  b.disabled = true; b.textContent = 'Saving\u2026';
+  clearTimeout(vtTimers[id]);
+  sendVote(v, v.mine).then(ok=>{
+    b.disabled = false; b.textContent = 'Save reason';
+    if(note) note.textContent = ok ? 'Saved.' : 'Not saved \u2014 try again when you are back online.';
+  });
+});
+
+async function sendVote(v, vote, reason){
   try{
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({type:'vote_cast', token: AUTH.token, id: v.id, vote,
+        reason: (reason !== undefined) ? reason : (v.mineReason || ''),
         date: v.date || '', meeting: v.meeting || '', item: v.item || ''})});
     const out = await r.json().catch(()=>null);
     if(out && out.ok === false && out.error === 'voting closed'){
       v.closed = true; vtPaint();
+      return false;
     }
+    return !!(out && out.ok);
   }catch(err){
     // offline — the vote stays shown; it will be sent on the next tap
+    return false;
   }
 }
 

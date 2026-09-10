@@ -634,7 +634,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
     </button>
     <button type="button" class="pick-c" data-path="partner">
       <span class="pick-k">I represent an organization</span>
-      <span class="pick-d">Join as a partner. Endorse, partner with us, or fund the work.</span>
+      <span class="pick-d">Work with us as an organization. We connect, then find what we can do for each other.</span>
     </button>
   </div>
 
@@ -742,33 +742,22 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <div class="panel-green prose" data-path-partner hidden>
     <h2>Working together</h2>
     <p style="margin:0 0 10px">Organizations work alongside members. Members set the direction and decide what BISC takes on; you bring what you're good at.</p>
-    <p style="margin:0 0 10px">Members are paid for their time, so we build that in from the start rather than raising it late. When members share their experience, it's because they chose to and on terms they set.</p>
+    <p style="margin:0 0 10px">When members share their experience, it's because they chose to and on terms they set.</p>
     <p style="margin:0">We make introductions rather than hand over lists, so you'll always have a member alongside you.</p>
   </div>
 
-  <h2 data-path-partner hidden>Three ways in</h2>
+  <h2 data-path-partner hidden>How partnership works</h2>
   <div class="card" data-path-partner hidden>
-    <p style="font-size:15px;margin:0 0 10px"><strong>Endorse.</strong> Say you're with us and be listed. Two minutes, no meeting, nothing owed.</p>
-    <p style="font-size:15px;margin:0 0 10px"><strong>Partner.</strong> Endorsement plus one concrete thing &mdash; connecting your participants, hosting an assembly, space, translation, training, or an introduction we couldn't get ourselves.</p>
-    <p style="font-size:15px;margin:0"><strong>Fund the work.</strong> Money, on terms we write down together, so nobody is guessing later.</p>
-    <p class="note" style="margin:12px 0 0">Start wherever you like and move later, or don't. Most organizations endorse and nothing more, and that genuinely helps.</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>We connect.</strong> A conversation with us and a member. Nothing agreed in advance, and no application to get through first.</p>
+    <p style="font-size:15px;margin:0 0 10px"><strong>We work out how we can support each other.</strong> Hosting an assembly, providing space, translation, training, introductions, connecting participants &mdash; whatever fits what you actually do.</p>
+    <p style="font-size:15px;margin:0"><strong>We write it down.</strong> Whatever we land on gets recorded, so nobody is guessing later and you have someone here to call.</p>
+    <p class="note" style="margin:12px 0 0">There are no tiers and nothing to sign up to. If it turns out there is nothing obvious to do together yet, that is a fine outcome too.</p>
   </div>
 
   <h2 data-path-partner hidden>Say hello</h2>
-  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px" data-path-partner hidden>Pick where you'd like to start and we'll ask only what that needs.</p>
+  <p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px" data-path-partner hidden>Tell us who you are and roughly what you're thinking. We'll take it from there.</p>
 
   <form id="partnerForm" novalidate data-path-partner hidden>
-    <div class="f">
-      <label class="q">Where would you like to start?</label>
-      <div class="choices" id="pLevel">
-        <label class="choice"><input type="radio" name="plevel" value="Endorse"><span>Endorse — say you're with us and be listed</span></label>
-        <label class="choice"><input type="radio" name="plevel" value="Partner"><span>Partner — there's something specific we could do together</span></label>
-        <label class="choice"><input type="radio" name="plevel" value="Fund"><span>Fund the work</span></label>
-        <label class="choice"><input type="radio" name="plevel" value="Not sure"><span>Not sure yet — we'd like to talk it through</span></label>
-      </div>
-      <div class="err" id="pe-level" hidden>Pick whichever is closest — you can change it later.</div>
-    </div>
-
     <div class="f">
       <label class="q" for="pOrg">Organization</label>
       <p class="help">The name as you'd want it listed publicly.</p>
@@ -803,7 +792,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
       </div>
       <div class="err" id="pe-pref" hidden>Please pick at least one way we can reach you.</div>
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q">What kind of organization?</label>
       <div class="choices" id="pType">
         <label class="choice"><input type="radio" name="ptype" value="Pilot administrator"><span>We run a guaranteed income pilot</span></label>
@@ -816,28 +805,28 @@ h2.fold.open .fold-x::after{content:'\2013'}
       </div>
       <div class="err" id="pe-type" hidden>Please pick the closest one.</div>
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q" for="pPilot">Do you run or fund a guaranteed income pilot? <span class="opt">— optional</span></label>
       <p class="help">If our members are in a pilot you run or fund, say so. Some of our best relationships will be exactly that — it just helps to know early.</p>
       <input type="text" id="pPilot" placeholder="Which pilot, and your role in it">
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q" for="pReach">Roughly how many participants could you connect to BISC? <span class="opt">— optional</span></label>
       <p class="help">A rough number is fine. Zero is a perfectly good answer.</p>
       <input type="text" id="pReach" placeholder="An estimate">
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q" for="pOffer">What did you have in mind?</label>
       <p class="help">A sentence is plenty. We'll work the rest out together.</p>
       <textarea id="pOffer" placeholder="What you're thinking of bringing."></textarea>
       <div class="err" id="pe-offer" hidden>Give us a rough idea and we'll take it from there.</div>
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q" for="pAsk">Anything you're hoping for from us? <span class="opt">— optional</span></label>
       <p class="help">Fine to leave blank. It's easier to say now than to find out later that we each expected something different.</p>
       <textarea id="pAsk" placeholder="What would make this worth it for you."></textarea>
     </div>
-    <div class="f" data-lvl-more hidden>
+    <div class="f">
       <label class="q" for="pConflict">Anything we should know up front? <span class="opt">— optional</span></label>
       <textarea id="pConflict" placeholder="Timelines, constraints, board requirements, anything that shapes what's possible."></textarea>
     </div>
@@ -2050,7 +2039,7 @@ const MODULES = {
       {h:'The number',
        p:['Speaking fees for lived experience consultants commonly run from a few hundred dollars for a short panel to several thousand for a keynote or a full day. Advisory work is often billed hourly.',
           'The exact figure matters less than having one before you are asked. People who improvise a number under pressure go low, every time.',
-          'For the union: BISC has a position that this work should be compensated. You are not being difficult by asking. You are doing what the union exists to establish.']},
+          'You are not being difficult by asking. Deciding what your own time is worth is yours to do.']},
       {h:'Scope, in writing',
        p:['Before you agree, get four things in an email: what exactly you are being asked to do, how long it will take including prep, who else will be there, and what you are being paid.',
           'If any of the four is vague, ask. Scope creep in this work is constant — a panel becomes a panel plus a pre-call plus a follow-up interview plus "would you mind if we film it".']},
@@ -4765,6 +4754,8 @@ function isActivated(){ return signedIn() && memberRank() >= 1; }
    wider question. The server enforces the same split; this is for the UI. */
 const PARTNER_RANK = {
   'partner pending': 1, 'pending partner': 1, 'partner (pending)': 1,
+  // partnership has one level now; the older labels stay so organizations
+  // already recorded under them keep the access they were given
   'endorser': 2, 'partner': 2, 'funding partner': 2, 'partner approved': 2,
   'partner declined': 0, 'partner paused': 0, 'partner ended': 0
 };
@@ -5173,25 +5164,6 @@ $$('#joinPick .pick-c').forEach(b => b.addEventListener('click', ()=>{
   setJoinPath(path);
 })();
 
-/* Endorsing should cost two minutes and no meeting. Only the levels that
-   involve actually agreeing something ask the longer questions, so the form
-   an endorser sees is four fields and a button. */
-function partnerLevelPicked(){
-  const el = $('#pLevel input:checked');
-  return el ? el.value : '';
-}
-function paintPartnerLevel(){
-  const lvl = partnerLevelPicked();
-  const more = lvl === 'Partner' || lvl === 'Fund' || lvl === 'Not sure';
-  $$('#partnerForm [data-lvl-more]').forEach(el => el.hidden = !more);
-  const foot = $('#pFoot');
-  if(foot) foot.textContent = lvl === 'Endorse'
-    ? "That's it. You'll be listed, and we'll send a note to say so."
-    : "We read everything that comes in and we'll come back to you.";
-}
-$$('#pLevel input').forEach(r => r.addEventListener('change', paintPartnerLevel));
-paintPartnerLevel();
-
 $('#partnerForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const v = id => ($('#'+id) ? $('#'+id).value.trim() : '');
@@ -5199,16 +5171,12 @@ $('#partnerForm').addEventListener('submit', async e=>{
   const set = (id,bad) => { $('#'+id).hidden = !bad; if(bad) ok = false; };
   const prefs = $$('#pPref input:checked').map(i=>i.value);
   const type  = ($('#pType input:checked')  || {}).value || '';
-  const level = ($('#pLevel input:checked') || {}).value || '';
-  const more = level === 'Partner' || level === 'Fund' || level === 'Not sure';
-  set('pe-level', !level);
   set('pe-org',   !v('pOrg'));
   set('pe-name',  !v('pName'));
   set('pe-email', !/^\S+@\S+\.\S+$/.test(v('pEmail')));
   set('pe-pref',  prefs.length === 0);
-  // only asked for when the chosen level actually shows them
-  set('pe-type',  more && !type);
-  set('pe-offer', more && !v('pOffer'));
+  set('pe-type',  !type);
+  set('pe-offer', !v('pOffer'));
   if(!ok){ $('#partnerForm .err:not([hidden])').scrollIntoView({block:'center',behavior:'smooth'}); return; }
 
   const btn = $('#partnerForm button[type=submit]');
@@ -5220,7 +5188,7 @@ $('#partnerForm').addEventListener('submit', async e=>{
     org:v('pOrg'), website:v('pSite'), contact:v('pName'), role:v('pRole'),
     email:v('pEmail'), phone:v('pPhone'), pref:prefs.join(', '),
     orgType:type, pilot:v('pPilot'), reach:v('pReach'),
-    offering:v('pOffer'), asking:v('pAsk'), level:level, conflict:v('pConflict'),
+    offering:v('pOffer'), asking:v('pAsk'), conflict:v('pConflict'),
     hp: $('#pWebsiteHp') ? $('#pWebsiteHp').value : ''
   });
   busy(btn, false);
@@ -5232,7 +5200,6 @@ $('#partnerForm').addEventListener('submit', async e=>{
   }
 
   const orgName = v('pOrg');
-  const selfServe = level === 'Endorse';
 
   $('#partnerForm').reset();
   $$('#partnerForm .choice').forEach(c=>c.classList.remove('sel'));
@@ -5241,27 +5208,21 @@ $('#partnerForm').addEventListener('submit', async e=>{
   if(eml){ eml.checked = true; if(eml.closest('.choice')) eml.closest('.choice').classList.add('sel'); }
   $$('#partnerForm .err').forEach(el=>el.hidden=true);
 
-  $('#welcomeH').textContent = selfServe ? 'Glad to have you, ' + orgName + '.'
-                                          : 'Thanks, ' + orgName + '.';
-  $('#welcomeEyebrow').textContent = selfServe ? "You're listed" : "We've got it";
-  $('#welcomeLede').textContent = selfServe
-    ? 'Thanks for standing with us. Here is what happens from here.'
-    : 'Thanks for reaching out. Here is what happens from here — nothing needed from you right now.';
-  buildPartnerWelcome(selfServe);
+  $('#welcomeH').textContent = 'Thanks, ' + orgName + '.';
+  $('#welcomeEyebrow').textContent = "We've got it";
+  $('#welcomeLede').textContent =
+    'Thanks for reaching out. Here is what happens from here — nothing needed from you right now.';
+  buildPartnerWelcome();
   $('#welcomeCardH').textContent = 'While you wait';
   $('#welcomeCardP').textContent = 'The calendar is open to you now. Everything we do in the open is on it, and turning up to something is the best way to get a feel for us.';
   go('welcome');
 });
 
-function buildPartnerWelcome(selfServe){
-  /* An endorsement is done the moment it arrives, so its steps say so.
-     The longer path is described as a conversation rather than a review,
-     because that is what it should feel like from the other side. */
-  const steps = selfServe
-    ? [['Done','You\u2019re on the list','Your organization will appear alongside the others backing this.'],
-       ['Now','The calendar is open to you','Come and see what we actually do. You\u2019re welcome at anything that isn\u2019t members-only.'],
-       ['Whenever','If you want to do more','Just reply to the note we send. No form, no application.']]
-    : [['This week','We\u2019ll be in touch','A real person, with what we think we could do together.'],
+function buildPartnerWelcome(){
+  /* Described as a conversation rather than a review, because that is what
+     it should feel like from the other side. */
+  const steps =
+      [['This week','We\u2019ll be in touch','A real person, with what we think we could do together.'],
        ['Now','The calendar is open to you','Come and see how we work before anything is agreed.'],
        ['Soon','A conversation','Us and you, with a member in the room, because they\u2019re who you\u2019d be working alongside.'],
        ['When it\u2019s clear','We write it down','Whatever we land on gets recorded so nobody is guessing later, and someone here is yours to call.']];

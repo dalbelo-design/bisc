@@ -303,6 +303,13 @@ body.mt-showing #fbBtn{bottom:calc(var(--nav-h) + 74px + env(safe-area-inset-bot
 .vt-out{display:flex;gap:10px;align-items:baseline;background:var(--raised);border:1px solid var(--line);
   border-left:5px solid var(--green-md);border-radius:11px;padding:11px 14px;margin-bottom:7px}
 .vt-out.no{border-left-color:#C4795F}
+.vt-out.none{border-left-color:var(--stone)}
+.vt-out.none .vt-out-k{color:var(--stone)}
+.vt-quorum{font-size:13px;color:var(--stone);margin:9px 0 0}
+.vt-quorum.met{color:var(--green-dk);font-weight:600}
+.vt-qbar{height:5px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.vt-qbar i{display:block;height:100%;background:var(--green-md);border-radius:99px}
+.vt-note-q{font-size:13.5px;color:var(--stone);margin:10px 0 0;padding-top:9px;border-top:1px solid var(--line)}
 .vt-out-k{font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.07em;
   text-transform:uppercase;color:var(--green-dk);flex:0 0 auto}
 .vt-out.no .vt-out-k{color:#8A3216}
@@ -3871,11 +3878,20 @@ function vtPaint(){
         : new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(dt);
     };
     const outcome = v => {
-      const carried = v.yes > v.no;
-      return `<div class="vt-out ${carried?'yes':'no'}">
-        <span class="vt-out-k">${carried?'Carried':'Not carried'}</span>
+      // an item that missed quorum neither carried nor failed — it comes back
+      const st = v.outcome || (v.yes > v.no ? 'carried' : 'not carried');
+      const noQ = st === 'no quorum';
+      const thin = st.indexOf('thin') > -1;
+      const failed = st.indexOf('not carried') === 0;
+      const cls = noQ ? 'none' : (failed ? 'no' : 'yes');
+      const label = noQ ? 'No quorum' : (failed ? 'Not carried' : 'Carried');
+      const nums = noQ
+        ? (v.cast||0) + ' of ' + (v.quorum||0)
+        : `${v.yes}\u2013${v.no}${v.abstain ? ' ('+v.abstain+' abs)' : ''}${thin ? ' \u00b7 thin' : ''}`;
+      return `<div class="vt-out ${cls}">
+        <span class="vt-out-k">${label}</span>
         <span class="vt-out-i">${esc(v.item)}</span>
-        <span class="vt-out-n">${v.yes}\u2013${v.no}${v.abstain ? ' ('+v.abstain+' abs)' : ''}</span>
+        <span class="vt-out-n">${nums}</span>
       </div>`;
     };
 
@@ -3889,6 +3905,17 @@ function vtPaint(){
         <div id="vtOlder" hidden>${
           older.map(d=>`<p class="vt-when">${fmtDate(d)}</p>` + byDate[d].map(outcome).join('')).join('')
         }</div>` : '');
+
+    const missed = decided.filter(v=>v.outcome === 'no quorum');
+    const thinned = decided.filter(v=>v.outcome && v.outcome.indexOf('thin') > -1);
+    if(missed.length || thinned.length){
+      const bits = [];
+      if(missed.length) bits.push(missed.length === 1
+        ? 'One item did not reach quorum. It neither carried nor failed \u2014 it comes back next cycle, once.'
+        : missed.length + ' items did not reach quorum. They neither carried nor failed \u2014 they come back next cycle, once.');
+      if(thinned.length) bits.push('Items marked thin missed quorum a second time and were decided by those who did vote.');
+      dlist.insertAdjacentHTML('beforeend', '<p class="vt-note-q">' + bits.join(' ') + '</p>');
+    }
 
     const more = $('#vtMore');
     if(more) more.addEventListener('click', ()=>{
@@ -3936,6 +3963,15 @@ function vtPaint(){
     const tallyText = v.revealed
       ? (total ? [v.yes+' yes', v.no+' no', ab ? ab+' abstained' : ''].filter(Boolean).join(' \u00b7 ') : 'no votes')
       : (cast ? cast + (cast===1 ? ' vote cast' : ' votes cast') : 'no votes yet');
+    // a result only stands if enough members take part, so show the gap
+    const q = v.quorum || 0;
+    const qPct = q ? Math.min(100, cast/q*100) : 0;
+    const qMet = q ? cast >= q : false;
+    const qText = !q ? ''
+      : qMet ? 'Quorum reached \u2014 ' + cast + ' of ' + q + ' have taken part.'
+             : cast + ' of ' + q + ' taken part. Without ' + q + ', the result does not stand'
+               + (v.attempt >= 2 ? ' \u2014 but this is a second cycle, so it will be decided by whoever votes.'
+                                 : ' and this comes back next cycle.');
     // a Date cell that is not a real date used to throw here and wipe the
     // whole list, so fall back to showing whatever was typed
     const when = (()=>{
@@ -3962,6 +3998,10 @@ function vtPaint(){
         <button class="vt-btn abstain${v.mine==='abstain'?' on':''}" data-vote="abstain" data-id="${v.id}"${v.closed?' disabled':''}>Abstain</button>
         <span class="vt-tally${v.revealed?'':' quiet'}">${tallyText}</span>
       </div>
+      ${q ? `<p class="vt-quorum${qMet?' met':''}">${qText}</p>
+        <div class="vt-qbar"><i style="width:${qPct}%"></i></div>` : ''}
+      ${v.attempt >= 2 ? '<p class="vt-hint">Second cycle. This item missed quorum last time'
+        + (v.carriedFrom ? ' (' + esc(v.carriedFrom) + ')' : '') + '.</p>' : ''}
       ${v.closed ? '<p class="vt-hint">Voting has closed on this one.</p>'
         : v.mine ? '<p class="vt-hint">Tap '+(v.mine==='abstain'?'Abstain':v.mine)+' again to withdraw your vote.</p>' : ''}
       ${(!v.closed && v.mine) ? `<details class="vt-why"${vtWhyOpen.has(v.id)?' open':''} data-why="${v.id}">

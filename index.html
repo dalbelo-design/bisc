@@ -522,6 +522,67 @@ h2.fold.open .fold-x::after{content:'\2013'}
   .top svg{width:52px}
   .wordmark .b{font-size:33px}.wordmark .u{font-size:25px}.wordmark .t{font-size:11px}
 }
+
+/* ---------- admin screen ---------- */
+#s-admin .adm-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 18px}
+#s-admin .adm-tab{border:1.5px solid var(--line);background:var(--raised);border-radius:99px;padding:9px 16px;
+  font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink);cursor:pointer;min-height:44px}
+#s-admin .adm-tab.on{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+#s-admin .adm-sub{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+#s-admin .adm-sub .adm-tab{font-size:14px;padding:7px 13px;min-height:40px}
+#s-admin .adm-sub .adm-tab.on{background:var(--yellow);border-color:var(--orange);color:var(--ink)}
+#s-admin .adm-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+#s-admin .adm-bar input[type=search]{flex:1 1 200px;min-width:0}
+#s-admin .adm-group{margin:0 0 22px}
+#s-admin .adm-gh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  border-bottom:2px solid var(--green-dk);padding:0 0 6px;margin:0 0 10px}
+#s-admin .adm-gh h3{margin:0;color:var(--green-dk)}
+#s-admin .adm-gh .m-meta{margin:0}
+#s-admin .adm-row{background:var(--raised);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin:0 0 8px;
+  display:flex;gap:12px;align-items:flex-start}
+#s-admin .adm-row .adm-n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;
+  justify-content:center;font-family:var(--display);font-weight:800;font-size:14px}
+#s-admin .adm-row .adm-b{flex:1;min-width:0}
+#s-admin .adm-row .adm-b strong{display:block;font-family:var(--display);font-size:17px;line-height:1.25;overflow-wrap:anywhere}
+#s-admin .adm-row .adm-s{font-size:14px;color:var(--stone);margin:2px 0 0;overflow-wrap:anywhere}
+#s-admin .adm-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+#s-admin .adm-mini{border:1.5px solid var(--line);background:var(--paper);border-radius:9px;padding:6px 11px;min-height:38px;
+  font-family:var(--display);font-weight:700;font-size:14px;color:var(--ink);cursor:pointer}
+#s-admin .adm-mini.go{background:var(--green-dk);border-color:var(--green-dk);color:#fff}
+#s-admin .adm-mini.warn{color:var(--brick);border-color:#E7C3BB}
+#s-admin .adm-mini.warn.armed{background:var(--brick);border-color:var(--brick);color:#fff}
+#s-admin .adm-mini[disabled]{opacity:.45;cursor:not-allowed}
+#s-admin .adm-chip{display:inline-block;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;border-radius:99px;padding:3px 8px;margin:0 4px 0 0;background:var(--line);color:var(--ink);vertical-align:middle}
+#s-admin .adm-chip.g{background:#DCEFDE;color:var(--green-dk)}
+#s-admin .adm-chip.o{background:var(--yellow);color:#5C4A0C}
+#s-admin .adm-chip.r{background:#F4D9D3;color:var(--brick)}
+#s-admin .adm-form{background:var(--raised);border:2px solid var(--green-md);border-radius:var(--r);padding:16px;margin:0 0 12px}
+#s-admin .adm-form h3{margin:0 0 12px;color:var(--green-dk)}
+#s-admin .adm-f{margin:0 0 13px}
+#s-admin .adm-f label{display:block;font-family:var(--display);font-weight:700;font-size:15px;margin:0 0 4px}
+#s-admin .adm-f .help{font-size:13px;margin:4px 0 0}
+#s-admin .adm-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#s-admin select,#s-admin input[type=date],#s-admin input[type=datetime-local],#s-admin input[type=number],
+#s-admin input[type=url],#s-admin input[type=search]{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;
+  background:var(--raised);min-height:50px;font-size:16px}
+#s-admin input[type=search]{width:auto}
+#s-admin .adm-checks{display:flex;flex-direction:column;gap:6px}
+#s-admin .adm-checks label{display:flex;gap:10px;align-items:center;font-family:var(--body);font-weight:500;font-size:15px;margin:0}
+#s-admin .adm-checks input{width:20px;height:20px;accent-color:var(--green-dk)}
+#s-admin .adm-ro{font-size:14px;color:var(--ink-soft);background:var(--paper);border-radius:10px;padding:10px 12px;margin:0 0 13px}
+#s-admin .adm-ro div{margin:0 0 3px;overflow-wrap:anywhere}
+#s-admin .adm-msg{font-weight:600;font-size:14.5px;margin:8px 0 0}
+#s-admin .adm-msg.bad{color:#A8341C}
+#s-admin .adm-empty{color:var(--stone);font-size:15px;padding:12px 0}
+#s-admin details.adm-adv{border:none;padding:0;margin:0 0 12px}
+#s-admin details.adm-adv summary{font-size:15px;color:var(--green-dk)}
+#s-admin .adm-meter{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin:7px 0 0;max-width:260px}
+#s-admin .adm-meter span{display:block;height:100%;background:var(--green-md)}
+#admToast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 16px);transform:translateX(-50%);background:var(--ink);color:#fff;
+  font-family:var(--display);font-weight:700;font-size:15px;padding:11px 18px;border-radius:99px;z-index:80;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);max-width:calc(100% - 32px);text-align:center}
+@media (max-width:420px){ #s-admin .adm-2{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -554,6 +615,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <button data-go="meetings"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg><span data-i18n="nav.meetings">Calendar</span></button>
   <button data-go="agenda"><svg viewBox="0 0 24 24"><path d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M8 11h8M8 15h5"/></svg><span data-i18n="nav.agenda">Agenda</span></button>
   <button data-go="learning"><svg viewBox="0 0 24 24"><path d="M12 7v13M12 7a5 5 0 0 0-5-4H3v13h4a5 5 0 0 1 5 4 5 5 0 0 1 5-4h4V3h-4a5 5 0 0 0-5 4z"/></svg><span data-i18n="nav.learning">Learning</span></button>
+  <button data-go="admin" hidden><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span>Admin</span></button>
 </nav>
 
 <!-- HOME -->
@@ -1253,7 +1315,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
 
   <div id="authDone" hidden>
     <div class="whoami"><strong id="whoName"></strong><span id="whoStatus"></span> — you're signed in on this device for 30 days.</div>
-    <div class="btn-row"><button class="btn ghost" id="signOut">Sign out</button></div>
+    <div class="btn-row"><button class="btn sm" data-go="admin" id="adminOpen" hidden>Open the Admin screen</button><button class="btn ghost" id="signOut">Sign out</button></div>
   </div>
 
   <div class="card sky" style="margin-top:18px">
@@ -1261,6 +1323,18 @@ h2.fold.open .fold-x::after{content:'\2013'}
     <p style="font-size:15px;margin:0 0 11px">Joining takes about two minutes and it's free.</p>
     <button class="btn sm gold" data-go="join">Join the community</button>
   </div>
+</section>
+
+
+<!-- ADMIN — only people on the Admins tab of the Sheet ever see this.
+     The server checks every request again, so hiding it here is for
+     tidiness, not security. -->
+<section class="screen" id="s-admin">
+  <p class="eyebrow">For admins</p>
+  <h1>Admin</h1>
+  <p class="lede" style="font-size:17px">Change agendas, the ballot, meetings and members here. Every change goes straight into the BISC.Work Sheet, and members see it the next time they open the app.</p>
+  <div class="adm-tabs" id="admTabs" role="tablist"></div>
+  <div id="admPane"><p class="adm-empty">Loading…</p></div>
 </section>
 
 <!-- ABOUT -->
@@ -4519,7 +4593,8 @@ const SCREEN_ACCESS = {
   meetings: function(){ return canSeeCalendar(); },
   learning: function(){ return canSeeLearning(); },
   module:   function(){ return canSeeLearning(); },
-  agenda:   function(){ return canSeeAgenda(); }
+  agenda:   function(){ return canSeeAgenda(); },
+  admin:    function(){ return isAdmin(); }
 };
 const GATED = Object.keys(SCREEN_ACCESS);
 function screenOpen(id){
@@ -4541,6 +4616,7 @@ function go(id){
   window.scrollTo({top:0,behavior:'instant'});
   if(id==='meetings'){ renderMeetings(); loadNotes(); }
   if(id==='agenda') renderAgenda();
+  if(id==='admin') openAdmin();
 }
 document.addEventListener('click', e=>{ const b=e.target.closest('[data-go]'); if(b) go(b.dataset.go); });
 
@@ -4810,6 +4886,12 @@ async function refreshStatus(){
         try{ localStorage.setItem('bisc.auth', JSON.stringify(AUTH)); }catch(e){}
       }
       if(!AUTH.status){ AUTH.status = out.status || 'New member'; }
+      // who is an admin can change on the sheet at any time too
+      const adm = Array.isArray(out.admin) ? out.admin : [];
+      if(JSON.stringify(adm) !== JSON.stringify(AUTH.admin || [])){
+        AUTH.admin = adm;
+        try{ localStorage.setItem('bisc.auth', JSON.stringify(AUTH)); }catch(e){}
+      }
     } else if(out && out.ok === false){
       saveAuth(null);            // token revoked or expired on the server
     }
@@ -4827,7 +4909,7 @@ function paintDenied(screen){
   const h = $('#authH'), why = $('#authWhy'), join = $('#authJoin');
   const thing = {meetings:'The calendar', agenda:'The agenda',
                  learning:'The learning modules',
-                 module:'The learning modules'}[screen] || 'That page';
+                 module:'The learning modules', admin:'The Admin screen'}[screen] || 'That page';
   if(!why) return;
   why.hidden = false;
 
@@ -4839,6 +4921,11 @@ function paintDenied(screen){
   }
   if(join) join.hidden = true;
 
+  if(screen === 'admin'){
+    if(h) h.textContent = 'Admins only';
+    why.textContent = 'The Admin screen is for people on the Admins list. If you should be on it, ask someone who manages admins to add you.';
+    return;
+  }
   if(isPartner()){
     if(h) h.textContent = 'Not just yet';
     why.textContent = 'Your application is with the organizing committee. The calendar is open to you now, and ' +
@@ -4863,6 +4950,7 @@ function paintAuth(){
   $$('#nav button').forEach(b => {
     b.hidden = !screenOpen(b.dataset.go);
   });
+  const ao = $('#adminOpen'); if(ao) ao.hidden = !isAdmin();
   $('#authStep1').hidden = inB;
   $('#authStep2').hidden = true;
   $('#authDone').hidden = !inB;
@@ -4939,7 +5027,8 @@ $('#verifyCode').addEventListener('click', async ()=>{
   }catch(e){}
   b.disabled = false; b.textContent = 'Sign in';
   if(out && out.ok){
-    saveAuth({token: out.token, name: out.name, status: out.status || 'New member', expires: out.expires});
+    saveAuth({token: out.token, name: out.name, status: out.status || 'New member',
+              admin: Array.isArray(out.admin) ? out.admin : [], expires: out.expires});
     msg.textContent = '';
     $('#codeInput').value = '';
     notesCache = null;
@@ -5236,6 +5325,694 @@ function buildPartnerWelcome(){
   $('#welcomeSteps').innerHTML = steps.map(([w,h,p]) =>
     '<li><div class="when">' + esc(w) + '</div><div class="step-b"><h3>' + esc(h) +
     '</h3><p>' + esc(p) + '</p></div></li>').join('');
+}
+
+
+/* =========================================================
+   ADMIN SCREEN
+   Edits the Agendas, Events, Meeting changes, Meeting links,
+   Members and Admins tabs without anyone opening the Sheet.
+
+   Who sees it: people on the Admins tab. The server sends their
+   areas with every sign-in check, and checks again on every
+   request, so nothing here is trusted on its own.
+   ========================================================= */
+
+const ADM_AREA_LABEL = {agendas:'Agendas and the ballot', calendar:'Calendar — meetings, events and join links',
+                        members:'Members', admins:'Admins'};
+const ADM_MEETINGS = ['New member meeting','Community meeting','Organizing Committee','National gathering'];
+const ADM_STATUSES = ['New member','Member','Founding member','Organizing Committee','Steering committee'];
+const ADM_LINK_KINDS = [['nm','New member meeting'],['fu','Community meeting'],['oc','Organizing Committee'],['sx','National gathering']];
+const ADM_VISIBLE = [['everyone','Everyone, even signed out'],['member','Members'],
+                     ['organizing committee','Organizing Committee'],['steering committee','Steering committee']];
+const ADM_YESNO = [['yes','Yes'],['no','No']];
+
+const ADM_FORMS = {
+  agendas: [
+    {k:'Item', label:'Item', type:'text', req:true},
+    {k:'Date', label:'Meeting date', type:'date', req:true, half:true},
+    {k:'Meeting', label:'Meeting', type:'select', options:ADM_MEETINGS, keep:true, half:true},
+    {k:'Order', label:'Order', type:'number', half:true, help:'1 runs first.'},
+    {k:'Minutes', label:'Minutes', type:'number', half:true},
+    {k:'Facilitator', label:'Facilitator', type:'text'},
+    {k:'Detail', label:'Detail', type:'textarea', help:'Line breaks and "- " bullets show in the app.'},
+    {k:'Type', label:'Type', type:'select', options:[['Agenda item','Agenda item'],['Decision','Decision — voted on, never takes a slot']]},
+    {k:'Published', label:'Where it shows', type:'select',
+     options:[['yes','On the posted agenda'],['no','On the ballot — members vote first']]},
+    {k:'Prepared by', label:'Prepared by', type:'text'},
+    {k:'Voting closes', label:'Voting closes', type:'datetime', adv:true,
+     help:'Blank means voting closes at the end of the meeting day.'},
+    {k:'Show results', label:'Show results before voting closes', type:'select', options:[['','No'],['yes','Yes']], adv:true},
+    {k:'Attempt', label:'Attempt', type:'number', adv:true, help:'2 means it missed quorum once and has come back.'},
+    {k:'Carried from', label:'Carried from', type:'text', adv:true}
+  ],
+  events: [
+    {k:'Title', label:'Title', type:'text', req:true},
+    {k:'Start date', label:'Start date', type:'date', req:true, half:true},
+    {k:'End date', label:'End date', type:'date', half:true, help:'Blank for a one-day event.'},
+    {k:'Lead', label:'Lead or host', type:'text'},
+    {k:'Where', label:'Where', type:'text', help:'A place, or paste a Zoom link and the app turns it into a button.'},
+    {k:'Toolkit URL', label:'Toolkit link', type:'text', half:true},
+    {k:'Toolkit label', label:'Toolkit button text', type:'text', half:true},
+    {k:'Members only', label:'Toolkit is members only', type:'select', options:[['no','No'],['yes','Yes']], half:true},
+    {k:'Published', label:'Show on the calendar', type:'select', options:ADM_YESNO, half:true}
+  ],
+  changes: [
+    {k:'Date', label:'Meeting date', type:'date', req:true, half:true},
+    {k:'Meeting', label:'Which meeting', type:'select', options:ADM_MEETINGS, keep:true, half:true},
+    {k:'Change', label:'What is changing', type:'select', req:true,
+     options:[['canceled','Canceled'],['moved','Moved to another date'],['added','Added — an extra meeting']]},
+    {k:'New date', label:'New date', type:'date', help:'Only for a moved meeting.'},
+    {k:'Reason', label:'Reason', type:'text', help:'Members see this.'},
+    {k:'Published', label:'Show on the calendar', type:'select', options:ADM_YESNO}
+  ],
+  links: [
+    {k:'Kind', label:'Meeting', type:'select', req:true, options:ADM_LINK_KINDS},
+    {k:'Label', label:'Button text', type:'text'},
+    {k:'URL', label:'Join link', type:'text', req:true, help:'Starts with https://'},
+    {k:'Visible to', label:'Who gets the link', type:'select', options:ADM_VISIBLE},
+    {k:'Published', label:'Use this link', type:'select', options:ADM_YESNO}
+  ],
+  members: [
+    {k:'First name', label:'First name', type:'text', req:true, half:true},
+    {k:'Last name', label:'Last name', type:'text', half:true},
+    {k:'Email', label:'Email', type:'text', req:true},
+    {k:'Status', label:'Status', type:'select', options:ADM_STATUSES, keep:true,
+     help:'New member: signed in, waiting for their group. Member and above: meetings, agendas, notes and voting.'},
+    {k:'Activated on', label:'Activated on', type:'date', half:true, help:'Filled in for you when someone is activated.'},
+    {k:'Phone', label:'Phone', type:'text', half:true},
+    {k:'Language', label:'Language', type:'text', half:true},
+    {k:'Pilot', label:'Pilot', type:'text', half:true},
+    {k:'State', label:'State', type:'text', half:true},
+    {k:'ZIP', label:'ZIP', type:'text', half:true}
+  ],
+  admins: [
+    {k:'Email', label:'Email', type:'text', req:true, help:'They also need to be a member, signed in with this email.'},
+    {k:'Name', label:'Name', type:'text'},
+    {k:'Areas', label:'What they can change', type:'areas'},
+    {k:'Active', label:'Active', type:'select', options:ADM_YESNO}
+  ]
+};
+
+/* Read-only details shown inside a member's form. */
+const ADM_MEMBER_INFO = ['Contact preference','Interested in','Requests','Anything else','Timestamp'];
+
+const ADM = {tab:'', sub:'changes', when:'upcoming', q:'', status:'', data:{}, open:null, arm:'', busy:false};
+
+function isAdmin(){ return signedIn() && Array.isArray(AUTH.admin) && AUTH.admin.length > 0; }
+function admCan(area){ return isAdmin() && AUTH.admin.indexOf(area) > -1; }
+
+function escA(t){ return String(t == null ? '' : t).replace(/[&<>"']/g,
+  c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function admToday(){
+  const t = new Date();
+  return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+}
+function admDay(s){
+  const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return s || 'No date';
+  return new Date(+m[1], +m[2]-1, +m[3]).toLocaleDateString('en-US',
+    {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+}
+function admWhen(s){
+  const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if(!m) return admDay(s);
+  return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5]).toLocaleString('en-US',
+    {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+}
+const admYes = v => /^(yes|true|y)\b/i.test(String(v||'').trim());
+
+function admToast(text){
+  let t = $('#admToast');
+  if(!t){ t = document.createElement('div'); t.id = 'admToast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.textContent = text; t.hidden = false;
+  clearTimeout(admToast.timer);
+  admToast.timer = setTimeout(()=>{ t.hidden = true; }, 2600);
+}
+
+async function admCall(type, extra){
+  if(!signedIn()) return {ok:false, error:'not signed in'};
+  try{
+    const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(Object.assign({type, token: AUTH.token}, extra || {}))});
+    return await r.json().catch(()=>({ok:false, error:'server'}));
+  }catch(e){ return {ok:false, error:'network'}; }
+}
+
+function admErr(out){
+  if(!out) return 'Something went wrong. Try again.';
+  if(out.message) return out.message;
+  return ({
+    'network':'Could not reach the server. Check your connection and try again.',
+    'changed':'Someone changed this in the Sheet since you opened it. The latest version is loaded now — check it and try again.',
+    'missing':(out.field || 'A required field') + ' cannot be blank.',
+    'not an admin':'You are not on the Admins list any more.',
+    'not allowed':'You do not have access to change this.',
+    'not signed in':'Your sign-in has expired. Sign in again.',
+    'busy':'Someone else is saving right now. Try again in a moment.',
+    'unknown set':'This version of the app and the server do not match. Ask whoever handles the code.'
+  })[out.error] || ('The server said: ' + (out.error || 'no reason given'));
+}
+
+/* Which tabs this admin gets, in order. */
+function admTabs(){
+  const t = [];
+  if(admCan('agendas')) t.push(['agenda','Agendas'], ['ballot','Ballot']);
+  if(admCan('calendar')) t.push(['calendar','Calendar']);
+  if(admCan('members')) t.push(['members','Members']);
+  if(admCan('admins')) t.push(['admins','Admins']);
+  return t;
+}
+const ADM_TAB_SETS = {agenda:['agendas'], ballot:['agendas'], calendar:['changes','events','links'],
+                      members:['members'], admins:['admins']};
+
+async function admLoad(set, force){
+  if(ADM.data[set] && !force) return ADM.data[set];
+  const out = await admCall('admin_list', {set});
+  if(out && out.ok){
+    ADM.data[set] = {rows: out.rows || [], quorum: out.quorum, at: Date.now()};
+    if(out.areas){ AUTH.admin = out.areas; }
+  } else {
+    ADM.data[set] = {rows: [], error: admErr(out)};
+    if(out && (out.error === 'not an admin' || out.error === 'not signed in')){ AUTH.admin = []; paintAuth(); }
+  }
+  return ADM.data[set];
+}
+
+async function openAdmin(){
+  // Ask again every time: someone may have been added or removed
+  const chk = await admCall('admin_check');
+  if(chk && chk.ok){ AUTH.admin = chk.areas || []; }
+  else if(chk && chk.error !== 'network'){ AUTH.admin = []; }
+  try{ localStorage.setItem('bisc.auth', JSON.stringify(AUTH)); }catch(e){}
+  paintAuth();
+  if(!isAdmin()){ go('auth'); return; }
+  const tabs = admTabs();
+  if(!tabs.some(t => t[0] === ADM.tab)) ADM.tab = tabs[0][0];
+  ADM.data = {};
+  renderAdmin();
+}
+
+async function renderAdmin(){
+  const tabs = admTabs();
+  $('#admTabs').innerHTML = tabs.map(([id,label]) =>
+    '<button type="button" class="adm-tab' + (id === ADM.tab ? ' on' : '') + '" data-adm-tab="' + id + '" role="tab" aria-selected="' +
+    (id === ADM.tab) + '">' + label + '</button>').join('');
+  const pane = $('#admPane');
+  const sets = ADM_TAB_SETS[ADM.tab] || [];
+  if(sets.some(s => !ADM.data[s])){
+    pane.innerHTML = '<p class="adm-empty">Loading…</p>';
+    await Promise.all(sets.map(s => admLoad(s)));
+  }
+  const draw = {agenda:admAgendaPane, ballot:admBallotPane, calendar:admCalendarPane,
+                members:admMembersPane, admins:admAdminsPane}[ADM.tab];
+  pane.innerHTML = draw ? draw() : '';
+  const f = pane.querySelector('.adm-form input, .adm-form select, .adm-form textarea');
+  if(f && ADM.focus){ f.focus(); ADM.focus = false; }
+}
+
+/* ---- the edit form, shared by every list ---- */
+
+function admField(f, v){
+  const id = 'admf-' + f.k.replace(/\W+/g,'-');
+  const val = v == null ? '' : String(v);
+  let input = '';
+  if(f.type === 'textarea'){
+    input = '<textarea id="' + id + '" data-k="' + escA(f.k) + '">' + escA(val) + '</textarea>';
+  } else if(f.type === 'select'){
+    let opts = f.options.map(o => Array.isArray(o) ? o : [o, o]);
+    if(val && !opts.some(o => o[0].toLowerCase() === val.toLowerCase())) opts = [[val, val + ' (as typed in the Sheet)']].concat(opts);
+    const has = opts.some(o => o[0].toLowerCase() === val.toLowerCase());
+    input = '<select id="' + id + '" data-k="' + escA(f.k) + '">' +
+      (has || f.req ? '' : '<option value=""></option>') +
+      opts.map(o => '<option value="' + escA(o[0]) + '"' + (o[0].toLowerCase() === val.toLowerCase() ? ' selected' : '') + '>' +
+        escA(o[1]) + '</option>').join('') + '</select>';
+  } else if(f.type === 'areas'){
+    const t = val.toLowerCase();
+    const all = !t ? ['agendas','calendar'] : (t.indexOf('all') > -1 ? Object.keys(ADM_AREA_LABEL)
+                : Object.keys(ADM_AREA_LABEL).filter(a => t.indexOf(a) > -1));
+    input = '<div class="adm-checks" data-k="' + escA(f.k) + '" data-areas="1">' +
+      Object.keys(ADM_AREA_LABEL).map(a => '<label><input type="checkbox" value="' + a + '"' +
+        (all.indexOf(a) > -1 ? ' checked' : '') + '> ' + escA(ADM_AREA_LABEL[a]) + '</label>').join('') + '</div>';
+  } else {
+    const type = f.type === 'datetime' ? 'datetime-local' : (f.type === 'date' || f.type === 'number') ? f.type : 'text';
+    input = '<input type="' + type + '" id="' + id + '" data-k="' + escA(f.k) + '" value="' + escA(val) + '"' +
+      (f.k === 'Email' ? ' inputmode="email" autocomplete="off"' : '') + '>';
+  }
+  return '<div class="adm-f' + (f.half ? ' half' : '') + '"><label for="' + id + '">' + escA(f.label) +
+    (f.req ? '' : ' <span class="opt">optional</span>') + '</label>' + input +
+    (f.help ? '<p class="help">' + escA(f.help) + '</p>' : '') + '</div>';
+}
+
+/* Lays fields out, pairing up the half-width ones. */
+function admFields(list, values){
+  let html = '', pair = [];
+  const flush = () => { if(pair.length){ html += pair.length === 2 ? '<div class="adm-2">' + pair.join('') + '</div>' : pair[0]; pair = []; } };
+  list.forEach(f => {
+    const h = admField(f, values[f.k]);
+    if(f.half){ pair.push(h); if(pair.length === 2) flush(); } else { flush(); html += h; }
+  });
+  flush();
+  return html;
+}
+
+function admForm(set, row, preset){
+  const fields = ADM_FORMS[set];
+  const values = row ? row.values : (preset || {});
+  const key = row ? set + ':' + row.row : set + ':new';
+  const main = fields.filter(f => !f.adv), adv = fields.filter(f => f.adv);
+  let info = '';
+  if(set === 'members' && row){
+    const bits = ADM_MEMBER_INFO.filter(k => String(row.values[k] || '').trim())
+      .map(k => '<div><strong>' + escA(k === 'Timestamp' ? 'Joined' : k) + ':</strong> ' + escA(row.values[k]) + '</div>');
+    if(bits.length) info = '<div class="adm-ro">' + bits.join('') + '</div>';
+  }
+  const removeLabel = ADM.arm === key ? 'Tap again to remove' : 'Remove';
+  return '<form class="adm-form" data-adm-form="' + escA(key) + '" novalidate>' +
+    '<h3>' + (row ? 'Edit' : 'Add') + '</h3>' + info +
+    admFields(main, values) +
+    (adv.length ? '<details class="adm-adv"' + (adv.some(f => values[f.k]) ? ' open' : '') +
+      '><summary>Voting settings</summary>' + admFields(adv, values) + '</details>' : '') +
+    '<div class="btn-row"><button type="submit" class="btn sm">Save</button>' +
+    '<button type="button" class="btn ghost sm" data-adm-cancel>Cancel</button>' +
+    (row ? '<button type="button" class="adm-mini warn' + (ADM.arm === key ? ' armed' : '') + '" data-adm-del="' + escA(key) +
+      '" style="margin-left:auto">' + removeLabel + '</button>' : '') + '</div>' +
+    '<p class="adm-msg bad" data-adm-msg hidden></p></form>';
+}
+
+function admRowFor(key){
+  const [set, n] = key.split(':');
+  if(n === 'new') return {set, row:null};
+  const d = ADM.data[set];
+  return {set, row: d ? d.rows.find(r => String(r.row) === n) : null};
+}
+
+function admRead(form){
+  const out = {};
+  form.querySelectorAll('[data-k]').forEach(el => {
+    const k = el.dataset.k;
+    if(el.dataset.areas){
+      const on = [...el.querySelectorAll('input:checked')].map(i => i.value);
+      out[k] = on.length === Object.keys(ADM_AREA_LABEL).length ? 'all' : on.join(', ');
+    } else out[k] = el.value.trim();
+  });
+  return out;
+}
+
+/* After a change that members would see, drop the app's own copies so the
+   rest of the app shows it straight away. */
+function admRefreshApp(set){
+  if(set === 'agendas'){
+    agendaCache = null;
+    loadAgendas().then(()=>renderAgenda());
+    if(typeof loadVotes === 'function') loadVotes();
+  }
+  if(set === 'events' || set === 'changes' || set === 'links'){
+    loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
+  }
+  if(set === 'admins' || set === 'members') refreshStatus();
+}
+
+async function admSave(set, row, values){
+  const body = {set, values};
+  if(row){
+    // only send what changed, so an untouched field is never rewritten
+    const changed = {};
+    Object.keys(values).forEach(k => { if(String(values[k]) !== String(row.values[k] == null ? '' : row.values[k])) changed[k] = values[k]; });
+    if(!Object.keys(changed).length) return {ok:true, same:true};
+    body.values = changed; body.row = row.row; body.fp = row.fp;
+  } else {
+    Object.keys(values).forEach(k => { if(values[k] === '') delete values[k]; });
+  }
+  return admCall('admin_save', body);
+}
+
+document.addEventListener('submit', async e => {
+  const form = e.target.closest('[data-adm-form]');
+  if(!form) return;
+  e.preventDefault();
+  if(ADM.busy) return;
+  const {set, row} = admRowFor(form.dataset.admForm);
+  const values = admRead(form);
+  const msg = form.querySelector('[data-adm-msg]');
+  const miss = ADM_FORMS[set].find(f => f.req && !String(values[f.k] || '').trim());
+  if(miss){ msg.hidden = false; msg.textContent = miss.label + ' cannot be blank.'; return; }
+  const btn = form.querySelector('button[type=submit]');
+  ADM.busy = true; busy(btn, true, 'Saving…');
+  const out = await admSave(set, row, values);
+  ADM.busy = false; busy(btn, false);
+  if(out && out.ok){
+    ADM.open = null; ADM.arm = '';
+    if(!out.same){ await admLoad(set, true); admRefreshApp(set); admToast('Saved'); }
+    renderAdmin();
+  } else {
+    if(out && out.error === 'changed'){ await admLoad(set, true); ADM.open = null; renderAdmin(); admToast('Reloaded — someone else changed it'); return; }
+    msg.hidden = false; msg.textContent = admErr(out);
+  }
+});
+
+document.addEventListener('click', async e => {
+  if(!e.target.closest('#s-admin')) return;
+  const t = e.target.closest('[data-adm-tab],[data-adm-sub],[data-adm-edit],[data-adm-add],[data-adm-cancel],[data-adm-del],[data-adm-when],[data-adm-quick],[data-adm-move]');
+  if(!t) return;
+
+  if(t.dataset.admTab){ ADM.tab = t.dataset.admTab; ADM.open = null; ADM.arm = ''; renderAdmin(); return; }
+  if(t.dataset.admSub){ ADM.sub = t.dataset.admSub; ADM.open = null; ADM.arm = ''; renderAdmin(); return; }
+  if(t.dataset.admWhen){ ADM.when = t.dataset.admWhen; ADM.open = null; renderAdmin(); return; }
+  if(t.dataset.admEdit){ ADM.open = t.dataset.admEdit; ADM.arm = ''; ADM.focus = true; renderAdmin(); return; }
+  if(t.dataset.admAdd){
+    ADM.open = t.dataset.admAdd; ADM.arm = ''; ADM.focus = true;
+    try{ ADM.preset = JSON.parse(t.dataset.preset || '{}'); }catch(err){ ADM.preset = {}; }
+    renderAdmin(); return;
+  }
+  if(t.hasAttribute('data-adm-cancel')){ ADM.open = null; ADM.arm = ''; renderAdmin(); return; }
+
+  if(t.dataset.admDel){
+    const key = t.dataset.admDel;
+    if(ADM.arm !== key){ ADM.arm = key; t.classList.add('armed'); t.textContent = 'Tap again to remove'; return; }
+    if(ADM.busy) return;
+    const {set, row} = admRowFor(key);
+    if(!row) return;
+    ADM.busy = true; t.disabled = true; t.textContent = 'Removing…';
+    const out = await admCall('admin_delete', {set, row: row.row, fp: row.fp});
+    ADM.busy = false; ADM.arm = '';
+    await admLoad(set, true);
+    if(out && out.ok){ ADM.open = null; admRefreshApp(set); admToast('Removed'); renderAdmin(); }
+    else { ADM.open = null; renderAdmin(); admToast(admErr(out)); }
+    return;
+  }
+
+  // one-tap changes from a list: activate a member, move to the agenda, …
+  if(t.dataset.admQuick){
+    if(ADM.busy) return;
+    const {set, row} = admRowFor(t.dataset.admQuick);
+    if(!row) return;
+    let values = {};
+    try{ values = JSON.parse(t.dataset.values || '{}'); }catch(err){}
+    ADM.busy = true; t.disabled = true;
+    const out = await admCall('admin_save', {set, row: row.row, fp: row.fp, values});
+    ADM.busy = false;
+    await admLoad(set, true);
+    if(out && out.ok){ admRefreshApp(set); admToast(t.dataset.done || 'Saved'); }
+    else admToast(admErr(out));
+    renderAdmin();
+    return;
+  }
+
+  // reorder an agenda: renumber the whole meeting 1, 2, 3 … in the new order
+  if(t.dataset.admMove){
+    if(ADM.busy) return;
+    const [rowNum, dir] = t.dataset.admMove.split(':');
+    const d = ADM.data.agendas; if(!d) return;
+    const me = d.rows.find(r => String(r.row) === rowNum); if(!me) return;
+    const group = admAgendaGroup(d.rows, me);
+    const i = group.indexOf(me), j = i + (dir === 'up' ? -1 : 1);
+    if(j < 0 || j >= group.length) return;
+    [group[i], group[j]] = [group[j], group[i]];
+    ADM.busy = true;
+    $$('#s-admin [data-adm-move]').forEach(b => b.disabled = true);
+    let bad = null;
+    for(let k = 0; k < group.length; k++){
+      const want = String(k + 1);
+      if(String(group[k].values['Order']) === want) continue;
+      const out = await admCall('admin_save', {set:'agendas', row: group[k].row, fp: group[k].fp, values:{'Order': want}});
+      if(!(out && out.ok)){ bad = out; break; }
+    }
+    ADM.busy = false;
+    await admLoad('agendas', true);
+    admRefreshApp('agendas');
+    admToast(bad ? admErr(bad) : 'Order saved');
+    renderAdmin();
+  }
+});
+
+/* ---- Agendas ---- */
+
+function admGroupKey(r){ return (r.values['Date'] || '') + '|' + String(r.values['Meeting'] || '').trim().toLowerCase(); }
+function admByOrder(a, b){
+  const x = Number(a.values['Order']) || 999, y = Number(b.values['Order']) || 999;
+  return x - y || a.row - b.row;
+}
+/* The posted running order for one meeting. Decisions never take a slot,
+   and items still on the ballot are not in the running order yet. */
+const admSlot = r => admYes(r.values['Published']) && !/^decision/i.test(r.values['Type'] || '');
+function admAgendaGroup(rows, me){
+  const k = admGroupKey(me);
+  return rows.filter(r => admGroupKey(r) === k && admSlot(r)).sort(admByOrder);
+}
+
+function admRowCard(set, r, body, actions){
+  // body opens .adm-b and leaves it open, so the actions sit under the text
+  if(ADM.open === set + ':' + r.row) return admForm(set, r);
+  return '<div class="adm-row">' + body + (actions ? '<div class="adm-acts">' + actions + '</div>' : '') + '</div></div>';
+}
+
+function admAgendaPane(){
+  const d = ADM.data.agendas;
+  if(d.error) return '<p class="adm-msg bad">' + escA(d.error) + '</p>';
+  const today = admToday();
+  const up = ADM.when === 'upcoming';
+  const rows = d.rows.filter(r => up ? (r.values['Date'] || '9999') >= today : (r.values['Date'] || '') < today);
+
+  const groups = {};
+  rows.forEach(r => { const k = admGroupKey(r); (groups[k] = groups[k] || []).push(r); });
+  let keys = Object.keys(groups).sort();
+  if(!up) keys.reverse();
+
+  let html = '<div class="adm-bar">' +
+    '<button type="button" class="adm-tab' + (up ? ' on' : '') + '" data-adm-when="upcoming">Upcoming</button>' +
+    '<button type="button" class="adm-tab' + (!up ? ' on' : '') + '" data-adm-when="past">Past</button>' +
+    '<button type="button" class="adm-mini go" data-adm-add="agendas:new" data-preset="{}" style="margin-left:auto">+ New agenda item</button></div>';
+
+  if(ADM.open === 'agendas:new') html += admForm('agendas', null, ADM.preset);
+  if(!keys.length) html += '<p class="adm-empty">' + (up ? 'Nothing is planned yet. Add the first item for the next meeting.' : 'No past agendas.') + '</p>';
+
+  keys.forEach(k => {
+    const g = groups[k];
+    const first = g[0];
+    const slots = g.filter(admSlot).sort(admByOrder);
+    const decisions = g.filter(r => !admSlot(r)).sort(admByOrder);
+    const posted = slots;
+    const mins = posted.reduce((a, r) => a + (Number(r.values['Minutes']) || 0), 0);
+    const nextOrder = slots.reduce((a, r) => Math.max(a, Number(r.values['Order']) || 0), 0) + 1;
+    const preset = {'Date': first.values['Date'], 'Meeting': first.values['Meeting'], 'Order': String(nextOrder),
+                    'Minutes':'10', 'Published':'yes', 'Type':'Agenda item'};
+    html += '<div class="adm-group"><div class="adm-gh"><div><h3>' + escA(admDay(first.values['Date'])) + '</h3>' +
+      '<p class="m-meta">' + escA(first.values['Meeting'] || 'Meeting not set') + ' · ' + posted.length + ' posted · ' + mins + ' min</p></div>' +
+      '<button type="button" class="adm-mini" data-adm-add="agendas:new" data-preset="' + escA(JSON.stringify(preset)) + '">+ Add item</button></div>';
+    slots.concat(decisions).forEach((r, i) => {
+      const v = r.values;
+      const isDec = /^decision/i.test(v['Type'] || '');
+      const inSlot = admSlot(r);
+      const chips = (admYes(v['Published']) ? '<span class="adm-chip g">Posted</span>' : '<span class="adm-chip o">On the ballot</span>') +
+        (isDec ? '<span class="adm-chip">Decision</span>' : '');
+      const body = '<div class="adm-n">' + (isDec ? '✓' : inSlot ? escA(v['Order'] || '–') : '?') + '</div><div class="adm-b"><strong>' + escA(v['Item']) + '</strong>' +
+        '<p class="adm-s">' + chips + escA([v['Minutes'] ? v['Minutes'] + ' min' : '', v['Facilitator']].filter(Boolean).join(' · ')) + '</p>';
+      const acts = '<button type="button" class="adm-mini" data-adm-edit="agendas:' + r.row + '">Edit</button>' +
+        (!inSlot ? '' :
+          '<button type="button" class="adm-mini" data-adm-move="' + r.row + ':up" aria-label="Move up"' + (i === 0 ? ' disabled' : '') + '>↑ Up</button>' +
+          '<button type="button" class="adm-mini" data-adm-move="' + r.row + ':down" aria-label="Move down"' + (i === slots.length - 1 ? ' disabled' : '') + '>↓ Down</button>');
+      html += admRowCard('agendas', r, body, acts);
+    });
+    html += '</div>';
+  });
+  return html;
+}
+
+/* ---- Ballot ---- */
+
+function admBallotPane(){
+  const d = ADM.data.agendas;
+  if(d.error) return '<p class="adm-msg bad">' + escA(d.error) + '</p>';
+  const q = d.quorum || 0;
+  const items = d.rows.filter(r => r.onBallot).sort((a, b) =>
+    (a.closed - b.closed) || String(a.values['Date']).localeCompare(String(b.values['Date'])));
+  const open = items.filter(r => !r.closed), shut = items.filter(r => r.closed);
+
+  let html = '<p class="help" style="font-size:15px">Items members are voting on. You see how many have voted, never which way — results show for everyone at the same moment, once voting closes. Quorum is ' + q + '.</p>' +
+    '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="agendas:new" data-preset="' +
+    escA(JSON.stringify({'Published':'no','Type':'Decision','Minutes':'10'})) + '">+ Put something to the vote</button></div>';
+  if(ADM.open === 'agendas:new') html += admForm('agendas', null, ADM.preset);
+
+  const card = r => {
+    const v = r.values;
+    const pct = q ? Math.min(100, Math.round(100 * r.cast / q)) : 0;
+    const chips = (r.closed ? '<span class="adm-chip">Voting closed</span>' : '<span class="adm-chip g">Voting open</span>') +
+      (/^decision/i.test(v['Type'] || '') ? '<span class="adm-chip">Decision</span>' : '<span class="adm-chip">Agenda request</span>') +
+      (Number(v['Attempt']) > 1 ? '<span class="adm-chip r">Attempt ' + escA(v['Attempt']) + '</span>' : '');
+    const body = '<div class="adm-b"><strong>' + escA(v['Item']) + '</strong>' +
+      '<p class="adm-s">' + chips + '</p>' +
+      '<p class="adm-s">' + escA(admDay(v['Date'])) + (v['Meeting'] ? ' · ' + escA(v['Meeting']) : '') +
+      (v['Voting closes'] ? ' · closes ' + escA(admWhen(v['Voting closes'])) : '') + '</p>' +
+      '<p class="adm-s"><strong style="display:inline;font-size:14px">' + r.cast + ' of ' + q + '</strong> needed have voted' +
+      (r.cast >= q ? ' — quorum met' : '') + '</p><div class="adm-meter"><span style="width:' + pct + '%"></span></div>';
+    const key = 'agendas:' + r.row;
+    const acts = '<button type="button" class="adm-mini" data-adm-edit="' + key + '">Edit</button>' +
+      (/^decision/i.test(v['Type'] || '') ? '' :
+        '<button type="button" class="adm-mini go" data-adm-quick="' + key + '" data-values="' + escA(JSON.stringify({'Published':'yes'})) +
+        '" data-done="Put on the agenda">Put on the agenda</button>') +
+      (!r.closed && !admYes(v['Show results']) ? '<button type="button" class="adm-mini" data-adm-quick="' + key + '" data-values="' +
+        escA(JSON.stringify({'Show results':'yes'})) + '" data-done="Results are showing">Show results now</button>' : '');
+    return admRowCard('agendas', r, body, acts);
+  };
+
+  html += '<h2 style="margin-top:8px">Open</h2>' + (open.length ? open.map(card).join('') : '<p class="adm-empty">Nothing is being voted on right now.</p>');
+  if(shut.length) html += '<h2>Closed</h2>' + shut.map(card).join('');
+  return html;
+}
+
+/* ---- Calendar ---- */
+
+function admCalendarPane(){
+  const subs = [['changes','Meeting changes'],['events','Events'],['links','Join links']];
+  let html = '<div class="adm-sub">' + subs.map(([id,l]) =>
+    '<button type="button" class="adm-tab' + (ADM.sub === id ? ' on' : '') + '" data-adm-sub="' + id + '">' + l + '</button>').join('') + '</div>';
+  const set = ADM.sub, d = ADM.data[set];
+  if(!d) return html + '<p class="adm-empty">Loading…</p>';
+  if(d.error) return html + '<p class="adm-msg bad">' + escA(d.error) + '</p>';
+  const today = admToday();
+
+  if(set === 'changes'){
+    html += '<p class="help" style="font-size:15px">The regular meetings repeat on their own. Use this to cancel one, move one, or add an extra one.</p>' +
+      '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="changes:new" data-preset="' +
+      escA(JSON.stringify({'Change':'canceled','Published':'yes'})) + '">+ Change a meeting</button></div>';
+    if(ADM.open === 'changes:new') html += admForm('changes', null, ADM.preset);
+    const rows = d.rows.slice().sort((a, b) => String(b.values['Date']).localeCompare(String(a.values['Date'])));
+    if(!rows.length) html += '<p class="adm-empty">No changes. Every meeting is running as usual.</p>';
+    rows.forEach(r => {
+      const v = r.values, c = String(v['Change'] || '').toLowerCase();
+      const chip = c === 'moved' ? '<span class="adm-chip o">Moved</span>' : c === 'added' ? '<span class="adm-chip g">Added</span>' : '<span class="adm-chip r">Canceled</span>';
+      const body = '<div class="adm-b"><strong>' + escA(v['Meeting'] || 'Any meeting that day') + '</strong>' +
+        '<p class="adm-s">' + chip + escA(admDay(v['Date'])) + (c === 'moved' && v['New date'] ? ' → ' + escA(admDay(v['New date'])) : '') +
+        (admYes(v['Published']) ? '' : ' · not showing') + (v['Date'] < today ? ' · past' : '') + '</p>' +
+        (v['Reason'] ? '<p class="adm-s">' + escA(v['Reason']) + '</p>' : '');
+      html += admRowCard('changes', r, body, '<button type="button" class="adm-mini" data-adm-edit="changes:' + r.row + '">Edit</button>');
+    });
+    return html;
+  }
+
+  if(set === 'events'){
+    html += '<p class="help" style="font-size:15px">One-off things: conferences, local actions, partner calls.</p>' +
+      '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="events:new" data-preset="' +
+      escA(JSON.stringify({'Published':'yes','Members only':'no'})) + '">+ Add an event</button></div>';
+    if(ADM.open === 'events:new') html += admForm('events', null, ADM.preset);
+    const rows = d.rows.slice().sort((a, b) => {
+      const pa = (a.values['End date'] || a.values['Start date']) < today, pb = (b.values['End date'] || b.values['Start date']) < today;
+      return (pa - pb) || (pa ? String(b.values['Start date']).localeCompare(String(a.values['Start date']))
+                              : String(a.values['Start date']).localeCompare(String(b.values['Start date'])));
+    });
+    if(!rows.length) html += '<p class="adm-empty">No events yet.</p>';
+    rows.forEach(r => {
+      const v = r.values;
+      const past = (v['End date'] || v['Start date']) < today;
+      const body = '<div class="adm-b"><strong>' + escA(v['Title']) + '</strong>' +
+        '<p class="adm-s">' + (admYes(v['Published']) ? '' : '<span class="adm-chip">Hidden</span>') + (past ? '<span class="adm-chip">Past</span>' : '') +
+        escA(admDay(v['Start date'])) + (v['End date'] && v['End date'] !== v['Start date'] ? ' – ' + escA(admDay(v['End date'])) : '') + '</p>' +
+        (v['Where'] ? '<p class="adm-s">' + escA(v['Where']) + '</p>' : '');
+      html += admRowCard('events', r, body, '<button type="button" class="adm-mini" data-adm-edit="events:' + r.row + '">Edit</button>');
+    });
+    return html;
+  }
+
+  // join links
+  const names = Object.fromEntries(ADM_LINK_KINDS);
+  html += '<p class="help" style="font-size:15px">The Zoom link for each regular meeting. Only people at or above "Who gets the link" are ever sent it. If there are two for the same meeting, the top one wins.</p>' +
+    '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="links:new" data-preset="' +
+    escA(JSON.stringify({'Published':'yes','Visible to':'member'})) + '">+ Add a join link</button></div>';
+  if(ADM.open === 'links:new') html += admForm('links', null, ADM.preset);
+  if(!d.rows.length) html += '<p class="adm-empty">No join links yet.</p>';
+  d.rows.forEach(r => {
+    const v = r.values;
+    const off = v['Published'] !== '' && !admYes(v['Published']);
+    const body = '<div class="adm-b"><strong>' + escA(names[v['Kind']] || v['Kind'] || 'Meeting not set') + '</strong>' +
+      '<p class="adm-s">' + (off ? '<span class="adm-chip">Not in use</span>' : '') + (v['URL'] ? '' : '<span class="adm-chip r">No link yet</span>') +
+      escA(v['Label'] || 'Join the meeting') + ' · for ' + escA(v['Visible to'] || 'member') + '</p>' +
+      (v['URL'] ? '<p class="adm-s">' + escA(v['URL']) + '</p>' : '');
+    html += admRowCard('links', r, body, '<button type="button" class="adm-mini" data-adm-edit="links:' + r.row + '">Edit</button>');
+  });
+  return html;
+}
+
+/* ---- Members ---- */
+
+function admStatusChip(s){
+  const k = String(s || '').trim().toLowerCase();
+  const rank = STATUS_RANK.hasOwnProperty(k) ? STATUS_RANK[k] : (PARTNER_RANK.hasOwnProperty(k) ? -1 : 0);
+  const cls = rank >= 2 ? 'g' : rank === 1 ? 'g' : rank === -1 ? '' : 'o';
+  return '<span class="adm-chip ' + cls + '">' + escA(s || 'New member') + '</span>';
+}
+
+function admMembersPane(){
+  const d = ADM.data.members;
+  if(d.error) return '<p class="adm-msg bad">' + escA(d.error) + '</p>';
+  const q = ADM.q.toLowerCase(), st = ADM.status;
+  const rows = d.rows.filter(r => {
+    const v = r.values;
+    if(st === 'new' && (STATUS_RANK[String(v['Status'] || '').trim().toLowerCase()] || 0) >= 1) return false;
+    if(st && st !== 'new' && String(v['Status'] || '').trim().toLowerCase() !== st) return false;
+    if(!q) return true;
+    return [v['First name'], v['Last name'], v['Email'], v['State'], v['Pilot']].join(' ').toLowerCase().indexOf(q) > -1;
+  }).sort((a, b) => String(b.values['Timestamp']).localeCompare(String(a.values['Timestamp'])));
+  const waiting = d.rows.filter(r => (STATUS_RANK[String(r.values['Status'] || '').trim().toLowerCase()] || 0) < 1).length;
+
+  let html = '<div class="adm-bar"><input type="search" id="admQ" placeholder="Search name, email, state, pilot" value="' + escA(ADM.q) + '" aria-label="Search members">' +
+    '<select id="admSt" aria-label="Filter by status" style="width:auto;flex:0 1 210px"><option value="">Everyone (' + d.rows.length + ')</option>' +
+    '<option value="new"' + (st === 'new' ? ' selected' : '') + '>Waiting to be activated (' + waiting + ')</option>' +
+    ADM_STATUSES.slice(1).map(s => '<option value="' + escA(s.toLowerCase()) + '"' + (st === s.toLowerCase() ? ' selected' : '') + '>' + escA(s) + '</option>').join('') +
+    '</select><button type="button" class="adm-mini go" data-adm-add="members:new" data-preset="' + escA(JSON.stringify({'Status':'Member'})) + '">+ Add a member</button></div>';
+  if(ADM.open === 'members:new') html += admForm('members', null, ADM.preset);
+  if(!rows.length) html += '<p class="adm-empty">Nobody matches.</p>';
+  rows.forEach(r => {
+    const v = r.values;
+    const isNew = (STATUS_RANK[String(v['Status'] || '').trim().toLowerCase()] || 0) < 1 &&
+                  !PARTNER_RANK.hasOwnProperty(String(v['Status'] || '').trim().toLowerCase());
+    const body = '<div class="adm-b"><strong>' + escA([v['First name'], v['Last name']].filter(Boolean).join(' ') || '(no name)') + '</strong>' +
+      '<p class="adm-s">' + admStatusChip(v['Status']) + escA(v['Email']) + '</p>' +
+      '<p class="adm-s">' + escA([v['State'], v['Pilot'], v['Timestamp'] ? 'joined ' + String(v['Timestamp']).slice(0, 10) : ''].filter(Boolean).join(' · ')) + '</p>';
+    const key = 'members:' + r.row;
+    const acts = '<button type="button" class="adm-mini" data-adm-edit="' + key + '">Edit</button>' +
+      (isNew ? '<button type="button" class="adm-mini go" data-adm-quick="' + key + '" data-values="' + escA(JSON.stringify({'Status':'Member'})) +
+        '" data-done="Activated">Activate</button>' : '');
+    html += admRowCard('members', r, body, acts);
+  });
+  return html;
+}
+
+document.addEventListener('input', e => {
+  if(e.target.id === 'admQ'){
+    ADM.q = e.target.value;
+    clearTimeout(ADM.qt);
+    ADM.qt = setTimeout(() => {
+      const pos = e.target.selectionStart;
+      renderAdmin().then(() => { const i = $('#admQ'); if(i){ i.focus(); try{ i.setSelectionRange(pos, pos); }catch(err){} } });
+    }, 250);
+  }
+});
+document.addEventListener('change', e => {
+  if(e.target.id === 'admSt'){ ADM.status = e.target.value; renderAdmin(); }
+});
+
+/* ---- Admins ---- */
+
+function admAdminsPane(){
+  const d = ADM.data.admins;
+  if(d.error) return '<p class="adm-msg bad">' + escA(d.error) + '</p>';
+  let html = '<p class="help" style="font-size:15px">People who can open this Admin screen. They need to be a member and sign in with the same email. There always has to be at least one person who can manage admins.</p>' +
+    '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="admins:new" data-preset="' +
+    escA(JSON.stringify({'Active':'yes','Areas':'agendas, calendar'})) + '">+ Add an admin</button></div>';
+  if(ADM.open === 'admins:new') html += admForm('admins', null, ADM.preset);
+  d.rows.forEach(r => {
+    const v = r.values;
+    const t = String(v['Areas'] || '').toLowerCase();
+    const areas = !t ? ['agendas','calendar'] : t.indexOf('all') > -1 ? Object.keys(ADM_AREA_LABEL) : Object.keys(ADM_AREA_LABEL).filter(a => t.indexOf(a) > -1);
+    const off = v['Active'] !== '' && !admYes(v['Active']);
+    const body = '<div class="adm-b"><strong>' + escA(v['Name'] || v['Email']) + '</strong>' +
+      '<p class="adm-s">' + (off ? '<span class="adm-chip r">Inactive</span>' : '') + escA(v['Email']) + '</p>' +
+      '<p class="adm-s">' + areas.map(a => '<span class="adm-chip g">' + escA(a) + '</span>').join('') + '</p>';
+    html += admRowCard('admins', r, body, '<button type="button" class="adm-mini" data-adm-edit="admins:' + r.row + '">Edit</button>');
+  });
+  return html;
 }
 
 loadAll();

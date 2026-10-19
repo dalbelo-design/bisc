@@ -932,10 +932,9 @@ h2.fold.open .fold-x::after{content:'\2013'}
   <p class="lede" data-i18n="mtg.lede">Our own meetings, plus what other organizations are doing. Some online, some in person.</p>
   <div class="tz-bar"><strong>Times shown in your zone:</strong> <span id="tzName"></span></div>
 
-  <div class="card sky">
+  <div class="card sky" id="twoSessions" hidden>
     <h3 data-i18n="mtg.two.h">Two sessions, same meeting</h3>
-    <p style="font-size:15px;margin:0 0 8px">All meetings run <strong>once a month, in two sessions on the same day</strong>. Same content — come to whichever works.</p>
-    <p style="font-size:15px;margin:0">The <strong>early session</strong> is 6:00 PM Eastern. The <strong>late session</strong> is 6:00 PM Pacific, three hours later. The national gathering and the Organizing Committee meeting each run once, not twice.</p>
+    <p style="font-size:15px;margin:0" id="twoSessionsP"></p>
   </div>
 
   <div class="cal">
@@ -945,13 +944,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
       <button id="calNext" aria-label="Next month">›</button>
     </div>
     <div class="cal-grid" id="calGrid"></div>
-    <div class="legend">
-      <span><i style="background:#64D5FF"></i>New member</span>
-      <span><i style="background:#519A66"></i>Community</span>
-      <span><i style="background:#FAAA04"></i>National gathering</span>
-      <span><i style="background:#9B2C1A"></i>Organizing Committee</span>
-      <span><i style="background:#247227"></i>Events</span>
-    </div>
+    <div class="legend" id="calLegend"></div>
   </div>
 
   <div class="day-panel" id="dayPanel"></div>
@@ -981,12 +974,7 @@ h2.fold.open .fold-x::after{content:'\2013'}
   </div>
 
   <h2 data-i18n="mtg.rhythm.h">The rhythm</h2>
-  <div class="card">
-    <p style="font-size:15px;margin:0 0 10px"><strong>Most Wednesdays</strong> — Organizing Committee · 4:00–6:00 PM PT / 7:00–9:00 PM ET · two hours. No meeting on community meeting week.</p>
-    <p style="font-size:15px;margin:0 0 10px"><strong>2nd Wednesday</strong> — New member meeting, both sessions · 6:00 PM ET and 6:00 PM PT · one hour</p>
-    <p style="font-size:15px;margin:0 0 10px"><strong>Last Wednesday</strong> — Community meeting, both sessions · 6:00 PM ET and 6:00 PM PT · two hours</p>
-    <p style="font-size:15px;margin:0"><strong>2nd Saturday</strong> — National gathering, one session · 1:00 PM PT / 4:00 PM ET</p>
-  </div>
+  <div class="card" id="rhythm"><p class="empty-day" style="margin:0">Loading the meeting schedule…</p></div>
 
   <h2 data-i18n="mtg.access.h">Access</h2>
   <div class="card green">
@@ -1804,27 +1792,49 @@ const tzAbbr = dt => {
   return p ? p.value : '';
 };
 
-/* ---- schedule rules ---- */
-const RULES = [
-  {id:'nm-e', kind:'nm', title:'New member meeting', session:'Eastern session',
-   dow:3, week:2, hh:18, mm:0, tz:ET,
-   desc:'Introductions, how the community works, and time for your questions.'},
-  {id:'nm-p', kind:'nm', title:'New member meeting', session:'Pacific session',
-   dow:3, week:2, hh:18, mm:0, tz:PT,
-   desc:'Introductions, how the community works, and time for your questions.'},
-  {id:'fu-e', kind:'fu', title:'Community meeting', session:'Eastern session',
-   dow:3, week:'last', hh:18, mm:0, tz:ET,
-   desc:'Open to every member. Priorities, decisions, and project updates. This is the early session.'},
-  {id:'fu-p', kind:'fu', title:'Community meeting', session:'Pacific session',
-   dow:3, week:'last', hh:18, mm:0, tz:PT,
-   desc:'Open to every member. Priorities, decisions, and project updates. This is the later session.'},
-  {id:'oc', kind:'oc', title:'Organizing Committee', session:'One session',
-   dow:3, week:null, except:'last', hh:16, mm:0, tz:PT,
-   desc:'The committee that runs the community. Two hours. No meeting on community meeting week.'},
-  {id:'sx-s', kind:'sx', title:'National gathering', session:'One session, everyone together',
-   dow:6, week:2, hh:13, mm:0, tz:PT,
-   desc:'The whole community in one room. Bring your kids, your dog, your lunch.'}
-];
+/* ---- schedule rules ----
+   The regular meetings come from the Meetings tab of the Sheet, through
+   calendar_fetch. Nothing about the schedule is written into this file:
+   adding, moving or retiring a meeting is editing a row there, or using
+   the Admin screen. The last copy received is kept on this device so the
+   calendar still shows something when the connection drops. */
+let RULES = [];
+let CAL_CACHED = null;
+
+function setRules(list){
+  RULES = (list || []).map(m => ({...m}));
+}
+(function(){
+  try{
+    const c = JSON.parse(localStorage.getItem('bisc.cal') || 'null');
+    if(c && Array.isArray(c.meetings)){
+      setRules(c.meetings);
+      CAL_CACHED = c;
+    }
+  }catch(e){}
+})();
+
+/* Does this occurrence of a weekday fall in the weeks a meeting runs? */
+function weekHit(w, seen, isLast){
+  if(!w) return false;
+  if(w.every) return !(w.exceptLast && isLast);
+  return (w.nth || []).includes(seen) || (!!w.last && isLast);
+}
+
+/* A meeting's name, from the Sheet. Falls back to the code itself. */
+function meetingName(kind){
+  const r = RULES.find(x => x.kind === kind);
+  return r ? r.title : (AGENDAS[kind] ? AGENDAS[kind].label : String(kind || ''));
+}
+function meetingColor(kind){
+  if(kind === 'ac') return '#247227';
+  const r = RULES.find(x => x.kind === kind);
+  return r && r.color ? r.color : '#736C42';
+}
+/* Whether a meeting gets an agenda, a timer and agenda requests. */
+function hasAgenda(e){ return !!e && !e.allDay && !e.oneOff && e.agenda !== false && !!RULES.find(x => x.kind === e.kind); }
+/* The running order used when nobody has posted one. */
+function defaultItems(kind){ return AGENDAS[kind] ? AGENDAS[kind].items : []; }
 
 /* One-off events now live in the Events tab of the sheet, not here.
    Anyone with edit access can add a conference, a local action, or a
@@ -1838,7 +1848,7 @@ const fmtRange = (y1,m1,d1,y2,m2,d2) => (m1===m2 && y1===y2)
   : fmtDay(y1,m1,d1) + ' \u2013 ' + fmtDay(y2,m2,d2);
 
 /* ---- calendar: sheet events and meeting changes ---- */
-let CAL = {events:[], changes:[], links:{}, loaded:false};
+let CAL = CAL_CACHED ? {...CAL_CACHED, loaded:false} : {events:[], changes:[], links:{}, meetings:[], loaded:false};
 
 async function loadCalendar(){
   try{
@@ -1847,8 +1857,13 @@ async function loadCalendar(){
     const r = await fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify(body)});
     const out = await r.json().catch(()=>null);
-    if(out && out.ok) CAL = {events:out.events||[], changes:out.changes||[],
-                             links:out.links||{}, loaded:true};
+    if(out && out.ok){
+      CAL = {events:out.events||[], changes:out.changes||[], links:out.links||{},
+             meetings:out.meetings||[], loaded:true};
+      setRules(CAL.meetings);
+      try{ localStorage.setItem('bisc.cal', JSON.stringify({...CAL, loaded:false})); }catch(e){}
+      if(typeof paintSchedule === 'function') paintSchedule();
+    }
   }catch(e){ /* keep whatever is built into the app */ }
   return CAL;
 }
@@ -1899,15 +1914,9 @@ function monthEvents(y, mo){
     for(let d=1; d<=dim; d++){
       if(new Date(y,mo,d).getDay() !== r.dow) continue;
       seen++;
-      // a rule can skip the last occurrence of the month — OC steps aside
-      // on community meeting week so nobody sits through four hours
-      if(r.except === 'last' && d + 7 > dim) continue;
-      if(r.week !== null){
-        const hit = r.week === 'last' ? (d + 7 > dim)
-                  : Array.isArray(r.week) ? r.week.includes(seen)
-                  : seen === r.week;
-        if(!hit) continue;
-      }
+      // "every except last" lets a meeting step aside on the last week,
+      // so nobody sits through two meetings back to back
+      if(!weekHit(r.weeks, seen, d + 7 > dim)) continue;
       (map[d] = map[d] || []).push({...r, dt: zoned(y,mo,d,r.hh,r.mm,r.tz), y, mo, day:d});
     }
   });
@@ -1959,12 +1968,16 @@ function monthEvents(y, mo){
     for(let dt=new Date(from); dt<=to; dt.setDate(dt.getDate()+1)){
       if(dt.getFullYear()!==y || dt.getMonth()!==mo) continue;
       const d = dt.getDate();
+      const timed = !!(e.time && typeof e.time.hh === 'number');
       (map[d] = map[d] || []).push({
-        kind:'ac', title:e.title, where:e.where, allDay:true, day:d, y, mo,
+        kind:'ac', oneOff:true, title:e.title, where:e.where, allDay:!timed, day:d, y, mo,
         when: e.start===e.end ? fmtDay(sy,sm,sd) : fmtRange(sy,sm,sd,ey,em,ed),
-        lead: e.lead || '',
+        lead: e.lead || '', details: e.details || '',
+        tz: e.tz || ET,
+        endAt: (timed && e.endTime) ? zoned(y, mo, d, e.endTime.hh, e.endTime.mm, e.tz || ET) : null,
+        join: e.join || null, joinLocked: !!e.joinLocked,
         link: e.hasToolkit ? {url:e.url, label:e.label, gated:e.gated} : null,
-        dt:new Date(y,mo,d,9,0)
+        dt: timed ? zoned(y, mo, d, e.time.hh, e.time.mm, e.tz || ET) : new Date(y,mo,d,9,0)
       });
     }
   });
@@ -3482,45 +3495,12 @@ document.addEventListener('click', e => {
   if(nx){ openModule(nx.dataset.modGo); }
 });
 
-/* ---- agendas ---- */
-const AGENDAS = {
-  nm: {
-    label: 'New member meeting',
-    items: [
-      [0, 8,  'Welcome', "Who's hosting, how the hour runs, and how to get help if the technology gives you trouble."],
-      [8, 20, "Who's in the room", 'Your name, where you are, and which pilot you were part of. Two sentences. That is the whole ask.'],
-      [20,30, 'What this community is', "Where BISC came from, what it's for, and what's actually happening this month."],
-      [30,40, 'How things work', 'Meetings, BISC Buddies, working groups, and how members come to hold a vote.'],
-      [40,50, 'Where you might fit', "The kinds of work going on, and room to say what interests you."],
-      [50,60, 'Questions and close', "Anything you want to ask, what's coming next, and who follows up with you."]
-    ]
-  },
-  fu: {
-    label: 'Community meeting',
-    items: [
-      [0,  10, 'Welcome and attendance', 'Who is here. Attendance is recorded, which is how Active Membership is tracked.'],
-      [10, 25, 'Community building', 'Time to actually know each other. Not a warm-up for the real work — part of it.'],
-      [25, 50, 'Working group updates', 'What each group has moved since last month.'],
-      [50, 60, 'Break', 'Ten minutes. Two hours without one is too long.'],
-      [60, 95, 'Priorities and decisions', 'What the community takes on next, and anything being put to the membership.'],
-      [95, 110,'Open floor', 'Raise something that is not on the agenda.'],
-      [110,120,'Feedback and goodbyes', 'What felt good about the meeting, and parting in solidarity.']
-    ]
-  },
-  oc: {
-    label: 'Organizing Committee',
-    items: [
-      [0,  10, 'Welcome and check-in', 'Who is here, and how everyone is arriving.'],
-      [10, 20, 'Decisions carried over', 'Anything left open from last week, closed before new business.'],
-      [20, 55, 'The BIG Conference', 'Portland. Sessions, staffing, materials, and what still needs deciding. This holds the room until the conference is behind us.'],
-      [55, 65, 'Break', 'Ten minutes.'],
-      [65, 95, 'Launching BISC', 'Getting the community open to members. What is ready, what is blocking, and who is carrying it this week.'],
-      [95, 110,'Requests for the next agenda', 'Anyone can ask for time. Each request is put to the room and voted on in the app \u2014 the ones that carry make next week\u2019s agenda.'],
-      [110,115,'Actions and owners', 'Who is doing what, by when. Said out loud and written down.'],
-      [115,120,'Close', 'What is on next week, and anything anyone needs.']
-    ]
-  }
-};
+/* ---- agendas ----
+   There is no built-in running order any more. A meeting's agenda is
+   whatever has been posted for that date on the Agendas tab, and if
+   nothing has been posted the agenda is simply empty — the same for
+   everyone. Kept as an empty object because older code asks it. */
+const AGENDAS = {};
 
 function nextMeeting(){
   const now = new Date(), n = new Date();
@@ -3580,8 +3560,10 @@ function meetingMatches(typed, kind){
   if(!t) return true;                       // blank matches whatever is on that date
   const list = MEETING_ALIASES[kind] || [];
   if(list.includes(t)) return true;
-  const label = AGENDAS[kind] ? AGENDAS[kind].label.toLowerCase() : '';
-  return t === label;
+  if(t === String(kind || '').toLowerCase()) return true;
+  // whatever the meeting is called on the Meetings tab, with or without "meeting"
+  const name = meetingName(kind).toLowerCase();
+  return t === name || t === name + ' meeting' || t + ' meeting' === name;
 }
 
 function postedAgendaFor(ev){
@@ -3600,8 +3582,8 @@ function postedAgendaFor(ev){
 
 function agendaMinutes(e){
   const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(e) : null;
-  const items = posted ? posted.items : (AGENDAS[e.kind] ? AGENDAS[e.kind].items : null);
-  return (items && items.length) ? items[items.length-1][1] : 60;
+  const items = posted ? posted.items : defaultItems(e.kind);
+  return (items && items.length) ? items[items.length-1][1] : (e.minutes || 60);
 }
 
 // A meeting stays on the list until its agenda has actually run out —
@@ -3614,7 +3596,7 @@ function upcomingWithAgendas(limit){
     const ev = monthEvents(p.getFullYear(), p.getMonth());
     Object.keys(ev).map(Number).sort((a,b)=>a-b)
       .flatMap(d => ev[d])
-      .filter(e => AGENDAS[e.kind] && !e.canceled &&
+      .filter(e => hasAgenda(e) && !e.canceled &&
                    (e.dt.getTime() + (agendaMinutes(e) + 15) * 60000) > now)
       .sort((a,b)=>a.dt-b.dt)
       .forEach(e=>{
@@ -3691,14 +3673,14 @@ function timerNow(){
 
 function agendaForEvent(ev){
   const posted = (typeof postedAgendaFor === 'function') ? postedAgendaFor(ev) : null;
-  return posted ? posted.items : (AGENDAS[ev.kind] ? AGENDAS[ev.kind].items : null);
+  return posted ? posted.items : defaultItems(ev.kind);
 }
 
 function runningMeeting(){
   const now = timerNow();
   const ev = monthEvents(now.getFullYear(), now.getMonth())[now.getDate()] || [];
   for(const e of ev){
-    if(e.allDay || e.canceled || !AGENDAS[e.kind]) continue;
+    if(e.allDay || e.canceled || !hasAgenda(e)) continue;
     const items = agendaForEvent(e);
     if(!items || !items.length) continue;
     const total = items[items.length-1][1];
@@ -3812,7 +3794,7 @@ function votingClosesFor(targetISO){
     const p = new Date(y, m-1-back, 1);
     const ev = monthEvents(p.getFullYear(), p.getMonth());
     Object.keys(ev).map(Number).flatMap(day=>ev[day])
-      .filter(e => !e.allDay && !e.canceled && AGENDAS[e.kind] && e.dt < target)
+      .filter(e => !e.allDay && !e.canceled && hasAgenda(e) && e.dt < target)
       .forEach(e=>{
         const ends = new Date(e.dt.getTime() + agendaMinutes(e)*60000);
         if(!best || ends > best) best = ends;
@@ -4195,7 +4177,7 @@ function lnContext(){
   if(!list.length) return null;
   const e = list[0];
   const posted = postedAgendaFor(e);
-  const items = posted ? posted.items : (AGENDAS[e.kind] ? AGENDAS[e.kind].items : []);
+  const items = posted ? posted.items : defaultItems(e.kind);
   return {ev: e, items, idx: 0};
 }
 
@@ -4222,7 +4204,7 @@ function lnFill(){
 
   $('#lnAuto').textContent = running
     ? 'Following the meeting. Change it if you are noting something else.'
-    : 'Next meeting: ' + (AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '');
+    : 'Next meeting: ' + meetingName(ctx.ev.kind);
 
   const sp = $('#lnSpeaker');
   const who = ctx.items[Number(sel.value) || 0];
@@ -4243,7 +4225,7 @@ if($('#lnSave')) $('#lnSave').addEventListener('click', ()=>{
     id: Date.now()+'-'+Math.random().toString(36).slice(2,6),
     ts: new Date().toISOString(),
     date: ctx.ev.y+'-'+String(ctx.ev.mo+1).padStart(2,'0')+'-'+String(ctx.ev.day).padStart(2,'0'),
-    meeting: AGENDAS[ctx.ev.kind] ? AGENDAS[ctx.ev.kind].label : '',
+    meeting: meetingName(ctx.ev.kind),
     session: ctx.ev.session || '',
     item: it[2] || '', speaker: g('lnSpeaker'),
     said: g('lnSaid'), decisions: g('lnDec'), actions: g('lnAct'), questions: g('lnQ'),
@@ -4313,7 +4295,8 @@ function paintRequestForm(){
     const d = new Intl.DateTimeFormat('en-US',{weekday:'long',month:'long',day:'numeric'})
       .format(new Date(e.y,e.mo,e.day));
     const iso = e.y+'-'+String(e.mo+1).padStart(2,'0')+'-'+String(e.day).padStart(2,'0');
-    return `<option value="${iso}|${AGENDAS[e.kind].label}">${AGENDAS[e.kind].label} — ${d}</option>`;
+    const nm = esc(meetingName(e.kind)).replace(/"/g,'&quot;');
+    return `<option value="${iso}|${nm}">${nm} — ${d}</option>`;
   }).join('');
   if(keep) sel.value = keep;
 }
@@ -4382,7 +4365,7 @@ function renderAgenda(){
         .format(new Date(e.y,e.mo,e.day));
       const live = isRunning(e);
       return `<button class="apick${i===agendaPick?' on':''}${live?' live':''}" data-pick="${i}">
-        <span class="ap-d">${live ? 'Now' : d}</span><span class="ap-k">${AGENDAS[e.kind].label}</span></button>`;
+        <span class="ap-d">${live ? 'Now' : d}</span><span class="ap-k">${esc(meetingName(e.kind))}</span></button>`;
     }).join('');
   }
 
@@ -4397,12 +4380,12 @@ function renderAgenda(){
   $('#nextUp').innerHTML = `
     <div class="card orange">
       <p class="eyebrow" style="margin-bottom:4px">${isRunning(first) ? 'Happening now' : (agendaPick===0 ? 'Next up' : 'Coming up')}</p>
-      <h3 style="font-size:21px">${AGENDAS[first.kind].label}</h3>
+      <h3 style="font-size:21px">${esc(meetingName(first.kind))}</h3>
       <p style="font-size:16px;font-weight:600;margin:2px 0 10px">${dateStr}</p>
       ${sameDay.map(e=>`<p style="font-size:15px;margin:0 0 5px">
         <strong>${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</strong>
-        <span style="color:var(--stone)"> — ${e.session} · ${fmtT(e.dt, ET)} ET / ${fmtT(e.dt, PT)} PT</span></p>`).join('')}
-      ${sameDay.length>1 ? '<p style="font-size:14px;color:var(--stone);margin:10px 0 0">Both sessions cover the same ground. Come to whichever suits you.</p>' : ''}
+        <span style="color:var(--stone)"> — ${esc(e.session || '')}${e.session ? ' · ' : ''}${fmtT(e.dt, ET)} ET / ${fmtT(e.dt, PT)} PT</span></p>`).join('')}
+      ${sameDay.length>1 ? '<p style="font-size:14px;color:var(--stone);margin:10px 0 0">The sessions cover the same ground. Come to whichever suits you.</p>' : ''}
     </div>`;
 
   const clock = off => {
@@ -4414,7 +4397,7 @@ function renderAgenda(){
   const ampm = (first.hh % 24) < 12 ? 'AM' : 'PM';
 
   const posted = postedAgendaFor(first);
-  const items = posted ? posted.items : AGENDAS[first.kind].items;
+  const items = posted ? posted.items : defaultItems(first.kind);
   // duration comes from the agenda itself, so the title can never go stale
   const mins = items.length ? items[items.length-1][1] : 0;
   const dur = mins >= 60 && mins % 60 === 0
@@ -4422,25 +4405,27 @@ function renderAgenda(){
       : mins > 60
         ? Math.floor(mins/60) + 'h ' + (mins%60) + 'm'
         : mins + ' minutes';
-  $('#agendaTitle').textContent = AGENDAS[first.kind].label + ' \u2014 ' + dur;
+  $('#agendaTitle').textContent = meetingName(first.kind) + (mins ? ' \u2014 ' + dur : '');
+  const zoneWord = z => ({'America/New_York':'Eastern','America/Chicago':'Central','America/Denver':'Mountain',
+    'America/Phoenix':'Arizona','America/Los_Angeles':'Pacific','America/Anchorage':'Alaska','Pacific/Honolulu':'Hawaii'})[z] || '';
   $('#agendaNote').textContent = sameDay.length > 1
-    ? 'Both sessions run on the same clock: ' + clock(0) + ' ' + ampm +
-      ' Eastern, and ' + clock(0) + ' ' + ampm + ' Pacific three hours later.'
-    : 'One session, starting ' + clock(0) + ' ' + ampm + ' ' +
-      (first.tz === PT ? 'Pacific' : 'Eastern') + '.';
+    ? 'Each session runs the same agenda on its own clock: ' +
+      sameDay.map(e => fmtT(e.dt, e.tz) + ' ' + zoneWord(e.tz) + (e.session ? ' (' + e.session + ')' : '')).join(', ') + '.'
+    : 'One session, starting ' + clock(0) + ' ' + ampm + ' ' + zoneWord(first.tz) + '.';
   $('#agendaBody').innerHTML = items.map(([a,b,t,d,w])=>
     `<li><div class="when">${clock(a)}–${clock(b)}</div><div class="step-b">
-       <h3>${t}</h3>${w ? `<p class="fac">Facilitator: ${w}</p>` : ''}${richText(d)}
+       <h3>${esc(t)}</h3>${w ? `<p class="fac">Facilitator: ${esc(w)}</p>` : ''}${richText(d)}
      </div></li>`
   ).join('');
   const src = $('#agendaSrc');
   if(src){
-    src.innerHTML = posted
-      ? 'Posted agenda' + (posted.by ? ' — prepared by ' + posted.by : '')
-      : signedIn()
-        ? 'Standard running order. Nobody has posted an agenda for this meeting yet.'
-        : 'Standard running order. Members see the posted agenda when there is one.';
+    // no built-in running order: nothing posted means nothing shown
+    src.textContent = posted
+      ? 'Posted agenda' + (posted.by ? ' \u2014 prepared by ' + posted.by : '')
+      : 'No agenda has been posted for this date.';
   }
+  $('#agendaNote').hidden = !items.length;
+  $('#agendaBody').hidden = !items.length;
 
   const firstKey = first.y+'-'+first.mo+'-'+first.day+'-'+first.kind;
   const seen = new Set([firstKey]);
@@ -4471,10 +4456,11 @@ function renderMeetings(){
     if(selDay && selDay.y===y && selDay.mo===mo && selDay.d===d) cls.push('sel');
     html += `<button class="${cls.join(' ')}" ${list.length?`data-day="${d}"`:'disabled'}>
       <span>${d}</span>
-      <span class="dots">${kinds.map(k=>`<i class="dot ${k}"></i>`).join('')}</span>
+      <span class="dots">${kinds.map(k=>`<i class="dot" style="background:${meetingColor(k)}"></i>`).join('')}</span>
     </button>`;
   }
   $('#calGrid').innerHTML = html;
+  paintSchedule();
   renderDayPanel();
 }
 
@@ -4490,7 +4476,11 @@ function renderDayPanel(){
        from the server, keyed by meeting kind, and only arrives if this
        person's rank clears the 'Visible to' column. If it is not in
        CAL.links, they were not meant to have it, so nothing renders. */
-    if(!e.link && !e.allDay && CAL.links && CAL.links[e.kind]){
+    if(e.join && e.join.url && /^https?:\/\//i.test(e.join.url))
+      return `<a class="ev-link" href="${esc(e.join.url).replace(/"/g,'&quot;')}" target="_blank" rel="noopener">${esc(e.join.label || 'Join')} \u2192</a>`;
+    if(e.joinLocked && !signedIn())
+      return `<button class="ev-locked" data-go="auth">\u{1F512} Link for members \u2014 sign in</button>`;
+    if(!e.link && !e.allDay && !e.oneOff && CAL.links && CAL.links[e.kind]){
       const j = CAL.links[e.kind];
       /* Only absolute http(s), or the browser resolves it against bisc.work
          and the button 404s. Quotes are escaped because esc() does not touch
@@ -4512,22 +4502,74 @@ function renderDayPanel(){
     if(e.added) return `<p class="ev-flag moved">Added${e.reason ? ' \u2014 ' + e.reason : ''}</p>`;
     return '';
   };
-  p.innerHTML = `<h3>${dateStr}</h3>` + ev.map(e=> e.allDay ? `
-    <div class="ev ${e.kind}">
-      <h4>${e.title}</h4>
-      <p class="t1">${e.when}</p>
-      ${e.lead ? `<p class="t2"><strong>${e.lead}</strong></p>` : ''}
-      <p class="t2">${linkify(e.where)}</p>
+  const bar = e => `style="border-left-color:${meetingColor(e.kind)}"`;
+  const span = e => fmtT(e.dt, localTZ) + (e.endAt ? '\u2013' + fmtT(e.endAt, localTZ) : '') + ' ' + tzAbbr(e.dt);
+  p.innerHTML = `<h3>${dateStr}</h3>` + ev.map(e=> e.oneOff ? `
+    <div class="ev ac" ${bar(e)}>
+      <h4>${esc(e.title)}</h4>
+      <p class="t1">${e.allDay ? e.when : span(e)}</p>
+      ${!e.allDay ? `<p class="t2">${fmtT(e.dt, ET)} ET \u00b7 ${fmtT(e.dt, PT)} PT${e.when && e.when.indexOf('\u2013') > -1 ? ' \u00b7 ' + e.when : ''}</p>` : ''}
+      ${e.lead ? `<p class="t2"><strong>${esc(e.lead)}</strong></p>` : ''}
+      ${e.where ? `<p class="t2">${linkify(e.where)}</p>` : ''}
+      ${e.details ? `<div class="d">${richText(e.details)}</div>` : ''}
       ${linkFor(e)}
+      ${e.join && e.link ? (()=>{ const x = {...e, join:null}; return linkFor(x); })() : ''}
     </div>` : `
-    <div class="ev ${e.kind}${e.canceled ? ' is-off' : ''}">
-      <h4>${e.title}</h4>
+    <div class="ev ${e.kind}${e.canceled ? ' is-off' : ''}" ${bar(e)}>
+      <h4>${esc(e.title)}</h4>
       ${flag(e)}
-      <p class="t1">${fmtT(e.dt, localTZ)} ${tzAbbr(e.dt)}</p>
-      <p class="t2">${fmtT(e.dt, ET)} ET \u00b7 ${fmtT(e.dt, PT)} PT \u2014 ${e.session}</p>
-      <p class="d">${e.desc}</p>
+      <p class="t1">${fmtT(e.dt, localTZ)}\u2013${fmtT(new Date(e.dt.getTime() + (e.minutes || 60) * 60000), localTZ)} ${tzAbbr(e.dt)}</p>
+      <p class="t2">${fmtT(e.dt, ET)} ET \u00b7 ${fmtT(e.dt, PT)} PT${e.session ? ' \u2014 ' + esc(e.session) : ''}</p>
+      ${e.desc ? `<p class="d">${esc(e.desc)}</p>` : ''}
       ${e.canceled ? '' : linkFor(e)}
     </div>`).join('');
+}
+
+/* The rhythm card, the legend and the two-sessions note are all written
+   from the Meetings tab, so they can never disagree with the calendar. */
+function paintSchedule(){
+  const box = $('#rhythm'), leg = $('#calLegend');
+  if(!box) return;
+  const zoneWord = z => ({'America/New_York':'ET','America/Chicago':'CT','America/Denver':'MT',
+    'America/Phoenix':'AZ','America/Los_Angeles':'PT','America/Anchorage':'AKT','Pacific/Honolulu':'HT'})[z] || '';
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const ord = ['','1st','2nd','3rd','4th','5th'];
+  const weeksWord = (w, day) => !w ? '' : w.every
+    ? (w.exceptLast ? 'Every ' + day + ' except the last' : 'Every ' + day)
+    : [...(w.nth||[]).map(n=>ord[n]), ...(w.last ? ['last'] : [])].join(' and ').replace(/^./, c=>c.toUpperCase()) + ' ' + day;
+  const hm = r => { const h = r.hh % 12 || 12; return h + ':' + String(r.mm).padStart(2,'0') + ' ' + (r.hh < 12 ? 'AM' : 'PM'); };
+  const groups = [];
+  RULES.forEach(r => {
+    let g = groups.find(x => x.kind === r.kind);
+    if(!g){ g = {kind:r.kind, title:r.title, rows:[]}; groups.push(g); }
+    g.rows.push(r);
+  });
+  if(!groups.length){
+    box.innerHTML = '<p class="empty-day" style="margin:0">' + (CAL.loaded ? 'No regular meetings are scheduled right now.' : 'Loading the meeting schedule\u2026') + '</p>';
+  } else {
+    box.innerHTML = groups.map((g, i) => {
+      const r0 = g.rows[0];
+      const when = weeksWord(r0.weeks, days[r0.dow]);
+      const times = g.rows.map(r => hm(r) + ' ' + zoneWord(r.tz) + (g.rows.length > 1 && r.session ? ' (' + r.session + ')' : '')).join(' and ');
+      const mins = r0.minutes || 60;
+      const len = mins % 60 === 0 ? (mins === 60 ? 'one hour' : (['','one','two','three','four'][mins/60] || mins/60) + ' hours') : mins + ' minutes';
+      return '<p style="font-size:15px;margin:0 0 ' + (i === groups.length - 1 ? '0' : '10px') + '"><i class="dot" style="display:inline-block;vertical-align:middle;margin-right:7px;width:9px;height:9px;background:' +
+        meetingColor(g.kind) + '"></i><strong>' + esc(when) + '</strong> \u2014 ' + esc(g.title) +
+        (g.rows.length > 1 ? ', ' + g.rows.length + ' sessions' : '') + ' \u00b7 ' + esc(times) + ' \u00b7 ' + len + '</p>';
+    }).join('');
+  }
+  if(leg){
+    leg.innerHTML = groups.map(g => '<span><i style="background:' + meetingColor(g.kind) + '"></i>' + esc(g.title) + '</span>').join('') +
+      '<span><i style="background:#247227"></i>Events</span>';
+  }
+  const two = $('#twoSessions');
+  if(two){
+    const multi = groups.filter(g => g.rows.length > 1);
+    two.hidden = !multi.length;
+    if(multi.length) $('#twoSessionsP').textContent = (multi.length === 1 ? 'The ' + multi[0].title.toLowerCase() + ' runs' :
+      multi.map(g => g.title).join(', ').replace(/, ([^,]*)$/, ' and $1') + ' run') +
+      ' in more than one session on the same day. Same content \u2014 come to whichever works.';
+  }
 }
 
 let calY, calM, selDay = null;
@@ -5340,7 +5382,20 @@ function buildPartnerWelcome(){
 
 const ADM_AREA_LABEL = {agendas:'Agendas and the ballot', calendar:'Calendar — meetings, events and join links',
                         members:'Members', admins:'Admins'};
-const ADM_MEETINGS = ['New member meeting','Community meeting','Organizing Committee','National gathering'];
+/* Meeting names for the dropdowns come from the Meetings tab, so a new
+   meeting can be picked on the Agendas and Meeting changes forms at once. */
+const ADM_MEETINGS = {map(fn){ return admMeetingNames().map(fn); }, some(fn){ return admMeetingNames().some(fn); }};
+function admMeetingNames(){
+  const fromSheet = ADM.data.meetings && !ADM.data.meetings.error
+    ? ADM.data.meetings.rows.map(r => String(r.values['Name'] || '').trim())
+    : RULES.map(r => r.title);
+  return [...new Set(fromSheet.filter(Boolean))];
+}
+const ADM_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const ADM_WEEKS = [['every','Every week'],['every except last','Every week except the last'],['1','1st week'],['2','2nd week'],
+                   ['3','3rd week'],['4','4th week'],['last','Last week'],['1, 3','1st and 3rd weeks'],['2, 4','2nd and 4th weeks']];
+const ADM_ZONES = ['Eastern','Central','Mountain','Pacific','Arizona','Alaska','Hawaii'];
+const ADM_COLORS = [['green','Green'],['sky','Sky blue'],['orange','Orange'],['red','Red'],['dark green','Dark green'],['yellow','Yellow'],['purple','Purple']];
 const ADM_STATUSES = ['New member','Member','Founding member','Organizing Committee','Steering committee'];
 const ADM_LINK_KINDS = [['nm','New member meeting'],['fu','Community meeting'],['oc','Organizing Committee'],['sx','National gathering']];
 const ADM_VISIBLE = [['everyone','Everyone, even signed out'],['member','Members'],
@@ -5366,15 +5421,38 @@ const ADM_FORMS = {
     {k:'Attempt', label:'Attempt', type:'number', adv:true, help:'2 means it missed quorum once and has come back.'},
     {k:'Carried from', label:'Carried from', type:'text', adv:true}
   ],
+  meetings: [
+    {k:'Name', label:'Meeting name', type:'text', req:true,
+     help:'Two rows with the same name are two sessions of one meeting.'},
+    {k:'Session', label:'Session', type:'text', help:'e.g. Eastern session. Leave blank if it only runs once.'},
+    {k:'Day', label:'Day', type:'select', req:true, options:ADM_DAYS, half:true},
+    {k:'Weeks', label:'Which weeks', type:'select', options:ADM_WEEKS, keep:true, half:true},
+    {k:'Start time', label:'Start time', type:'time', req:true, half:true},
+    {k:'Time zone', label:'Time zone', type:'select', options:ADM_ZONES, keep:true, half:true},
+    {k:'Minutes', label:'Length in minutes', type:'number', half:true},
+    {k:'Color', label:'Color on the calendar', type:'select', options:ADM_COLORS, keep:true, half:true},
+    {k:'Description', label:'Description', type:'textarea'},
+    {k:'Join link', label:'Join link', type:'text', help:'The Zoom link, starting https://'},
+    {k:'Link label', label:'Button text', type:'text', half:true},
+    {k:'Visible to', label:'Who gets the link', type:'select', options:ADM_VISIBLE, half:true},
+    {k:'Agenda', label:'Has an agenda in the app', type:'select', options:[['yes','Yes'],['no','No']], half:true},
+    {k:'Published', label:'Show on the calendar', type:'select', options:ADM_YESNO, half:true}
+  ],
   events: [
-    {k:'Title', label:'Title', type:'text', req:true},
-    {k:'Start date', label:'Start date', type:'date', req:true, half:true},
-    {k:'End date', label:'End date', type:'date', half:true, help:'Blank for a one-day event.'},
+    {k:'Title', label:'Event name', type:'text', req:true},
+    {k:'Start date', label:'Date', type:'date', req:true, half:true},
+    {k:'End date', label:'End date', type:'date', half:true, help:'Only for events over several days.'},
+    {k:'Start time', label:'Start time', type:'time', half:true, help:'Blank for an all-day event.'},
+    {k:'End time', label:'End time', type:'time', half:true},
+    {k:'Time zone', label:'Time zone', type:'select', options:ADM_ZONES, keep:true},
+    {k:'Link', label:'Link', type:'text', half:true, help:'Zoom, a sign-up page, anything starting https://'},
+    {k:'Link label', label:'Button text', type:'text', half:true},
+    {k:'Where', label:'Where', type:'text', help:'A place, if it is in person.'},
+    {k:'Details', label:'Details', type:'textarea'},
     {k:'Lead', label:'Lead or host', type:'text'},
-    {k:'Where', label:'Where', type:'text', help:'A place, or paste a Zoom link and the app turns it into a button.'},
-    {k:'Toolkit URL', label:'Toolkit link', type:'text', half:true},
-    {k:'Toolkit label', label:'Toolkit button text', type:'text', half:true},
-    {k:'Members only', label:'Toolkit is members only', type:'select', options:[['no','No'],['yes','Yes']], half:true},
+    {k:'Toolkit URL', label:'Toolkit link', type:'text', half:true, adv:true},
+    {k:'Toolkit label', label:'Toolkit button text', type:'text', half:true, adv:true},
+    {k:'Members only', label:'Links are for members only', type:'select', options:[['no','No'],['yes','Yes']], half:true},
     {k:'Published', label:'Show on the calendar', type:'select', options:ADM_YESNO, half:true}
   ],
   changes: [
@@ -5417,7 +5495,7 @@ const ADM_FORMS = {
 /* Read-only details shown inside a member's form. */
 const ADM_MEMBER_INFO = ['Contact preference','Interested in','Requests','Anything else','Timestamp'];
 
-const ADM = {tab:'', sub:'changes', when:'upcoming', q:'', status:'', data:{}, open:null, arm:'', busy:false};
+const ADM = {tab:'', sub:'meetings', when:'upcoming', q:'', status:'', data:{}, open:null, arm:'', busy:false};
 
 function isAdmin(){ return signedIn() && Array.isArray(AUTH.admin) && AUTH.admin.length > 0; }
 function admCan(area){ return isAdmin() && AUTH.admin.indexOf(area) > -1; }
@@ -5484,7 +5562,7 @@ function admTabs(){
   if(admCan('admins')) t.push(['admins','Admins']);
   return t;
 }
-const ADM_TAB_SETS = {agenda:['agendas'], ballot:['agendas'], calendar:['changes','events','links'],
+const ADM_TAB_SETS = {agenda:['agendas','meetings'], ballot:['agendas'], calendar:['meetings','events','changes'],
                       members:['members'], admins:['admins']};
 
 async function admLoad(set, force){
@@ -5555,6 +5633,8 @@ function admField(f, v){
     input = '<div class="adm-checks" data-k="' + escA(f.k) + '" data-areas="1">' +
       Object.keys(ADM_AREA_LABEL).map(a => '<label><input type="checkbox" value="' + a + '"' +
         (all.indexOf(a) > -1 ? ' checked' : '') + '> ' + escA(ADM_AREA_LABEL[a]) + '</label>').join('') + '</div>';
+  } else if(f.type === 'time'){
+    input = '<input type="time" id="' + id + '" data-k="' + escA(f.k) + '" data-time="1" value="' + escA(admTo24(val)) + '">';
   } else {
     const type = f.type === 'datetime' ? 'datetime-local' : (f.type === 'date' || f.type === 'number') ? f.type : 'text';
     input = '<input type="' + type + '" id="' + id + '" data-k="' + escA(f.k) + '" value="' + escA(val) + '"' +
@@ -5593,7 +5673,7 @@ function admForm(set, row, preset){
     '<h3>' + (row ? 'Edit' : 'Add') + '</h3>' + info +
     admFields(main, values) +
     (adv.length ? '<details class="adm-adv"' + (adv.some(f => values[f.k]) ? ' open' : '') +
-      '><summary>Voting settings</summary>' + admFields(adv, values) + '</details>' : '') +
+      '><summary>' + (set === 'agendas' ? 'Voting settings' : 'More options') + '</summary>' + admFields(adv, values) + '</details>' : '') +
     '<div class="btn-row"><button type="submit" class="btn sm">Save</button>' +
     '<button type="button" class="btn ghost sm" data-adm-cancel>Cancel</button>' +
     (row ? '<button type="button" class="adm-mini warn' + (ADM.arm === key ? ' armed' : '') + '" data-adm-del="' + escA(key) +
@@ -5615,9 +5695,26 @@ function admRead(form){
     if(el.dataset.areas){
       const on = [...el.querySelectorAll('input:checked')].map(i => i.value);
       out[k] = on.length === Object.keys(ADM_AREA_LABEL).length ? 'all' : on.join(', ');
+    } else if(el.dataset.time){
+      out[k] = admTo12(el.value);
     } else out[k] = el.value.trim();
   });
   return out;
+}
+/* The Sheet keeps times as "6:00 PM"; the time picker wants "18:00". */
+function admTo24(s){
+  const m = String(s || '').trim().toLowerCase().match(/^(\d{1,2})(?::(\d{2}))?\s*(a|p)?/);
+  if(!m) return '';
+  let h = +m[1]; const mm = m[2] || '00';
+  if(m[3] === 'p' && h < 12) h += 12;
+  if(m[3] === 'a' && h === 12) h = 0;
+  return String(h).padStart(2,'0') + ':' + mm;
+}
+function admTo12(s){
+  const m = String(s || '').match(/^(\d{2}):(\d{2})/);
+  if(!m) return '';
+  const h = +m[1];
+  return ((h % 12) || 12) + ':' + m[2] + ' ' + (h < 12 ? 'AM' : 'PM');
 }
 
 /* After a change that members would see, drop the app's own copies so the
@@ -5628,7 +5725,7 @@ function admRefreshApp(set){
     loadAgendas().then(()=>renderAgenda());
     if(typeof loadVotes === 'function') loadVotes();
   }
-  if(set === 'events' || set === 'changes' || set === 'links'){
+  if(set === 'events' || set === 'changes' || set === 'links' || set === 'meetings'){
     loadCalendar().then(()=>{ renderMeetings(); renderAgenda(); });
   }
   if(set === 'admins' || set === 'members') refreshStatus();
@@ -5865,7 +5962,7 @@ function admBallotPane(){
 /* ---- Calendar ---- */
 
 function admCalendarPane(){
-  const subs = [['changes','Meeting changes'],['events','Events'],['links','Join links']];
+  const subs = [['meetings','Regular meetings'],['events','Events'],['changes','One-off changes']];
   let html = '<div class="adm-sub">' + subs.map(([id,l]) =>
     '<button type="button" class="adm-tab' + (ADM.sub === id ? ' on' : '') + '" data-adm-sub="' + id + '">' + l + '</button>').join('') + '</div>';
   const set = ADM.sub, d = ADM.data[set];
@@ -5873,8 +5970,29 @@ function admCalendarPane(){
   if(d.error) return html + '<p class="adm-msg bad">' + escA(d.error) + '</p>';
   const today = admToday();
 
+  if(set === 'meetings'){
+    html += '<p class="help" style="font-size:15px">Meetings that repeat. Each row is one session; give two rows the same name for a meeting with two sessions. Change the time, the day or the link here and every future date follows.</p>' +
+      '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="meetings:new" data-preset="' +
+      escA(JSON.stringify({'Weeks':'every','Time zone':'Eastern','Minutes':'60','Visible to':'member','Agenda':'yes','Published':'yes'})) +
+      '">+ Add a regular meeting</button></div>';
+    if(ADM.open === 'meetings:new') html += admForm('meetings', null, ADM.preset);
+    if(!d.rows.length) html += '<p class="adm-empty">No regular meetings yet.</p>';
+    const wk = Object.fromEntries(ADM_WEEKS);
+    d.rows.forEach(r => {
+      const v = r.values;
+      const off = v['Published'] !== '' && !admYes(v['Published']);
+      const body = '<div class="adm-b"><strong>' + escA(v['Name']) + (v['Session'] ? ' <span style="font-weight:500;color:var(--stone)">· ' + escA(v['Session']) + '</span>' : '') + '</strong>' +
+        '<p class="adm-s">' + (off ? '<span class="adm-chip">Hidden</span>' : '') +
+        escA((wk[String(v['Weeks'] || 'every').toLowerCase()] || v['Weeks'] || 'Every week') + ' · ' + (v['Day'] || '?') + ' · ' +
+        (v['Start time'] || '?') + ' ' + (v['Time zone'] || 'Eastern') + ' · ' + (v['Minutes'] || 60) + ' min') + '</p>' +
+        '<p class="adm-s">' + (v['Join link'] ? 'Join link set · for ' + escA(v['Visible to'] || 'member') : '<span class="adm-chip o">No join link</span>') + '</p>';
+      html += admRowCard('meetings', r, body, '<button type="button" class="adm-mini" data-adm-edit="meetings:' + r.row + '">Edit</button>');
+    });
+    return html;
+  }
+
   if(set === 'changes'){
-    html += '<p class="help" style="font-size:15px">The regular meetings repeat on their own. Use this to cancel one, move one, or add an extra one.</p>' +
+    html += '<p class="help" style="font-size:15px">For a single date: cancel a regular meeting, move it, or add an extra one. To change a meeting for good, edit it under Regular meetings.</p>' +
       '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="changes:new" data-preset="' +
       escA(JSON.stringify({'Change':'canceled','Published':'yes'})) + '">+ Change a meeting</button></div>';
     if(ADM.open === 'changes:new') html += admForm('changes', null, ADM.preset);
@@ -5895,7 +6013,7 @@ function admCalendarPane(){
   if(set === 'events'){
     html += '<p class="help" style="font-size:15px">One-off things: conferences, local actions, partner calls.</p>' +
       '<div class="adm-bar"><button type="button" class="adm-mini go" data-adm-add="events:new" data-preset="' +
-      escA(JSON.stringify({'Published':'yes','Members only':'no'})) + '">+ Add an event</button></div>';
+      escA(JSON.stringify({'Published':'yes','Members only':'no','Time zone':'Pacific'})) + '">+ Add an event</button></div>';
     if(ADM.open === 'events:new') html += admForm('events', null, ADM.preset);
     const rows = d.rows.slice().sort((a, b) => {
       const pa = (a.values['End date'] || a.values['Start date']) < today, pb = (b.values['End date'] || b.values['Start date']) < today;
@@ -5908,8 +6026,9 @@ function admCalendarPane(){
       const past = (v['End date'] || v['Start date']) < today;
       const body = '<div class="adm-b"><strong>' + escA(v['Title']) + '</strong>' +
         '<p class="adm-s">' + (admYes(v['Published']) ? '' : '<span class="adm-chip">Hidden</span>') + (past ? '<span class="adm-chip">Past</span>' : '') +
-        escA(admDay(v['Start date'])) + (v['End date'] && v['End date'] !== v['Start date'] ? ' – ' + escA(admDay(v['End date'])) : '') + '</p>' +
-        (v['Where'] ? '<p class="adm-s">' + escA(v['Where']) + '</p>' : '');
+        escA(admDay(v['Start date'])) + (v['End date'] && v['End date'] !== v['Start date'] ? ' – ' + escA(admDay(v['End date'])) : '') +
+        (v['Start time'] ? ' · ' + escA(v['Start time'] + (v['End time'] ? '–' + v['End time'] : '') + ' ' + (v['Time zone'] || 'Eastern')) : ' · all day') + '</p>' +
+        (v['Link'] ? '<p class="adm-s">' + escA(v['Link']) + '</p>' : v['Where'] ? '<p class="adm-s">' + escA(v['Where']) + '</p>' : '');
       html += admRowCard('events', r, body, '<button type="button" class="adm-mini" data-adm-edit="events:' + r.row + '">Edit</button>');
     });
     return html;
